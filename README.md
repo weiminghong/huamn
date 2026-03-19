@@ -1,0 +1,57 @@
+# Human Staged Pipeline
+
+This folder is reorganized for staged development:
+
+```text
+human/
+  common/      # shared utils across stage1/stage2/stage3
+  stage1/      # VLM unified training (no task heads)
+  stage2/      # head-based task training (box/pose/parsing)
+  stage3/      # placeholder
+```
+
+## Why This Split
+
+- `stage1`: single VLM objective (text generation for structured labels).
+- `stage2`: discriminative heads for each task.
+- `stage3`: reserved for later joint/distillation work.
+
+`sapiens` itself is not a Qwen-VL text-generation stage. It is mainly
+task-specific discriminative training (`mmdet/mmpose/mmseg` style).
+
+## Shared Data Convention
+
+```text
+data/human/
+  stage1/
+    train.jsonl
+    val.jsonl
+    test.jsonl
+  images/
+    train/
+    val/
+  det/
+    annotations/
+  pose/
+    annotations/
+  parsing/
+    images/
+    annotations/
+```
+
+## Quick Entry
+
+Stage1:
+
+```bash
+cd human/stage1/scripts/train && ./node.sh
+cd human/stage1/scripts/test && ./node.sh
+```
+
+Stage2:
+
+```bash
+cd human/stage2/scripts/train/box && ./node.sh
+cd human/stage2/scripts/train/pose && ./node.sh
+cd human/stage2/scripts/train/parsing && ./node.sh
+```
