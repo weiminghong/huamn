@@ -5,6 +5,7 @@ This folder is reorganized for staged development:
 ```text
 human/
   common/      # shared utils across stage1/stage2/stage3
+  stage0/      # five-task data build (box/pose/attribute/relation/parsing)
   stage1/      # VLM unified training (no task heads)
   stage2/      # head-based task training (box/pose/parsing)
   stage3/      # placeholder
@@ -46,6 +47,16 @@ Stage1:
 ```bash
 cd human/stage1/scripts/train && ./node.sh
 cd human/stage1/scripts/test && ./node.sh
+```
+
+Stage0 + Stage1 (five tasks):
+
+```bash
+cd human
+python stage1/tools/run_five_task_pipeline.py \
+  --unified-jsonl data/human/unified/all.jsonl \
+  --image-root data/human \
+  --mask-root data/human
 ```
 
 Stage2:

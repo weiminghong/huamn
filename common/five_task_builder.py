@@ -16,6 +16,17 @@ def _to_int(v: Any, default: int = 0) -> int:
         return default
 
 
+def _to_entity(value: Any) -> Any:
+    if isinstance(value, (int, float)):
+        return int(value)
+    if isinstance(value, str):
+        stripped = value.strip()
+        if stripped.isdigit():
+            return int(stripped)
+        return stripped
+    return str(value)
+
+
 def _normalize_box(box_obj: Any) -> Optional[Dict[str, List[float]]]:
     if isinstance(box_obj, dict):
         box = box_obj.get("bbox_xyxy", box_obj.get("bbox", None))
@@ -71,9 +82,9 @@ def _normalize_relation(rel_obj: Any) -> Optional[Dict[str, Any]]:
     if predicate is None:
         return None
     return {
-        "subject": _to_int(subject, default=0) if isinstance(subject, (int, float, str)) else str(subject),
+        "subject": _to_entity(subject),
         "predicate": str(predicate),
-        "object": _to_int(obj, default=0) if isinstance(obj, (int, float, str)) else str(obj),
+        "object": _to_entity(obj),
     }
 
 
