@@ -253,6 +253,8 @@ def extract_prediction_struct(record: Dict[str, Any], image_size: Optional[Tuple
 
 
 def get_record_gt(record: Dict[str, Any], image_size: Optional[Tuple[int, int]] = None) -> Dict[str, List[Dict[str, Any]]]:
+    if isinstance(record.get("gt_struct"), dict):
+        return normalize_struct(record["gt_struct"], image_size=image_size)
     return normalize_struct(
         {
             "box": record.get("box", []),
@@ -457,6 +459,16 @@ def evaluate_records_scheme2(
         matches = greedy_match_boxes(gt_boxes, pred_boxes, iou_thr=float(iou_thr))
         matched_g = {gi for gi, _, _ in matches}
         matched_p = {pi for _, pi, _ in matches}
+        best_ious = []
+        for pi, pred_box in enumerate(pred_boxes):
+            best_iou = 0.0
+            best_gt = -1
+            for gi, gt_box in enumerate(gt_boxes):
+                iou = box_iou(gt_box["bbox_xyxy"], pred_box["bbox_xyxy"])
+                if iou > best_iou:
+                    best_iou = iou
+                    best_gt = gi
+            best_ious.append({"pred_index": pi, "best_gt_index": best_gt, "best_iou": float(best_iou)})
 
         n_gt_box += len(gt_boxes)
         n_pred_box += len(pred_boxes)
@@ -528,6 +540,11 @@ def evaluate_records_scheme2(
                 "box_tp_iou_thr": len(matches),
                 "box_fp_iou_thr": max(0, len(pred_boxes) - len(matched_p)),
                 "box_fn_iou_thr": max(0, len(gt_boxes) - len(matched_g)),
+                "pred_best_ious": best_ious,
+                "box_matches": [
+                    {"gt_index": int(gi), "pred_index": int(pi), "iou": float(iou)}
+                    for gi, pi, iou in matches
+                ],
                 "pose_gt_valid_matched_box": img_pose_gt_valid,
                 "pose_pck_correct": img_pose_kpt_correct,
                 "pose_pck_total": img_pose_kpt_total,

@@ -314,6 +314,9 @@ def _save_visualization(
         _draw_boxes(draw, pred["box"], PRED_COLORS[0], "P")
         _draw_pose(draw, pred["pose"], PRED_COLORS[0])
         _draw_attrs(draw, pred["box"], pred["attribute"], PRED_COLORS[0], 18)
+    summary = f"GT box:{len(gt['box'])}  PRED box:{len(pred['box'])}"
+    draw.rectangle([4, 4, 260, 24], fill=(0, 0, 0))
+    draw.text((8, 8), summary, fill=(255, 255, 255))
     Path(out_path).parent.mkdir(parents=True, exist_ok=True)
     vis.save(out_path)
 
@@ -448,6 +451,9 @@ def main() -> None:
     metrics["pred_jsonl"] = str(pred_jsonl)
     metrics["vis_dir"] = str(vis_dir) if bool(args.save_vis) else ""
     metrics["num_debug_records"] = len(records)
+    match_debug_jsonl = out_dir / "match_debug.jsonl"
+    _write_jsonl(str(match_debug_jsonl), metrics.get("per_image", []))
+    metrics["match_debug_jsonl"] = str(match_debug_jsonl)
     metrics_for_print = dict(metrics)
     metrics_for_print.pop("per_image", None)
     dump_json(str(metrics_json), metrics)
