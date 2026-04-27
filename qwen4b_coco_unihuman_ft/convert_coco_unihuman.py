@@ -12,7 +12,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--train-ann-json", type=str, default="", help="Train annotation json.")
     parser.add_argument("--val-ann-json", type=str, default="", help="Val annotation json.")
     parser.add_argument("--ann-json", type=str, default="", help="Single annotation json (split by ratio).")
-    parser.add_argument("--image-root", type=str, required=True, help="Image root directory.")
+    parser.add_argument("--image-root", type=str, required=True, help="Default image root directory.")
+    parser.add_argument("--train-image-root", type=str, default="", help="Optional train image root directory.")
+    parser.add_argument("--val-image-root", type=str, default="", help="Optional val image root directory.")
     parser.add_argument("--output-dir", type=str, required=True, help="Output directory for train/val jsonl.")
     parser.add_argument("--train-ratio", type=float, default=0.9)
     parser.add_argument("--val-ratio", type=float, default=0.1)
@@ -292,13 +294,15 @@ def main() -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
 
     if args.train_ann_json and args.val_ann_json:
+        train_image_root = args.train_image_root or args.image_root
+        val_image_root = args.val_image_root or args.image_root
         train_payload = _read_json(args.train_ann_json)
         val_payload = _read_json(args.val_ann_json)
         train_records_all, train_stats = _convert_payload(
-            train_payload, args.image_root, skip_missing_images=bool(args.skip_missing_images)
+            train_payload, train_image_root, skip_missing_images=bool(args.skip_missing_images)
         )
         val_records_all, val_stats = _convert_payload(
-            val_payload, args.image_root, skip_missing_images=bool(args.skip_missing_images)
+            val_payload, val_image_root, skip_missing_images=bool(args.skip_missing_images)
         )
         train_records = _apply_max_samples(train_records_all, args.max_samples)
         val_records = _apply_max_samples(val_records_all, args.max_samples)
@@ -311,6 +315,8 @@ def main() -> None:
             "train_ann_json": args.train_ann_json,
             "val_ann_json": args.val_ann_json,
             "image_root": args.image_root,
+            "train_image_root": train_image_root,
+            "val_image_root": val_image_root,
             "num_train": len(train_records),
             "num_val": len(val_records),
             "train_stats": train_stats,
