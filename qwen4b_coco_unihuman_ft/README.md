@@ -38,11 +38,16 @@ If train and val images are in different folders:
 
 ```bash
 TRAIN_IMAGE_ROOT=/home/priv/wmh_project/coco_person/images \
-VAL_IMAGE_ROOT=/path/to/val/images \
+VAL_IMAGE_ROOT=/home/priv/wmh_project/coco_person/val/val2017 \
 bash qwen4b_coco_unihuman_ft/scripts/run_prepare_server_data.sh
 ```
 
-Your previous conversion produced `num_val=0`, which means the val image files referenced by `coco_unihuman_val_v1.json` were not found under the configured `image_root`.
+The default script already uses:
+
+- train images: `/home/priv/wmh_project/coco_person/images`
+- val images: `/home/priv/wmh_project/coco_person/val/val2017`
+
+Your previous conversion produced `num_val=0`, which means the val image files referenced by `coco_unihuman_val_v1.json` were not found under the old configured `image_root`. Re-run the prepare script before val evaluation.
 
 ## Train
 
