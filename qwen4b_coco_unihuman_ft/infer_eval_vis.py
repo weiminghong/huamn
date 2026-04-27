@@ -1,4 +1,5 @@
 import argparse
+import inspect
 import json
 import os
 import random
@@ -9,12 +10,16 @@ from typing import Any, Dict, List, Optional, Tuple
 import torch
 from PIL import Image, ImageDraw
 from tqdm import tqdm
-from transformers import AutoModelForCausalLM, AutoProcessor
+from transformers import AutoConfig, AutoModelForCausalLM, AutoProcessor
 
 try:
     from transformers import AutoModelForVision2Seq
 except Exception:
     AutoModelForVision2Seq = None
+try:
+    from transformers.models.qwen3_5.modeling_qwen3_5 import Qwen3_5ForConditionalGeneration
+except Exception:
+    Qwen3_5ForConditionalGeneration = None
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(REPO_ROOT) not in sys.path:
@@ -80,7 +85,7 @@ def parse_args() -> argparse.Namespace:
         description="Debug inference, scheme-2 eval, and visualization for box+pose+attribute VLM outputs."
     )
     parser.add_argument("--config", type=str, default="")
-    parser.add_argument("--model-name-or-path", type=str, default="/home/priv/project/model/Qwen3.5-4B")
+    parser.add_argument("--model-name-or-path", type=str, default="/home/priv/project/model/Qwen2.5-VL-3B-Instruct")
     parser.add_argument("--adapter-path", type=str, default="", help="Optional LoRA/PEFT adapter checkpoint path.")
     parser.add_argument("--jsonl", type=str, default="")
     parser.add_argument("--image-root", type=str, default="")
@@ -154,12 +159,46 @@ def _load_model(model_name_or_path: str, dtype):
         "trust_remote_code": True,
         "low_cpu_mem_usage": True,
     }
+    cfg = AutoConfig.from_pretrained(model_name_or_path, trust_remote_code=True)
+    has_vision = bool(getattr(cfg, "vision_config", None))
+
+    if has_vision and Qwen3_5ForConditionalGeneration is not None:
+        try:
+            return Qwen3_5ForConditionalGeneration.from_pretrained(model_name_or_path, **kwargs)
+        except Exception:
+            pass
     if AutoModelForVision2Seq is not None:
         try:
             return AutoModelForVision2Seq.from_pretrained(model_name_or_path, **kwargs)
         except Exception:
             pass
     return AutoModelForCausalLM.from_pretrained(model_name_or_path, **kwargs)
+
+
+def _model_accepts_vision_inputs(model) -> bool:
+    keys = set()
+    for fn_name in ("forward", "prepare_inputs_for_generation"):
+        fn = getattr(model, fn_name, None)
+        if fn is None:
+            continue
+        try:
+            keys.update(inspect.signature(fn).parameters.keys())
+        except Exception:
+            continue
+    return any(k in keys for k in ("pixel_values", "image_grid_thw", "images"))
+
+
+def _filter_generate_inputs(model, inputs: Dict[str, Any]) -> Dict[str, Any]:
+    keys = {"input_ids", "attention_mask", "position_ids", "token_type_ids", "past_key_values", "use_cache"}
+    for fn_name in ("forward", "prepare_inputs_for_generation"):
+        fn = getattr(model, fn_name, None)
+        if fn is None:
+            continue
+        try:
+            keys.update(inspect.signature(fn).parameters.keys())
+        except Exception:
+            continue
+    return {k: v for k, v in inputs.items() if k in keys}
 
 
 def _build_chat_text(processor, image_path: str, prompt: str, assistant_prefix: str) -> str:
@@ -317,6 +356,12 @@ def main() -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     model.eval()
+    if not _model_accepts_vision_inputs(model):
+        raise ValueError(
+            "Loaded model does not accept image inputs. "
+            f"Current model: {args.model_name_or_path}. "
+            "Please use a VL model (for example Qwen2.5-VL-* or Qwen3.5-VL-*)."
+        )
     pad_token_id = getattr(tokenizer, "pad_token_id", None) if tokenizer is not None else None
     eos_token_id = getattr(tokenizer, "eos_token_id", None) if tokenizer is not None else None
     if pad_token_id is None:
@@ -346,14 +391,15 @@ def main() -> None:
             for k, v in inputs.items():
                 if isinstance(v, torch.Tensor):
                     inputs[k] = v.to(device)
+            gen_inputs = _filter_generate_inputs(model, inputs)
             gen_ids = model.generate(
-                **inputs,
+                **gen_inputs,
                 max_new_tokens=int(args.max_new_tokens),
                 do_sample=False,
                 num_beams=1,
                 pad_token_id=pad_token_id,
             )
-            input_len = inputs["input_ids"].shape[1]
+            input_len = gen_inputs["input_ids"].shape[1]
             gen_suffix = gen_ids[:, input_len:]
             suffixes = processor.batch_decode(gen_suffix, skip_special_tokens=True)
 
