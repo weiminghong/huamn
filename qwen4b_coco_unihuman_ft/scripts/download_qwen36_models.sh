@@ -8,8 +8,8 @@ export HF_ENDPOINT
 
 mkdir -p "${MODEL_ROOT}"
 
-if ! command -v huggingface-cli >/dev/null 2>&1; then
-  echo "huggingface-cli not found. Install it first:"
+if ! command -v hf >/dev/null 2>&1; then
+  echo "hf CLI not found. Install or upgrade it first:"
   echo "  pip install -U huggingface_hub"
   exit 1
 fi
@@ -22,10 +22,9 @@ download_model() {
   echo "Downloading ${repo_id}"
   echo "Target: ${local_dir}"
 
-  huggingface-cli download "${repo_id}" \
+  hf download "${repo_id}" \
     --local-dir "${local_dir}" \
-    --local-dir-use-symlinks False \
-    --resume-download
+    --local-dir-use-symlinks False
 }
 
 download_model "Qwen/Qwen3.6-35B-A3B" "Qwen3.6-35B-A3B"
