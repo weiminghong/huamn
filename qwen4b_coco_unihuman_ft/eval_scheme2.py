@@ -118,19 +118,24 @@ def _clip_box(box: List[float], image_size: Optional[Tuple[int, int]]) -> List[f
 
 def normalize_box_item(item: Any, image_size: Optional[Tuple[int, int]] = None) -> Optional[Dict[str, Any]]:
     if isinstance(item, dict):
-        raw = item.get("bbox_xyxy", item.get("bbox", item.get("box")))
+        raw = item.get("bbox_xyxy", item.get("xyxy", item.get("bbox", item.get("box"))))
         score = _to_float(item.get("score", 1.0))
         person_id = item.get("person_id", None)
+        fmt = str(item.get("bbox_format", item.get("format", ""))).lower()
     else:
         raw = item
         score = 1.0
         person_id = None
+        fmt = ""
     if not isinstance(raw, (list, tuple)) or len(raw) < 4:
         return None
     vals = [_to_float(v) for v in raw[:4]]
     if any(v is None for v in vals):
         return None
     x1, y1, x2, y2 = [float(v) for v in vals]
+    if "xywh" in fmt:
+        x2 = x1 + max(0.0, x2)
+        y2 = y1 + max(0.0, y2)
     if x2 <= x1 or y2 <= y1:
         return None
     out = {
@@ -231,12 +236,55 @@ def normalize_attributes(items: Any) -> List[Dict[str, Any]]:
     return attrs
 
 
+def _is_flat_box(value: Any) -> bool:
+    return (
+        isinstance(value, list)
+        and len(value) >= 4
+        and all(not isinstance(x, (list, tuple, dict)) for x in value[:4])
+    )
+
+
+def _extract_box_items(obj: Dict[str, Any]) -> Any:
+    for key in ("box", "boxes", "bbox", "bboxes", "detections"):
+        value = obj.get(key, None)
+        if _is_flat_box(value):
+            return [value]
+        if isinstance(value, list):
+            return value
+    persons = obj.get("persons", obj.get("person", None))
+    if isinstance(persons, list):
+        return persons
+    return []
+
+
+def _extract_pose_items(obj: Dict[str, Any]) -> Any:
+    for key in ("pose", "poses", "keypoints", "kpts"):
+        value = obj.get(key, None)
+        if isinstance(value, list):
+            return value
+    persons = obj.get("persons", obj.get("person", None))
+    if isinstance(persons, list):
+        return persons
+    return []
+
+
+def _extract_attribute_items(obj: Dict[str, Any]) -> Any:
+    for key in ("attribute", "attributes", "attrs"):
+        value = obj.get(key, None)
+        if isinstance(value, list):
+            return value
+    persons = obj.get("persons", obj.get("person", None))
+    if isinstance(persons, list):
+        return persons
+    return []
+
+
 def normalize_struct(obj: Optional[Dict[str, Any]], image_size: Optional[Tuple[int, int]] = None) -> Dict[str, List[Dict[str, Any]]]:
     obj = obj if isinstance(obj, dict) else {}
     return {
-        "box": normalize_boxes(obj.get("box", []), image_size=image_size),
-        "pose": normalize_poses(obj.get("pose", []), image_size=image_size),
-        "attribute": normalize_attributes(obj.get("attribute", [])),
+        "box": normalize_boxes(_extract_box_items(obj), image_size=image_size),
+        "pose": normalize_poses(_extract_pose_items(obj), image_size=image_size),
+        "attribute": normalize_attributes(_extract_attribute_items(obj)),
     }
 
 

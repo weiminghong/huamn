@@ -239,6 +239,21 @@ def _write_jsonl(path: str, rows: List[Dict[str, Any]]) -> None:
             f.write(json.dumps(row, ensure_ascii=False) + "\n")
 
 
+def _raw_box_candidate_count(obj: Any) -> int:
+    if not isinstance(obj, dict):
+        return 0
+    for key in ("box", "boxes", "bbox", "bboxes", "detections"):
+        value = obj.get(key, None)
+        if isinstance(value, list) and len(value) >= 4 and all(not isinstance(x, (list, tuple, dict)) for x in value[:4]):
+            return 1
+        if isinstance(value, list):
+            return len(value)
+    persons = obj.get("persons", obj.get("person", None))
+    if isinstance(persons, list):
+        return len(persons)
+    return 0
+
+
 def _draw_boxes(draw: ImageDraw.ImageDraw, boxes: List[Dict[str, Any]], color: Tuple[int, int, int], prefix: str) -> None:
     for i, item in enumerate(boxes):
         box = item.get("bbox_xyxy", [])
@@ -331,6 +346,7 @@ def main() -> None:
     out_dir = Path(args.output_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     vis_dir = Path(args.vis_dir) if str(args.vis_dir).strip() else out_dir / "vis"
+    pred_only_vis_dir = out_dir / "vis_pred_only"
     pred_jsonl = Path(args.pred_jsonl) if str(args.pred_jsonl).strip() else out_dir / "predictions.jsonl"
     metrics_json = Path(args.metrics_json) if str(args.metrics_json).strip() else out_dir / "metrics.json"
 
@@ -420,6 +436,8 @@ def main() -> None:
                     "prompt": prompt,
                     "prediction_text": pred_text,
                     "valid_json": obj is not None,
+                    "raw_json_box_count": _raw_box_candidate_count(obj),
+                    "post_box_count": len(pred_struct["box"]),
                     "prediction_struct_post": pred_struct,
                     "gt_struct": gt_struct,
                 }
@@ -436,6 +454,15 @@ def main() -> None:
                         draw_gt=bool(args.draw_gt),
                         draw_pred=bool(args.draw_pred),
                     )
+                    pred_only_path = pred_only_vis_dir / f"{row['id']}_{stem}.jpg"
+                    _save_visualization(
+                        image=image,
+                        gt=gt_struct,
+                        pred=pred_struct,
+                        out_path=str(pred_only_path),
+                        draw_gt=False,
+                        draw_pred=True,
+                    )
 
     _write_jsonl(str(pred_jsonl), pred_rows)
     metrics = evaluate_records_scheme2(
@@ -450,6 +477,7 @@ def main() -> None:
     metrics["output_dir"] = str(out_dir)
     metrics["pred_jsonl"] = str(pred_jsonl)
     metrics["vis_dir"] = str(vis_dir) if bool(args.save_vis) else ""
+    metrics["pred_only_vis_dir"] = str(pred_only_vis_dir) if bool(args.save_vis) else ""
     metrics["num_debug_records"] = len(records)
     match_debug_jsonl = out_dir / "match_debug.jsonl"
     _write_jsonl(str(match_debug_jsonl), metrics.get("per_image", []))

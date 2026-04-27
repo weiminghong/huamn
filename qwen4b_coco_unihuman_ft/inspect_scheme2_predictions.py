@@ -14,6 +14,7 @@ from qwen4b_coco_unihuman_ft.eval_scheme2 import (
     extract_prediction_struct,
     get_record_gt,
     load_jsonl,
+    parse_json_object_from_text,
 )
 
 
@@ -37,6 +38,21 @@ def _best_iou_summary(gt_boxes: List[Dict[str, Any]], pred_boxes: List[Dict[str,
                 best_gt = gi
         rows.append({"pred_index": pi, "best_gt_index": best_gt, "best_iou": best_iou})
     return rows
+
+
+def _raw_box_candidate_count(obj: Any) -> int:
+    if not isinstance(obj, dict):
+        return 0
+    for key in ("box", "boxes", "bbox", "bboxes", "detections"):
+        value = obj.get(key, None)
+        if isinstance(value, list) and len(value) >= 4 and all(not isinstance(x, (list, tuple, dict)) for x in value[:4]):
+            return 1
+        if isinstance(value, list):
+            return len(value)
+    persons = obj.get("persons", obj.get("person", None))
+    if isinstance(persons, list):
+        return len(persons)
+    return 0
 
 
 def parse_args() -> argparse.Namespace:
@@ -68,6 +84,7 @@ def main() -> None:
         image_size = _image_size_from_record(pred_rec) or _image_size_from_record(gt_rec)
         gt = get_record_gt(gt_rec, image_size=image_size)
         pred, valid = extract_prediction_struct(pred_rec, image_size=image_size)
+        raw_obj = parse_json_object_from_text(str(pred_rec.get("prediction_text", "")))
         rows.append(
             {
                 "id": sid,
@@ -75,6 +92,9 @@ def main() -> None:
                 "valid_prediction": valid,
                 "gt_box": len(gt["box"]),
                 "pred_box": len(pred["box"]),
+                "saved_raw_json_box_count": pred_rec.get("raw_json_box_count", None),
+                "saved_post_box_count": pred_rec.get("post_box_count", None),
+                "reparsed_raw_json_box_count": _raw_box_candidate_count(raw_obj),
                 "pred_best_ious": _best_iou_summary(gt["box"], pred["box"]),
                 "prediction_text_head": str(pred_rec.get("prediction_text", ""))[:500],
             }
