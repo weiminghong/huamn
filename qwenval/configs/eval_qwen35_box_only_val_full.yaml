@@ -1,0 +1,32 @@
+jsonl: /home/priv/wmh_project/coco_person/data_test/stage0_eval_val.jsonl
+image_root: /home/priv/wmh_project/coco_person/images
+coco_ann_json: /home/priv/wmh_project/coco_person/person_with_instances.json
+coco_split_txt: /home/priv/wmh_project/coco_person/data_test/val.txt
+
+model_path: /home/priv/project/model/Qwen3.5-9B
+output_dir: /home/priv/wmh_project/coco_person/qwenval_box_only/val_full_4b
+cuda_visible_devices: "0"
+
+max_samples: null
+batch_size: 2
+num_workers: 2
+debug_sample_size: 0
+debug_seed: 42
+debug_print: false
+debug_save_file: ""
+save_vis: false
+vis_dir: /home/priv/wmh_project/coco_person/qwenval_box_only/val_full_4b/vis
+vis_score_thr: 0.0
+draw_gt_box: true
+
+max_length: 4096
+max_new_tokens: 2048
+repair_max_new_tokens: 2048
+fp16: false
+bf16: false
+
+score_thr: 0.0
+nms_iou_thr: 0.5
+max_per_img: 100
+
+skip_coco_eval: false

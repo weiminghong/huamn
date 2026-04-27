@@ -39,3 +39,49 @@ Outputs:
 - `val.jsonl`
 - `test.jsonl`
 - `summary.json`
+
+## Stage0 Box+Pose Eval (Qwen Structured JSON)
+
+### 1) Build Eval JSONL From `person_with_instances.json` + `train/val.txt`
+
+```bash
+python stage0/tools/build_stage0_box_pose_eval_jsonl.py \
+  --ann-json /share2/program/weiminghong/coco/coco_person/person_with_instances.json \
+  --train-txt /share2/program/weiminghong/coco/coco_person/data_test/train.txt \
+  --val-txt /share2/program/weiminghong/coco/coco_person/data_test/val.txt \
+  --output-train-jsonl /share2/program/weiminghong/coco/coco_person/data_test/stage0_eval_train.jsonl \
+  --output-val-jsonl /share2/program/weiminghong/coco/coco_person/data_test/stage0_eval_val.jsonl
+```
+
+Or use YAML config:
+
+```bash
+python stage0/tools/build_stage0_box_pose_eval_jsonl.py \
+  --config stage0/configs/build_stage0_box_pose_eval.yaml
+```
+
+### 2) Run Box+Pose Evaluation On Val
+
+```bash
+python stage0/tools/eval_stage0_box_pose_qwenvl.py \
+  --jsonl /share2/program/weiminghong/coco/coco_person/data_test/stage0_eval_val.jsonl \
+  --image-root /share2/program/weiminghong/coco/coco_person/images \
+  --model-path /share2/program/models/Qwen3.5-4B \
+  --output-dir stage0/outputs/box_pose_eval_val \
+  --eval-iou-thr 0.5 \
+  --coco-ann-json /share2/program/weiminghong/coco/coco_person/person_with_instances.json \
+  --coco-split-txt /share2/program/weiminghong/coco/coco_person/data_test/val.txt \
+  --pose-pck-thr 0.2 \
+  --batch-size 1
+```
+
+Or use YAML config (GPU 3):
+
+```bash
+python stage0/tools/eval_stage0_box_pose_qwenvl.py \
+  --config stage0/configs/eval_stage0_box_pose_qwen35_val_gpu3.yaml
+```
+
+Main outputs:
+- `predictions.jsonl`
+- `metrics.json`

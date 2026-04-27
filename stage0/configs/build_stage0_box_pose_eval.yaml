@@ -1,0 +1,6 @@
+ann_json: /share2/program/weiminghong/coco/coco_person/person_with_instances.json
+train_txt: /share2/program/weiminghong/coco/coco_person/data_test/train.txt
+val_txt: /share2/program/weiminghong/coco/coco_person/data_test/val.txt
+output_train_jsonl: /share2/program/weiminghong/coco/coco_person/data_test/stage0_eval_train.jsonl
+output_val_jsonl: /share2/program/weiminghong/coco/coco_person/data_test/stage0_eval_val.jsonl
+skip_empty_images: false

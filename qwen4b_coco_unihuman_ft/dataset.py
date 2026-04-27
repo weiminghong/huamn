@@ -1,0 +1,104 @@
+import json
+import os
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+import torch
+from PIL import Image
+from torch.utils.data import Dataset
+
+from .prompts import build_box_pose_attribute_prompt
+
+
+def load_jsonl(path: str) -> List[Dict[str, Any]]:
+    records: List[Dict[str, Any]] = []
+    with open(path, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            records.append(json.loads(line))
+    return records
+
+
+class CocoUniHumanSFTDataset(Dataset):
+    def __init__(
+        self,
+        jsonl_path: str,
+        image_root: Optional[str] = None,
+        max_samples: Optional[int] = None,
+        extra_prompt: Optional[str] = None,
+    ) -> None:
+        self.records = load_jsonl(jsonl_path)
+        if max_samples is not None:
+            self.records = self.records[: int(max_samples)]
+        self.image_root = image_root
+        self.extra_prompt = extra_prompt
+
+    def __len__(self) -> int:
+        return len(self.records)
+
+    def _resolve_image_path(self, image_path: str) -> str:
+        p = Path(image_path)
+        if p.is_absolute():
+            return str(p)
+        if self.image_root:
+            return str(Path(self.image_root) / image_path)
+        return str(p)
+
+    def __getitem__(self, idx: int) -> Dict[str, Any]:
+        rec = self.records[idx]
+        image_path = self._resolve_image_path(str(rec["image"]))
+        if not os.path.isfile(image_path):
+            raise FileNotFoundError(f"Image not found: {image_path}")
+
+        image = Image.open(image_path).convert("RGB")
+        prompt = build_box_pose_attribute_prompt(self.extra_prompt)
+        target_text = rec.get("target_text", "")
+        if not target_text:
+            payload = {
+                "box": rec.get("box", []),
+                "pose": rec.get("pose", []),
+                "attribute": rec.get("attribute", []),
+            }
+            target_text = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+
+        return {
+            "id": rec.get("id", str(idx)),
+            "image": image,
+            "image_path": image_path,
+            "prompt": prompt,
+            "target_text": target_text,
+        }
+
+
+class SFTCollator:
+    def __init__(self, processor, tokenizer, max_length: int) -> None:
+        self.processor = processor
+        self.tokenizer = tokenizer
+        self.max_length = int(max_length)
+
+    def __call__(self, samples: List[Dict[str, Any]]) -> Dict[str, torch.Tensor]:
+        prompts = [s["prompt"] + "\n" for s in samples]
+        targets = [s["target_text"] for s in samples]
+        texts = [p + t for p, t in zip(prompts, targets)]
+        images = [s["image"] for s in samples]
+
+        batch = self.processor(
+            text=texts,
+            images=images,
+            return_tensors="pt",
+            padding=True,
+            truncation=True,
+            max_length=self.max_length,
+        )
+        labels = batch["input_ids"].clone()
+        prefix_lens = [
+            len(self.tokenizer(p, add_special_tokens=False).input_ids) for p in prompts
+        ]
+        for i, plen in enumerate(prefix_lens):
+            labels[i, : min(plen, labels.shape[1])] = -100
+        if "attention_mask" in batch:
+            labels[batch["attention_mask"] == 0] = -100
+        batch["labels"] = labels
+        return batch
