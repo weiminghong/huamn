@@ -80,7 +80,7 @@ def parse_args() -> argparse.Namespace:
         description="Debug inference, scheme-2 eval, and visualization for box+pose+attribute VLM outputs."
     )
     parser.add_argument("--config", type=str, default="")
-    parser.add_argument("--model-name-or-path", type=str, default="/home/priv/project/model/Qwen2.5-VL-3B-Instruct")
+    parser.add_argument("--model-name-or-path", type=str, default="/home/priv/project/model/Qwen3.5-4B")
     parser.add_argument("--adapter-path", type=str, default="", help="Optional LoRA/PEFT adapter checkpoint path.")
     parser.add_argument("--jsonl", type=str, default="")
     parser.add_argument("--image-root", type=str, default="")
