@@ -1,4 +1,4 @@
-model_name_or_path: "/home/priv/project/model/Qwen2.5-VL-3B-Instruct"
+model_name_or_path: "/home/priv/project/model/Qwen3.5-4B"
 adapter_path: ""
 
 # Use val.jsonl after running run_prepare_server_data.sh with VAL_IMAGE_ROOT=/home/priv/wmh_project/coco_person/val/val2017.
