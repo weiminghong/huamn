@@ -4,6 +4,8 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
+from qwen4b_coco_unihuman_ft.prompts import build_box_pose_attribute_prompt
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
@@ -68,12 +70,75 @@ def _dump_jsonl(path: str, records: List[Dict[str, Any]]) -> None:
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
 
 
+def _norm_x(x: Any, width: int) -> int:
+    if width <= 0:
+        return 0
+    return int(round(max(0.0, min(float(x), float(width - 1))) / float(width) * 1000.0))
+
+
+def _norm_y(y: Any, height: int) -> int:
+    if height <= 0:
+        return 0
+    return int(round(max(0.0, min(float(y), float(height - 1))) / float(height) * 1000.0))
+
+
+def _attrs_by_person_id(attrs: List[Dict[str, Any]]) -> Dict[Any, Dict[str, Any]]:
+    return {item.get("person_id"): item for item in attrs if isinstance(item, dict)}
+
+
+def _poses_by_person_id(poses: List[Dict[str, Any]]) -> Dict[Any, Dict[str, Any]]:
+    return {item.get("person_id"): item for item in poses if isinstance(item, dict)}
+
+
+def _norm_pose_17(pose: Optional[Dict[str, Any]], width: int, height: int) -> List[List[int]]:
+    raw = pose.get("keypoints", []) if isinstance(pose, dict) else []
+    out: List[List[int]] = []
+    keypoints = raw[:17] if isinstance(raw, list) else []
+    for kp in keypoints:
+        if not isinstance(kp, list) or len(kp) < 3:
+            out.append([0, 0, 0])
+            continue
+        v = int(round(float(kp[2])))
+        if v <= 0:
+            out.append([0, 0, 0])
+        else:
+            out.append([_norm_x(kp[0], width), _norm_y(kp[1], height), 2 if v > 1 else 1])
+    while len(out) < 17:
+        out.append([0, 0, 0])
+    return out[:17]
+
+
 def _build_target_text(record: Dict[str, Any]) -> str:
-    payload = {
-        "box": record.get("box", []),
-        "pose": record.get("pose", []),
-        "attribute": record.get("attribute", []),
-    }
+    width = int(record.get("width", 0))
+    height = int(record.get("height", 0))
+    poses_by_pid = _poses_by_person_id(record.get("pose", []))
+    attrs_by_pid = _attrs_by_person_id(record.get("attribute", []))
+    persons: List[Dict[str, Any]] = []
+    for box_item in record.get("box", []):
+        if not isinstance(box_item, dict):
+            continue
+        bbox = box_item.get("bbox_xyxy", [])
+        if not isinstance(bbox, list) or len(bbox) < 4:
+            continue
+        pid = box_item.get("person_id", len(persons) + 1)
+        attr = attrs_by_pid.get(pid, {})
+        person = {
+            "person_id": pid,
+            "bbox_2d": [
+                _norm_x(bbox[0], width),
+                _norm_y(bbox[1], height),
+                _norm_x(bbox[2], width),
+                _norm_y(bbox[3], height),
+            ],
+            "bbox_format": "norm_xyxy_1000",
+            "keypoints_2d": _norm_pose_17(poses_by_pid.get(pid), width, height),
+            "keypoint_format": "norm_xyv_1000",
+            "gender": int(attr.get("gender", -1)) if isinstance(attr, dict) else -1,
+            "age": int(round(float(attr.get("age", -1)))) if isinstance(attr, dict) and "age" in attr else -1,
+            "score": 1.0,
+        }
+        persons.append(person)
+    payload = {"persons": persons}
     return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
 
 
@@ -247,20 +312,14 @@ def _convert_payload(payload: Dict[str, Any], image_root: str, skip_missing_imag
 
 def _to_swift_records(records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     swift_records: List[Dict[str, Any]] = []
+    prompt = build_box_pose_attribute_prompt()
     for rec in records:
         target_text = rec.get("target_text", _build_target_text(rec))
         image_path = rec.get("image_abs", rec.get("image", ""))
         swift_records.append(
             {
                 "messages": [
-                    {
-                        "role": "user",
-                        "content": (
-                            "<image>\n"
-                            "Detect all persons and output JSON only with fields box, pose, attribute. "
-                            "Use person_id to align results across fields."
-                        ),
-                    },
+                    {"role": "user", "content": prompt},
                     {"role": "assistant", "content": target_text},
                 ],
                 "images": [image_path],

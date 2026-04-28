@@ -7,6 +7,7 @@ import torch
 from PIL import Image
 from torch.utils.data import Dataset
 
+from .convert_coco_unihuman import _build_target_text
 from .prompts import build_box_pose_attribute_prompt
 
 
@@ -48,7 +49,7 @@ class CocoUniHumanSFTDataset(Dataset):
 
     def __getitem__(self, idx: int) -> Dict[str, Any]:
         rec = self.records[idx]
-        image_path = self._resolve_image_path(str(rec["image"]))
+        image_path = self._resolve_image_path(str(rec.get("image_abs", rec["image"])))
         if not os.path.isfile(image_path):
             raise FileNotFoundError(f"Image not found: {image_path}")
 
@@ -56,12 +57,7 @@ class CocoUniHumanSFTDataset(Dataset):
         prompt = build_box_pose_attribute_prompt(self.extra_prompt)
         target_text = rec.get("target_text", "")
         if not target_text:
-            payload = {
-                "box": rec.get("box", []),
-                "pose": rec.get("pose", []),
-                "attribute": rec.get("attribute", []),
-            }
-            target_text = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+            target_text = _build_target_text(rec)
 
         return {
             "id": rec.get("id", str(idx)),

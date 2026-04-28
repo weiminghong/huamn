@@ -116,9 +116,14 @@ def _clip_box(box: List[float], image_size: Optional[Tuple[int, int]]) -> List[f
     return [x1, y1, x2, y2]
 
 
+def _is_norm_1000_format(fmt: str) -> bool:
+    fmt = str(fmt).lower()
+    return "norm" in fmt or "1000" in fmt
+
+
 def normalize_box_item(item: Any, image_size: Optional[Tuple[int, int]] = None) -> Optional[Dict[str, Any]]:
     if isinstance(item, dict):
-        raw = item.get("bbox_xyxy", item.get("xyxy", item.get("bbox", item.get("box"))))
+        raw = item.get("bbox_2d", item.get("bbox_xyxy", item.get("xyxy", item.get("bbox", item.get("box")))))
         score = _to_float(item.get("score", 1.0))
         person_id = item.get("person_id", None)
         fmt = str(item.get("bbox_format", item.get("format", ""))).lower()
@@ -136,6 +141,12 @@ def normalize_box_item(item: Any, image_size: Optional[Tuple[int, int]] = None) 
     if "xywh" in fmt:
         x2 = x1 + max(0.0, x2)
         y2 = y1 + max(0.0, y2)
+    if image_size is not None and _is_norm_1000_format(fmt):
+        w, h = image_size
+        x1 = x1 / 1000.0 * float(w)
+        x2 = x2 / 1000.0 * float(w)
+        y1 = y1 / 1000.0 * float(h)
+        y2 = y2 / 1000.0 * float(h)
     if x2 <= x1 or y2 <= y1:
         return None
     out = {
@@ -159,13 +170,15 @@ def normalize_boxes(items: Any, image_size: Optional[Tuple[int, int]] = None) ->
 
 def normalize_pose_item(item: Any, image_size: Optional[Tuple[int, int]] = None) -> Optional[Dict[str, Any]]:
     if isinstance(item, dict):
-        raw = item.get("keypoints", item.get("kpts", []))
+        raw = item.get("keypoints_2d", item.get("keypoints", item.get("kpts", [])))
         score = _to_float(item.get("score", 1.0))
         person_id = item.get("person_id", None)
+        fmt = str(item.get("keypoint_format", item.get("kpt_format", item.get("format", "")))).lower()
     else:
         raw = item
         score = 1.0
         person_id = None
+        fmt = ""
 
     triplets: List[List[float]] = []
     if isinstance(raw, list) and raw and all(not isinstance(x, (list, tuple)) for x in raw):
@@ -195,6 +208,9 @@ def normalize_pose_item(item: Any, image_size: Optional[Tuple[int, int]] = None)
         for kp in triplets:
             if kp[2] <= 0:
                 continue
+            if _is_norm_1000_format(fmt):
+                kp[0] = kp[0] / 1000.0 * float(w)
+                kp[1] = kp[1] / 1000.0 * float(h)
             kp[0] = max(0.0, min(kp[0], float(max(0, w - 1))))
             kp[1] = max(0.0, min(kp[1], float(max(0, h - 1))))
     return {
@@ -225,15 +241,163 @@ def normalize_attributes(items: Any) -> List[Dict[str, Any]]:
         out: Dict[str, Any] = {"person_id": item.get("person_id", None)}
         if "gender" in item:
             g = _to_float(item.get("gender"))
-            if g is not None:
+            if g is not None and int(round(g)) in (0, 1):
                 out["gender"] = int(round(g))
         if "age" in item:
             a = _to_float(item.get("age"))
-            if a is not None:
+            if a is not None and a >= 0:
                 out["age"] = float(a)
         if len(out) > 1:
             attrs.append(out)
     return attrs
+
+
+def _zero_pose_17() -> List[List[float]]:
+    return [[0.0, 0.0, 0.0] for _ in range(17)]
+
+
+def _align_box_pose(struct_obj: Dict[str, Any]) -> Dict[str, Any]:
+    boxes = struct_obj.get("box", [])
+    poses = struct_obj.get("pose", [])
+    if not isinstance(boxes, list):
+        boxes = []
+    if not isinstance(poses, list):
+        poses = []
+
+    aligned_poses: List[Dict[str, Any]] = []
+    for i, box_item in enumerate(boxes):
+        score = 1.0
+        if isinstance(box_item, dict):
+            score = _to_float(box_item.get("score", 1.0)) or 1.0
+        if i < len(poses) and isinstance(poses[i], dict):
+            kpts = poses[i].get("keypoints", [])
+            if isinstance(kpts, list) and len(kpts) == 17:
+                aligned_poses.append({"person_id": box_item.get("person_id") if isinstance(box_item, dict) else None, "keypoints": kpts, "score": score})
+                continue
+        aligned_poses.append({"person_id": box_item.get("person_id") if isinstance(box_item, dict) else None, "keypoints": _zero_pose_17(), "score": score})
+    return {"box": boxes, "pose": aligned_poses, "attribute": struct_obj.get("attribute", []) if isinstance(struct_obj.get("attribute", []), list) else []}
+
+
+def _truncate_to_answer(text: str) -> str:
+    if not isinstance(text, str) or not text:
+        return ""
+    start_m = re.search(r"<answer>", text, flags=re.IGNORECASE)
+    if start_m:
+        text = text[start_m.start():]
+    end_m = re.search(r"</answer>", text, flags=re.IGNORECASE)
+    if end_m:
+        text = text[: end_m.end()]
+    return text
+
+
+def parse_tag_struct(text: str, image_size: Optional[Tuple[int, int]] = None) -> Optional[Dict[str, Any]]:
+    if not text:
+        return None
+    if "No person detected" in text:
+        return {"box": [], "pose": [], "attribute": []}
+    if image_size is None:
+        return None
+
+    text = _truncate_to_answer(text)
+    width, height = image_size
+    person_blobs = re.split(r"<person>", text, flags=re.IGNORECASE)[1:]
+    if not person_blobs:
+        return None
+
+    boxes: List[Dict[str, Any]] = []
+    poses: List[Dict[str, Any]] = []
+    attrs: List[Dict[str, Any]] = []
+    num_pattern = r"-?(?:\d+\.\d+|\d+|\.\d+)"
+    for person_id, blob in enumerate(person_blobs, start=1):
+        score = 1.0
+        m_score = re.search(r"<score>\s*([0-9]*\.?[0-9]+)", blob, flags=re.IGNORECASE)
+        if m_score:
+            score = _to_float(m_score.group(1)) or 1.0
+        score = max(0.0, min(score, 1.0))
+
+        m_box = re.search(r"<box>(.*?)(?:</box>|$)", blob, flags=re.DOTALL | re.IGNORECASE)
+        if m_box is None:
+            continue
+        box_nums = re.findall(num_pattern, m_box.group(1))
+        if len(box_nums) < 4:
+            continue
+        try:
+            x1_norm, y1_norm, x2_norm, y2_norm = [float(n) for n in box_nums[:4]]
+        except Exception:
+            continue
+        x1 = max(0.0, min((x1_norm / 1000.0) * width, width - 1))
+        y1 = max(0.0, min((y1_norm / 1000.0) * height, height - 1))
+        x2 = max(0.0, min((x2_norm / 1000.0) * width, width - 1))
+        y2 = max(0.0, min((y2_norm / 1000.0) * height, height - 1))
+        if x2 <= x1 or y2 <= y1:
+            continue
+
+        boxes.append({"person_id": person_id, "bbox_xyxy": [x1, y1, x2, y2], "score": score})
+
+        m_pose = re.search(r"<pose>(.*?)(?:</pose>|$)", blob, flags=re.DOTALL | re.IGNORECASE)
+        kpts: List[List[float]] = []
+        if m_pose is not None:
+            pose_nums = re.findall(num_pattern, m_pose.group(1))
+            if len(pose_nums) >= 51:
+                for i in range(17):
+                    try:
+                        x_n = float(pose_nums[i * 3])
+                        y_n = float(pose_nums[i * 3 + 1])
+                        v_n = int(round(float(pose_nums[i * 3 + 2])))
+                    except Exception:
+                        x_n, y_n, v_n = 0.0, 0.0, 0
+                    if x_n == 0 and y_n == 0 and v_n == 0:
+                        kpts.append([0.0, 0.0, 0.0])
+                    else:
+                        x = max(0.0, min((x_n / 1000.0) * width, width - 1))
+                        y = max(0.0, min((y_n / 1000.0) * height, height - 1))
+                        if v_n not in (0, 1, 2):
+                            v_n = 0
+                        kpts.append([x, y, float(v_n)])
+            elif len(pose_nums) >= 34:
+                for i in range(17):
+                    try:
+                        x_n = float(pose_nums[i * 2])
+                        y_n = float(pose_nums[i * 2 + 1])
+                    except Exception:
+                        x_n, y_n = 0.0, 0.0
+                    if x_n == 0 and y_n == 0:
+                        kpts.append([0.0, 0.0, 0.0])
+                    else:
+                        x = max(0.0, min((x_n / 1000.0) * width, width - 1))
+                        y = max(0.0, min((y_n / 1000.0) * height, height - 1))
+                        kpts.append([x, y, 2.0])
+
+        poses.append({"person_id": person_id, "keypoints": kpts if len(kpts) == 17 else _zero_pose_17(), "score": score})
+        attr_item: Dict[str, Any] = {"person_id": person_id}
+
+        m_gender = re.search(r"<gender>(.*?)(?:</gender>|$)", blob, flags=re.DOTALL | re.IGNORECASE)
+        if m_gender is not None:
+            gender_text = m_gender.group(1).strip().lower()
+            gender_val: Optional[int] = None
+            if gender_text in ("male", "man", "m"):
+                gender_val = 0
+            elif gender_text in ("female", "woman", "f"):
+                gender_val = 1
+            else:
+                gender_num = _to_float(gender_text)
+                if gender_num is not None:
+                    gender_val = int(round(gender_num))
+            if gender_val in (0, 1):
+                attr_item["gender"] = gender_val
+
+        m_age = re.search(r"<age>(.*?)(?:</age>|$)", blob, flags=re.DOTALL | re.IGNORECASE)
+        if m_age is not None:
+            age_nums = re.findall(num_pattern, m_age.group(1))
+            if age_nums:
+                age_val = _to_float(age_nums[0])
+                if age_val is not None and age_val >= 0:
+                    attr_item["age"] = float(age_val)
+
+        if len(attr_item) > 1:
+            attrs.append(attr_item)
+
+    return _align_box_pose({"box": boxes, "pose": poses, "attribute": attrs}) if boxes else None
 
 
 def _is_flat_box(value: Any) -> bool:
@@ -294,7 +458,11 @@ def extract_prediction_struct(record: Dict[str, Any], image_size: Optional[Tuple
         if isinstance(obj, dict):
             return normalize_struct(obj, image_size=image_size), True
     for key in ("prediction_text", "text", "response", "output"):
-        obj = parse_json_object_from_text(str(record.get(key, "")))
+        text = str(record.get(key, ""))
+        tag_obj = parse_tag_struct(text, image_size=image_size)
+        if tag_obj is not None:
+            return normalize_struct(tag_obj, image_size=image_size), True
+        obj = parse_json_object_from_text(text)
         if obj is not None:
             return normalize_struct(obj, image_size=image_size), True
     return normalize_struct(None, image_size=image_size), False

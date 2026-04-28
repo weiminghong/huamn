@@ -1,5 +1,6 @@
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -55,6 +56,20 @@ def _raw_box_candidate_count(obj: Any) -> int:
     return 0
 
 
+def _raw_tag_box_candidate_count(text: str) -> int:
+    if not isinstance(text, str) or not text:
+        return 0
+    return len(re.findall(r"<box>.*?(?:</box>|$)", text, flags=re.DOTALL | re.IGNORECASE))
+
+
+def _raw_tag_attr_candidate_count(text: str) -> int:
+    if not isinstance(text, str) or not text:
+        return 0
+    genders = len(re.findall(r"<gender>.*?(?:</gender>|$)", text, flags=re.DOTALL | re.IGNORECASE))
+    ages = len(re.findall(r"<age>.*?(?:</age>|$)", text, flags=re.DOTALL | re.IGNORECASE))
+    return max(genders, ages)
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Inspect parsed predictions and scheme-2 matching.")
     parser.add_argument("--gt-jsonl", type=str, required=True)
@@ -93,8 +108,13 @@ def main() -> None:
                 "gt_box": len(gt["box"]),
                 "pred_box": len(pred["box"]),
                 "saved_raw_json_box_count": pred_rec.get("raw_json_box_count", None),
+                "saved_raw_tag_box_count": pred_rec.get("raw_tag_box_count", None),
                 "saved_post_box_count": pred_rec.get("post_box_count", None),
+                "saved_raw_tag_attr_count": pred_rec.get("raw_tag_attr_count", None),
+                "saved_post_attr_count": pred_rec.get("post_attr_count", None),
                 "reparsed_raw_json_box_count": _raw_box_candidate_count(raw_obj),
+                "reparsed_raw_tag_box_count": _raw_tag_box_candidate_count(str(pred_rec.get("prediction_text", ""))),
+                "reparsed_raw_tag_attr_count": _raw_tag_attr_candidate_count(str(pred_rec.get("prediction_text", ""))),
                 "pred_best_ious": _best_iou_summary(gt["box"], pred["box"]),
                 "prediction_text_head": str(pred_rec.get("prediction_text", ""))[:500],
             }

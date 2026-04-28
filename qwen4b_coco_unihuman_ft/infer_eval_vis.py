@@ -3,6 +3,7 @@ import inspect
 import json
 import os
 import random
+import re
 import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -102,6 +103,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--fp16", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--assistant-prefix", type=str, default="")
     parser.add_argument("--extra-prompt", type=str, default="")
+    parser.add_argument("--prompt-format", type=str, default="json", choices=["json"])
     parser.add_argument("--iou-thr", type=float, default=0.5)
     parser.add_argument("--pck-thr", type=float, default=0.2)
     parser.add_argument("--save-vis", action=argparse.BooleanOptionalAction, default=True)
@@ -201,13 +203,13 @@ def _filter_generate_inputs(model, inputs: Dict[str, Any]) -> Dict[str, Any]:
     return {k: v for k, v in inputs.items() if k in keys}
 
 
-def _build_chat_text(processor, image_path: str, prompt: str, assistant_prefix: str) -> str:
+def _build_chat_text(processor, prompt: str, assistant_prefix: str) -> str:
     if hasattr(processor, "apply_chat_template"):
         messages = [
             {
                 "role": "user",
                 "content": [
-                    {"type": "image", "image": image_path},
+                    {"type": "image"},
                     {"type": "text", "text": prompt},
                 ],
             }
@@ -252,6 +254,20 @@ def _raw_box_candidate_count(obj: Any) -> int:
     if isinstance(persons, list):
         return len(persons)
     return 0
+
+
+def _raw_tag_box_candidate_count(text: str) -> int:
+    if not isinstance(text, str) or not text:
+        return 0
+    return len(re.findall(r"<box>.*?(?:</box>|$)", text, flags=re.DOTALL | re.IGNORECASE))
+
+
+def _raw_tag_attr_candidate_count(text: str) -> int:
+    if not isinstance(text, str) or not text:
+        return 0
+    genders = len(re.findall(r"<gender>.*?(?:</gender>|$)", text, flags=re.DOTALL | re.IGNORECASE))
+    ages = len(re.findall(r"<age>.*?(?:</age>|$)", text, flags=re.DOTALL | re.IGNORECASE))
+    return max(genders, ages)
 
 
 def _draw_boxes(draw: ImageDraw.ImageDraw, boxes: List[Dict[str, Any]], color: Tuple[int, int, int], prefix: str) -> None:
@@ -390,6 +406,7 @@ def main() -> None:
         model.generation_config.eos_token_id = eos_token_id
 
     prompt = build_box_pose_attribute_prompt(str(args.extra_prompt).strip() or None)
+    assistant_prefix = str(args.assistant_prefix)
     pred_rows: List[Dict[str, Any]] = []
 
     with torch.no_grad():
@@ -404,7 +421,7 @@ def main() -> None:
                 image = Image.open(image_path).convert("RGB")
                 image_paths.append(image_path)
                 images.append(image)
-                texts.append(_build_chat_text(processor, image_path, prompt, str(args.assistant_prefix)))
+                texts.append(_build_chat_text(processor, prompt, assistant_prefix))
 
             inputs = _make_inputs(processor, texts, images, max_length=int(args.max_length))
             for k, v in inputs.items():
@@ -423,10 +440,11 @@ def main() -> None:
             suffixes = processor.batch_decode(gen_suffix, skip_special_tokens=True)
 
             for rec, image, image_path, suffix in zip(batch_records, images, image_paths, suffixes):
-                pred_text = str(args.assistant_prefix) + suffix
-                obj = parse_json_object_from_text(pred_text)
+                pred_text = assistant_prefix + suffix
                 image_size = image.size
+                obj = parse_json_object_from_text(pred_text)
                 pred_struct = normalize_struct(obj, image_size=image_size)
+                parsed_from = "json" if obj is not None else "none"
                 gt_struct = get_record_gt(rec, image_size=image_size)
                 row = {
                     "id": str(rec.get("id", "")),
@@ -434,10 +452,16 @@ def main() -> None:
                     "image_path": image_path,
                     "image_size": [image_size[0], image_size[1]],
                     "prompt": prompt,
+                    "prompt_format": str(args.prompt_format),
+                    "parsed_from": parsed_from,
                     "prediction_text": pred_text,
                     "valid_json": obj is not None,
+                    "valid_struct": parsed_from != "none",
                     "raw_json_box_count": _raw_box_candidate_count(obj),
+                    "raw_tag_box_count": _raw_tag_box_candidate_count(pred_text),
                     "post_box_count": len(pred_struct["box"]),
+                    "raw_tag_attr_count": _raw_tag_attr_candidate_count(pred_text),
+                    "post_attr_count": len(pred_struct["attribute"]),
                     "prediction_struct_post": pred_struct,
                     "gt_struct": gt_struct,
                 }
