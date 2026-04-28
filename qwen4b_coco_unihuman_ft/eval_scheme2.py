@@ -302,6 +302,8 @@ def parse_tag_struct(text: str, image_size: Optional[Tuple[int, int]] = None) ->
     width, height = image_size
     person_blobs = re.split(r"<person>", text, flags=re.IGNORECASE)[1:]
     if not person_blobs:
+        if re.search(r"<answer>\s*</answer>", text, flags=re.DOTALL | re.IGNORECASE):
+            return {"box": [], "pose": [], "attribute": []}
         return None
 
     boxes: List[Dict[str, Any]] = []
@@ -453,6 +455,8 @@ def normalize_struct(obj: Optional[Dict[str, Any]], image_size: Optional[Tuple[i
 
 
 def extract_prediction_struct(record: Dict[str, Any], image_size: Optional[Tuple[int, int]] = None) -> Tuple[Dict[str, Any], bool]:
+    if record.get("valid_struct", True) is False:
+        return normalize_struct(None, image_size=image_size), False
     for key in ("prediction_struct_post", "prediction_struct_raw", "prediction", "pred"):
         obj = record.get(key, None)
         if isinstance(obj, dict):

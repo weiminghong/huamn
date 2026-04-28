@@ -108,38 +108,49 @@ def _norm_pose_17(pose: Optional[Dict[str, Any]], width: int, height: int) -> Li
     return out[:17]
 
 
+def _format_tag_pose(keypoints: List[List[int]]) -> str:
+    return ", ".join(f"[{int(kp[0])}, {int(kp[1])}, {int(kp[2])}]" for kp in keypoints[:17])
+
+
 def _build_target_text(record: Dict[str, Any]) -> str:
     width = int(record.get("width", 0))
     height = int(record.get("height", 0))
     poses_by_pid = _poses_by_person_id(record.get("pose", []))
     attrs_by_pid = _attrs_by_person_id(record.get("attribute", []))
-    persons: List[Dict[str, Any]] = []
+    person_blocks: List[str] = []
     for box_item in record.get("box", []):
         if not isinstance(box_item, dict):
             continue
         bbox = box_item.get("bbox_xyxy", [])
         if not isinstance(bbox, list) or len(bbox) < 4:
             continue
-        pid = box_item.get("person_id", len(persons) + 1)
+        pid = box_item.get("person_id", len(person_blocks) + 1)
         attr = attrs_by_pid.get(pid, {})
-        person = {
-            "person_id": pid,
-            "bbox_2d": [
-                _norm_x(bbox[0], width),
-                _norm_y(bbox[1], height),
-                _norm_x(bbox[2], width),
-                _norm_y(bbox[3], height),
-            ],
-            "bbox_format": "norm_xyxy_1000",
-            "keypoints_2d": _norm_pose_17(poses_by_pid.get(pid), width, height),
-            "keypoint_format": "norm_xyv_1000",
-            "gender": int(attr.get("gender", -1)) if isinstance(attr, dict) else -1,
-            "age": int(round(float(attr.get("age", -1)))) if isinstance(attr, dict) and "age" in attr else -1,
-            "score": 1.0,
-        }
-        persons.append(person)
-    payload = {"persons": persons}
-    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+        box = [
+            _norm_x(bbox[0], width),
+            _norm_y(bbox[1], height),
+            _norm_x(bbox[2], width),
+            _norm_y(bbox[3], height),
+        ]
+        pose = _norm_pose_17(poses_by_pid.get(pid), width, height)
+        gender = int(attr.get("gender", -1)) if isinstance(attr, dict) else -1
+        age = int(round(float(attr.get("age", -1)))) if isinstance(attr, dict) and "age" in attr else -1
+        person_blocks.append(
+            "\n".join(
+                [
+                    "<person>",
+                    f"<box>[{box[0]}, {box[1]}, {box[2]}, {box[3]}]</box>",
+                    f"<pose>{_format_tag_pose(pose)}</pose>",
+                    f"<gender>{gender}</gender>",
+                    f"<age>{age}</age>",
+                    "<score>1.0</score>",
+                    "</person>",
+                ]
+            )
+        )
+    if not person_blocks:
+        return "<answer></answer>"
+    return "<answer>\n" + "\n".join(person_blocks) + "\n</answer>"
 
 
 def _read_json(path: str) -> Dict[str, Any]:

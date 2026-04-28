@@ -10,20 +10,24 @@ It intentionally does not train segmentation/parsing.
 
 ## Data Format
 
-The converted JSONL records use this target format:
+The converted JSONL records store normalized internal annotations, and SFT targets are emitted as tag-only text:
 
-```json
-{
-  "box": [{"person_id": 1, "bbox_xyxy": [x1, y1, x2, y2]}],
-  "pose": [{"person_id": 1, "keypoints": [[x, y, v]]}],
-  "attribute": [{"person_id": 1, "gender": 0, "age": 25}]
-}
+```xml
+<answer>
+<person>
+<box>[120, 250, 480, 820]</box>
+<pose>[250, 300, 2], ... exactly 17 keypoints ...</pose>
+<gender>0</gender>
+<age>25</age>
+<score>1.0</score>
+</person>
+</answer>
 ```
 
 Notes:
 
-- Coordinates are original-image pixel coordinates.
-- `bbox_xyxy` is `[x1, y1, x2, y2]`.
+- Target text coordinates are normalized to `[0,1000]`.
+- `bbox_xyxy` remains the evaluator's internal pixel-coordinate field after parsing.
 - `keypoints` use COCO-17 order.
 - `gender` follows COCO-UniHuman coding in this project: `0=male`, `1=female`.
 - `person_id` only aligns the three text fields. Evaluation still matches people by IoU, not by output order.
@@ -74,6 +78,7 @@ Outputs:
 
 - `predictions.jsonl`: raw text and parsed structure
 - `metrics.json`: scheme-2 metrics with per-image debug details
+- `tag_parse_success_rate`: share of predictions parsed from `<answer>` tags
 - `vis/`: GT and prediction visualization
 
 Visualization colors:

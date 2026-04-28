@@ -18,7 +18,7 @@ bf16: true
 fp16: false
 assistant_prefix: ""
 extra_prompt: null
-prompt_format: json
+prompt_format: tag
 
 iou_thr: 0.5
 pck_thr: 0.2

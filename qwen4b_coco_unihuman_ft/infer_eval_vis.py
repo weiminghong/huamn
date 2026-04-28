@@ -33,6 +33,7 @@ from qwen4b_coco_unihuman_ft.eval_scheme2 import (  # noqa: E402
     load_jsonl,
     normalize_struct,
     parse_json_object_from_text,
+    parse_tag_struct,
 )
 from qwen4b_coco_unihuman_ft.prompts import build_box_pose_attribute_prompt  # noqa: E402
 
@@ -103,7 +104,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--fp16", action=argparse.BooleanOptionalAction, default=False)
     parser.add_argument("--assistant-prefix", type=str, default="")
     parser.add_argument("--extra-prompt", type=str, default="")
-    parser.add_argument("--prompt-format", type=str, default="json", choices=["json"])
+    parser.add_argument("--prompt-format", type=str, default="tag", choices=["tag", "json"])
     parser.add_argument("--iou-thr", type=float, default=0.5)
     parser.add_argument("--pck-thr", type=float, default=0.2)
     parser.add_argument("--save-vis", action=argparse.BooleanOptionalAction, default=True)
@@ -270,6 +271,16 @@ def _raw_tag_attr_candidate_count(text: str) -> int:
     return max(genders, ages)
 
 
+def _parse_prediction_text(text: str, image_size: Tuple[int, int]) -> Tuple[Dict[str, Any], str, Optional[Dict[str, Any]]]:
+    tag_obj = parse_tag_struct(text, image_size=image_size)
+    if tag_obj is not None:
+        return normalize_struct(tag_obj, image_size=image_size), "tag", None
+    json_obj = parse_json_object_from_text(text)
+    if json_obj is not None:
+        return normalize_struct(json_obj, image_size=image_size), "json", json_obj
+    return normalize_struct(None, image_size=image_size), "none", None
+
+
 def _draw_boxes(draw: ImageDraw.ImageDraw, boxes: List[Dict[str, Any]], color: Tuple[int, int, int], prefix: str) -> None:
     for i, item in enumerate(boxes):
         box = item.get("bbox_xyxy", [])
@@ -407,6 +418,8 @@ def main() -> None:
 
     prompt = build_box_pose_attribute_prompt(str(args.extra_prompt).strip() or None)
     assistant_prefix = str(args.assistant_prefix)
+    if str(args.prompt_format) == "tag" and not assistant_prefix.strip():
+        assistant_prefix = "<answer>\n"
     pred_rows: List[Dict[str, Any]] = []
 
     with torch.no_grad():
@@ -442,9 +455,7 @@ def main() -> None:
             for rec, image, image_path, suffix in zip(batch_records, images, image_paths, suffixes):
                 pred_text = assistant_prefix + suffix
                 image_size = image.size
-                obj = parse_json_object_from_text(pred_text)
-                pred_struct = normalize_struct(obj, image_size=image_size)
-                parsed_from = "json" if obj is not None else "none"
+                pred_struct, parsed_from, obj = _parse_prediction_text(pred_text, image_size=image_size)
                 gt_struct = get_record_gt(rec, image_size=image_size)
                 row = {
                     "id": str(rec.get("id", "")),
@@ -456,6 +467,7 @@ def main() -> None:
                     "parsed_from": parsed_from,
                     "prediction_text": pred_text,
                     "valid_json": obj is not None,
+                    "valid_tag": parsed_from == "tag",
                     "valid_struct": parsed_from != "none",
                     "raw_json_box_count": _raw_box_candidate_count(obj),
                     "raw_tag_box_count": _raw_tag_box_candidate_count(pred_text),
@@ -503,6 +515,9 @@ def main() -> None:
     metrics["vis_dir"] = str(vis_dir) if bool(args.save_vis) else ""
     metrics["pred_only_vis_dir"] = str(pred_only_vis_dir) if bool(args.save_vis) else ""
     metrics["num_debug_records"] = len(records)
+    metrics["tag_parse_success_rate"] = sum(1 for row in pred_rows if row.get("parsed_from") == "tag") / max(1, len(pred_rows))
+    metrics["json_parse_success_rate"] = sum(1 for row in pred_rows if row.get("parsed_from") == "json") / max(1, len(pred_rows))
+    metrics["non_tag_parse_rate"] = sum(1 for row in pred_rows if row.get("parsed_from") != "tag") / max(1, len(pred_rows))
     match_debug_jsonl = out_dir / "match_debug.jsonl"
     _write_jsonl(str(match_debug_jsonl), metrics.get("per_image", []))
     metrics["match_debug_jsonl"] = str(match_debug_jsonl)

@@ -55,8 +55,8 @@ class CocoUniHumanSFTDataset(Dataset):
 
         image = Image.open(image_path).convert("RGB")
         prompt = build_box_pose_attribute_prompt(self.extra_prompt)
-        target_text = rec.get("target_text", "")
-        if not target_text:
+        target_text = str(rec.get("target_text", "")).strip()
+        if not target_text or not target_text.lower().startswith("<answer"):
             target_text = _build_target_text(rec)
 
         return {
