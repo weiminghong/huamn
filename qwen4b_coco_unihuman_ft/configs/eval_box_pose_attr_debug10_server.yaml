@@ -7,7 +7,7 @@ image_root: "/home/priv/wmh_project/coco_person/val/val2017"
 output_dir: "/home/priv/wmh_project/coco_person/ft_box_pose_attr_eval/debug10"
 cuda_visible_devices: "0"
 
-debug_sample_size: 10
+debug_sample_size: 4
 debug_seed: 42
 max_samples: null
 batch_size: 1
