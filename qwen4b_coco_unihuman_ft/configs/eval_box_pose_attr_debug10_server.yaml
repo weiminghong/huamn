@@ -15,7 +15,7 @@ num_workers: 0
 
 max_length: 4096
 max_new_tokens: 1024
-bf16: false
+bf16: true
 fp16: false
 assistant_prefix: ""
 extra_prompt: null
