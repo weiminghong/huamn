@@ -10,8 +10,8 @@ COCO_KEYPOINT_ORDER = (
 
 PROMPT_BOX_POSE_ATTR_TAG = (
     "<image>\n"
-    "Detect every visible person in the image, including small, occluded, and edge persons.\n"
-    "Output only XML-like tags wrapped inside <answer>...</answer>.\n\n"
+    "Detect every visible person in the image.\n"
+    'Output only XML blocks wrapped inside <answer>...</answer>. No explanation.\n\n'
     "Required output format:\n"
     "<answer>\n"
     "<person>\n"
@@ -31,11 +31,12 @@ PROMPT_BOX_POSE_ATTR_TAG = (
     "- Format: Each keypoint is a triplet [x, y, v].\n"
     "  * x, y: coordinates.\n"
     "  * v (visibility): 2 = visible, 1 = occluded/inferred, 0 = missing/out-of-frame.\n"
+    "- In <pose>, output exactly 17 comma-separated [x, y, v] triplets, no more and no fewer.\n"
+    "- If uncertain, still output 17 triplets and use [0,0,0] for unknown keypoints.\n"
     "- If a keypoint is missing (v=0), you MUST output exactly [0,0,0].\n"
-    "- Gender uses COCO-UniHuman coding: 0 male, 1 female, -1 unknown.\n"
+    "- Gender: 0 male, 1 female, -1 unknown.\n"
     "- Age is estimated age in years; use -1 when unknown.\n"
-    "- Score is confidence in [0,1]. Use 1.0 for ground-truth style answers.\n"
-    "- If no person is visible, output exactly <answer></answer>.\n"
+    # "- Score is confidence in [0,1]. Use 1.0 for ground-truth style answers.\n"
     "- Output tags only. Do not output markdown, JSON, analysis, or explanations.\n"
     "\n--- EXAMPLE OUTPUT ---\n"
     "<answer>\n"
