@@ -1,4 +1,5 @@
 import argparse
+import inspect
 import json
 import os
 from typing import Any, Dict
@@ -94,6 +95,37 @@ def maybe_apply_lora(model, cfg: Dict[str, Any]):
     model = get_peft_model(model, peft_cfg)
     model.print_trainable_parameters()
     return model
+
+
+def _build_training_arguments(cfg: Dict[str, Any], has_eval: bool) -> TrainingArguments:
+    kwargs: Dict[str, Any] = {
+        "output_dir": str(cfg["output_dir"]),
+        "per_device_train_batch_size": int(cfg.get("train_batch_size", 1)),
+        "per_device_eval_batch_size": int(cfg.get("eval_batch_size", 1)),
+        "gradient_accumulation_steps": int(cfg.get("gradient_accumulation_steps", 1)),
+        "learning_rate": float(cfg.get("learning_rate", 1e-5)),
+        "weight_decay": float(cfg.get("weight_decay", 0.01)),
+        "num_train_epochs": float(cfg.get("num_train_epochs", 1)),
+        "warmup_ratio": float(cfg.get("warmup_ratio", 0.03)),
+        "logging_steps": int(cfg.get("logging_steps", 10)),
+        "save_steps": int(cfg.get("save_steps", 500)),
+        "eval_steps": int(cfg.get("eval_steps", 500)),
+        "save_total_limit": int(cfg.get("save_total_limit", 2)),
+        "bf16": bool(cfg.get("bf16", False)),
+        "fp16": bool(cfg.get("fp16", False)),
+        "dataloader_num_workers": int(cfg.get("dataloader_num_workers", 2)),
+        "remove_unused_columns": False,
+        "report_to": cfg.get("report_to", []),
+    }
+    params = inspect.signature(TrainingArguments.__init__).parameters
+    eval_value = "steps" if has_eval else "no"
+    if "evaluation_strategy" in params:
+        kwargs["evaluation_strategy"] = eval_value
+    elif "eval_strategy" in params:
+        kwargs["eval_strategy"] = eval_value
+    elif has_eval and "do_eval" in params:
+        kwargs["do_eval"] = True
+    return TrainingArguments(**kwargs)
 
 
 def _jsonable_cfg(cfg: Dict[str, Any]) -> Dict[str, Any]:
@@ -278,26 +310,7 @@ def main() -> None:
         )
 
     has_eval = val_dataset is not None
-    train_args = TrainingArguments(
-        output_dir=str(cfg["output_dir"]),
-        per_device_train_batch_size=int(cfg.get("train_batch_size", 1)),
-        per_device_eval_batch_size=int(cfg.get("eval_batch_size", 1)),
-        gradient_accumulation_steps=int(cfg.get("gradient_accumulation_steps", 1)),
-        learning_rate=float(cfg.get("learning_rate", 1e-5)),
-        weight_decay=float(cfg.get("weight_decay", 0.01)),
-        num_train_epochs=float(cfg.get("num_train_epochs", 1)),
-        warmup_ratio=float(cfg.get("warmup_ratio", 0.03)),
-        logging_steps=int(cfg.get("logging_steps", 10)),
-        save_steps=int(cfg.get("save_steps", 500)),
-        eval_steps=int(cfg.get("eval_steps", 500)),
-        save_total_limit=int(cfg.get("save_total_limit", 2)),
-        bf16=bool(cfg.get("bf16", False)),
-        fp16=bool(cfg.get("fp16", False)),
-        dataloader_num_workers=int(cfg.get("dataloader_num_workers", 2)),
-        remove_unused_columns=False,
-        report_to=report_to,
-        evaluation_strategy="steps" if has_eval else "no",
-    )
+    train_args = _build_training_arguments(cfg={**cfg, "report_to": report_to}, has_eval=has_eval)
 
     trainer = Trainer(
         model=model,
