@@ -18,6 +18,10 @@ except Exception:
     AutoModelForVision2Seq = None
 
 from qwen4b_coco_unihuman_ft.dataset import CocoUniHumanSFTDataset, SFTCollator
+from qwen4b_coco_unihuman_ft.prompts import (
+    DEFAULT_ASSISTANT_PREFIX_TAG,
+    build_vl_chat_text,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -92,6 +96,117 @@ def maybe_apply_lora(model, cfg: Dict[str, Any]):
     return model
 
 
+def _jsonable_cfg(cfg: Dict[str, Any]) -> Dict[str, Any]:
+    out: Dict[str, Any] = {}
+    for key, value in cfg.items():
+        try:
+            json.dumps(value)
+            out[str(key)] = value
+        except Exception:
+            out[str(key)] = str(value)
+    return out
+
+
+def _prepare_preview_inputs(processor, prompt: str, image, max_length: int) -> Dict[str, torch.Tensor]:
+    batch = processor(
+        text=[prompt],
+        images=[image],
+        return_tensors="pt",
+        padding=True,
+        truncation=True,
+        max_length=int(max_length),
+    )
+    return batch
+
+
+def _move_batch_to_device(batch: Dict[str, Any], device: torch.device) -> Dict[str, Any]:
+    out: Dict[str, Any] = {}
+    for key, value in batch.items():
+        out[key] = value.to(device) if isinstance(value, torch.Tensor) else value
+    return out
+
+
+def _filter_generate_inputs(model, inputs: Dict[str, Any]) -> Dict[str, Any]:
+    accepted = {
+        "input_ids",
+        "attention_mask",
+        "position_ids",
+        "token_type_ids",
+        "past_key_values",
+        "use_cache",
+        "pixel_values",
+        "image_grid_thw",
+        "images",
+    }
+    return {k: v for k, v in inputs.items() if k in accepted}
+
+
+def _log_swanlab_predictions(
+    trainer: Trainer,
+    processor,
+    dataset: CocoUniHumanSFTDataset,
+    cfg: Dict[str, Any],
+) -> None:
+    swanlab_cfg = cfg.get("swanlab", {})
+    if not isinstance(swanlab_cfg, dict) or not bool(swanlab_cfg.get("enable", False)):
+        return
+
+    try:
+        import swanlab
+    except Exception as e:
+        raise RuntimeError("SwanLab preview logging requested, but `swanlab` is not installed.") from e
+
+    preview_count = min(int(swanlab_cfg.get("preview_samples", 4)), len(dataset))
+    if preview_count <= 0:
+        return
+
+    model = trainer.model
+    model.eval()
+    tokenizer = getattr(processor, "tokenizer", None)
+    eos_token_id = getattr(tokenizer, "eos_token_id", None) if tokenizer is not None else None
+    pad_token_id = getattr(tokenizer, "pad_token_id", None) if tokenizer is not None else eos_token_id
+    device = next(model.parameters()).device
+    images_to_log = []
+
+    with torch.no_grad():
+        for idx in range(preview_count):
+            sample = dataset[idx]
+            prompt = build_vl_chat_text(
+                processor=processor,
+                prompt=str(sample["prompt"]),
+                assistant_prefix=DEFAULT_ASSISTANT_PREFIX_TAG,
+            )
+            image = sample["image"]
+            inputs = _prepare_preview_inputs(
+                processor=processor,
+                prompt=prompt,
+                image=image,
+                max_length=int(cfg.get("max_length", 4096)),
+            )
+            inputs = _move_batch_to_device(inputs, device)
+            gen_inputs = _filter_generate_inputs(model, inputs)
+            gen_ids = model.generate(
+                **gen_inputs,
+                max_new_tokens=int(swanlab_cfg.get("preview_max_new_tokens", 1024)),
+                do_sample=False,
+                num_beams=1,
+                pad_token_id=pad_token_id,
+                eos_token_id=eos_token_id,
+            )
+            input_len = gen_inputs["input_ids"].shape[1]
+            pred_text = processor.batch_decode(gen_ids[:, input_len:], skip_special_tokens=True)[0]
+            caption = (
+                f"id={sample['id']}\n"
+                f"prompt={sample['prompt']}\n\n"
+                f"gt={sample['target_text']}\n\n"
+                f"pred={DEFAULT_ASSISTANT_PREFIX_TAG}{pred_text}"
+            )
+            images_to_log.append(swanlab.Image(image, caption=caption))
+
+    if images_to_log:
+        swanlab.log({"Prediction": images_to_log})
+
+
 def main() -> None:
     args = parse_args()
     cfg = load_yaml(args.config)
@@ -138,6 +253,30 @@ def main() -> None:
     if report_to in ("none", None):
         report_to = []
 
+    callbacks = []
+    swanlab_cfg = cfg.get("swanlab", {})
+    if isinstance(swanlab_cfg, dict) and bool(swanlab_cfg.get("enable", False)):
+        try:
+            from swanlab.integration.transformers import SwanLabCallback
+        except Exception as e:
+            raise RuntimeError(
+                "SwanLab is enabled in config, but the Transformers integration is unavailable. "
+                "Install it with: pip install swanlab"
+            ) from e
+
+        callbacks.append(
+            SwanLabCallback(
+                project=str(swanlab_cfg.get("project", "human-box-pose-attr-sft")),
+                experiment_name=str(
+                    swanlab_cfg.get(
+                        "experiment_name",
+                        os.path.basename(os.path.abspath(str(cfg["output_dir"]))),
+                    )
+                ),
+                config=_jsonable_cfg(cfg),
+            )
+        )
+
     has_eval = val_dataset is not None
     train_args = TrainingArguments(
         output_dir=str(cfg["output_dir"]),
@@ -166,12 +305,20 @@ def main() -> None:
         train_dataset=train_dataset,
         eval_dataset=val_dataset,
         data_collator=collator,
+        callbacks=callbacks,
     )
     trainer.train()
     trainer.save_model()
     if has_eval:
         metrics = trainer.evaluate()
         print(json.dumps(metrics, ensure_ascii=False, indent=2, default=float))
+    preview_dataset = val_dataset if val_dataset is not None else train_dataset
+    _log_swanlab_predictions(
+        trainer=trainer,
+        processor=processor,
+        dataset=preview_dataset,
+        cfg=cfg,
+    )
 
 
 if __name__ == "__main__":

@@ -1,5 +1,7 @@
 from typing import Optional
 
+DEFAULT_ASSISTANT_PREFIX_TAG = "<answer>\n"
+
 
 COCO_KEYPOINT_ORDER = (
     "nose,left_eye,right_eye,left_ear,right_ear,"
@@ -49,3 +51,32 @@ def build_box_pose_attribute_prompt(extra_instruction: Optional[str] = None) -> 
     if extra_instruction:
         return f"{base}\n{extra_instruction}"
     return base
+
+
+def build_vl_chat_text(processor, prompt: str, assistant_prefix: str = "") -> str:
+    if hasattr(processor, "apply_chat_template"):
+        messages = [
+            {
+                "role": "user",
+                "content": [
+                    {"type": "image"},
+                    {"type": "text", "text": prompt},
+                ],
+            }
+        ]
+        text = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+    else:
+        text = f"<image>\n{prompt}\nAnswer:"
+    if assistant_prefix:
+        text += assistant_prefix
+    return text
+
+
+def strip_answer_prefix(text: str) -> str:
+    if not isinstance(text, str):
+        return ""
+    stripped = text.lstrip()
+    if stripped.startswith("<answer>"):
+        stripped = stripped[len("<answer>") :]
+        stripped = stripped.lstrip("\r\n")
+    return stripped

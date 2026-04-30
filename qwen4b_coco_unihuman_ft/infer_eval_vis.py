@@ -35,7 +35,11 @@ from qwen4b_coco_unihuman_ft.eval_scheme2 import (  # noqa: E402
     parse_json_object_from_text,
     parse_tag_struct,
 )
-from qwen4b_coco_unihuman_ft.prompts import build_box_pose_attribute_prompt  # noqa: E402
+from qwen4b_coco_unihuman_ft.prompts import (  # noqa: E402
+    DEFAULT_ASSISTANT_PREFIX_TAG,
+    build_box_pose_attribute_prompt,
+    build_vl_chat_text,
+)
 
 
 COCO_SKELETON_1_BASED = [
@@ -202,25 +206,6 @@ def _filter_generate_inputs(model, inputs: Dict[str, Any]) -> Dict[str, Any]:
         except Exception:
             continue
     return {k: v for k, v in inputs.items() if k in keys}
-
-
-def _build_chat_text(processor, prompt: str, assistant_prefix: str) -> str:
-    if hasattr(processor, "apply_chat_template"):
-        messages = [
-            {
-                "role": "user",
-                "content": [
-                    {"type": "image"},
-                    {"type": "text", "text": prompt},
-                ],
-            }
-        ]
-        text = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
-    else:
-        text = f"<image>\n{prompt}\nAnswer:"
-    if assistant_prefix:
-        text += assistant_prefix
-    return text
 
 
 def _make_inputs(processor, texts: List[str], images: List[Image.Image], max_length: int):
@@ -419,7 +404,7 @@ def main() -> None:
     prompt = build_box_pose_attribute_prompt(str(args.extra_prompt).strip() or None)
     assistant_prefix = str(args.assistant_prefix)
     if str(args.prompt_format) == "tag" and not assistant_prefix.strip():
-        assistant_prefix = "<answer>\n"
+        assistant_prefix = DEFAULT_ASSISTANT_PREFIX_TAG
     pred_rows: List[Dict[str, Any]] = []
 
     with torch.no_grad():
@@ -434,7 +419,7 @@ def main() -> None:
                 image = Image.open(image_path).convert("RGB")
                 image_paths.append(image_path)
                 images.append(image)
-                texts.append(_build_chat_text(processor, prompt, assistant_prefix))
+                texts.append(build_vl_chat_text(processor, prompt, assistant_prefix))
 
             inputs = _make_inputs(processor, texts, images, max_length=int(args.max_length))
             for k, v in inputs.items():

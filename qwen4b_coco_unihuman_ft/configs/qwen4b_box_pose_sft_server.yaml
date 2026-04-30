@@ -29,6 +29,13 @@ dataloader_num_workers: 4
 report_to: "none"
 extra_prompt: null
 
+swanlab:
+  enable: false
+  project: "human-box-pose-attr-sft"
+  experiment_name: "qwen4b-box-pose-sft-server"
+  preview_samples: 4
+  preview_max_new_tokens: 1024
+
 lora:
   enable: true
   r: 16

@@ -569,6 +569,69 @@ def bbox_ap_at_iou(gt_boxes: List[Dict[str, Any]], pred_boxes: List[Dict[str, An
     return float(ap)
 
 
+def bbox_dataset_ap_at_iou(
+    gt_boxes_by_image: Dict[str, List[Dict[str, Any]]],
+    pred_boxes_by_image: Dict[str, List[Dict[str, Any]]],
+    iou_thr: float,
+) -> float:
+    total_gt = sum(len(items) for items in gt_boxes_by_image.values())
+    if total_gt <= 0:
+        return 0.0
+
+    flat_preds: List[Tuple[float, str, List[float]]] = []
+    for image_id, pred_boxes in pred_boxes_by_image.items():
+        for pred in pred_boxes:
+            flat_preds.append(
+                (
+                    float(pred.get("score", 1.0)),
+                    str(image_id),
+                    pred["bbox_xyxy"],
+                )
+            )
+    if not flat_preds:
+        return 0.0
+
+    flat_preds.sort(reverse=True, key=lambda x: x[0])
+    used_gt: Dict[str, set] = {str(image_id): set() for image_id in gt_boxes_by_image.keys()}
+    tp: List[float] = []
+    fp: List[float] = []
+    for _, image_id, pred_box in flat_preds:
+        gt_boxes = gt_boxes_by_image.get(str(image_id), [])
+        best_iou = 0.0
+        best_gi = -1
+        for gi, gt in enumerate(gt_boxes):
+            if gi in used_gt.setdefault(str(image_id), set()):
+                continue
+            iou = box_iou(gt["bbox_xyxy"], pred_box)
+            if iou > best_iou:
+                best_iou = iou
+                best_gi = gi
+        if best_iou >= float(iou_thr) and best_gi >= 0:
+            used_gt[str(image_id)].add(best_gi)
+            tp.append(1.0)
+            fp.append(0.0)
+        else:
+            tp.append(0.0)
+            fp.append(1.0)
+
+    cum_tp: List[float] = []
+    cum_fp: List[float] = []
+    s_tp = 0.0
+    s_fp = 0.0
+    for t, f in zip(tp, fp):
+        s_tp += t
+        s_fp += f
+        cum_tp.append(s_tp)
+        cum_fp.append(s_fp)
+    recalls = [x / max(1, total_gt) for x in cum_tp]
+    precisions = [cum_tp[i] / max(1e-12, cum_tp[i] + cum_fp[i]) for i in range(len(cum_tp))]
+    ap = 0.0
+    for r in [x / 100.0 for x in range(0, 101)]:
+        p = max([precisions[i] for i, rec in enumerate(recalls) if rec >= r] or [0.0])
+        ap += p / 101.0
+    return float(ap)
+
+
 def _by_person_id(items: List[Dict[str, Any]]) -> Dict[Any, Dict[str, Any]]:
     return {x.get("person_id"): x for x in items if x.get("person_id", None) is not None}
 
@@ -649,20 +712,29 @@ def evaluate_records_scheme2(
     sum_ap50 = 0.0
     sum_ap5095 = 0.0
     valid_json = 0
+    gt_boxes_by_image: Dict[str, List[Dict[str, Any]]] = {}
+    pred_boxes_by_image: Dict[str, List[Dict[str, Any]]] = {}
     pose_gt_valid_total = 0
     pose_visible_kpt_total_all_gt = 0
     pose_gt_valid = 0
     pose_kpt_correct = 0
     pose_kpt_total = 0
     pose_oks_values: List[float] = []
+    matched_ious: List[float] = []
+    strict_tp_box = 0
     gender_total = 0
+    gender_total_all_gt = 0
     gender_correct = 0
     gender_missing_pred = 0
     age_total = 0
+    age_total_all_gt = 0
     age_abs_err_sum = 0.0
     age_acc10 = 0
     age_missing_pred = 0
     per_image: List[Dict[str, Any]] = []
+    count_abs_err_sum = 0.0
+    count_sq_err_sum = 0.0
+    count_bias_sum = 0.0
 
     for sid in ids:
         gt_rec = gt_by_id[sid]
@@ -676,9 +748,14 @@ def evaluate_records_scheme2(
 
         gt_boxes = gt["box"]
         pred_boxes = pred["box"]
+        gt_boxes_by_image[str(sid)] = gt_boxes
+        pred_boxes_by_image[str(sid)] = pred_boxes
         matches = greedy_match_boxes(gt_boxes, pred_boxes, iou_thr=float(iou_thr))
+        strict_matches = greedy_match_boxes(gt_boxes, pred_boxes, iou_thr=0.75)
         matched_g = {gi for gi, _, _ in matches}
         matched_p = {pi for _, pi, _ in matches}
+        matched_ious.extend([float(iou) for _, _, iou in matches])
+        strict_tp_box += len(strict_matches)
         best_ious = []
         for pi, pred_box in enumerate(pred_boxes):
             best_iou = 0.0
@@ -693,6 +770,10 @@ def evaluate_records_scheme2(
         n_gt_box += len(gt_boxes)
         n_pred_box += len(pred_boxes)
         tp_box += len(matches)
+        count_err = float(len(pred_boxes) - len(gt_boxes))
+        count_bias_sum += count_err
+        count_abs_err_sum += abs(count_err)
+        count_sq_err_sum += count_err * count_err
         sum_ap50 += bbox_ap_at_iou(gt_boxes, pred_boxes, 0.5)
         thrs = [0.5 + 0.05 * i for i in range(10)]
         sum_ap5095 += sum(bbox_ap_at_iou(gt_boxes, pred_boxes, t) for t in thrs) / len(thrs)
@@ -710,6 +791,13 @@ def evaluate_records_scheme2(
             if gt_pose is not None and has_valid_pose(gt_pose):
                 pose_gt_valid_total += 1
                 pose_visible_kpt_total_all_gt += visible_keypoint_count(gt_pose)
+            gt_attr = gt_attr_by_pid.get(gt_pid) if gt_pid is not None else None
+            if gt_attr is None and gi < len(gt["attribute"]):
+                gt_attr = gt["attribute"][gi]
+            if isinstance(gt_attr, dict) and "gender" in gt_attr:
+                gender_total_all_gt += 1
+            if isinstance(gt_attr, dict) and "age" in gt_attr:
+                age_total_all_gt += 1
 
         img_pose_gt_valid = 0
         img_pose_kpt_total = 0
@@ -774,6 +862,20 @@ def evaluate_records_scheme2(
     precision = tp_box / max(1, n_pred_box)
     recall = tp_box / max(1, n_gt_box)
     f1 = 0.0 if precision + recall <= 0 else 2 * precision * recall / (precision + recall)
+    strict_precision = strict_tp_box / max(1, n_pred_box)
+    strict_recall = strict_tp_box / max(1, n_gt_box)
+    strict_f1 = 0.0 if strict_precision + strict_recall <= 0 else 2 * strict_precision * strict_recall / (strict_precision + strict_recall)
+    thrs = [0.5 + 0.05 * i for i in range(10)]
+    bbox_ap50_global = bbox_dataset_ap_at_iou(gt_boxes_by_image, pred_boxes_by_image, 0.5)
+    bbox_ap5095_global = sum(bbox_dataset_ap_at_iou(gt_boxes_by_image, pred_boxes_by_image, t) for t in thrs) / len(thrs)
+    matched_iou_median = 0.0
+    if matched_ious:
+        matched_ious_sorted = sorted(matched_ious)
+        mid = len(matched_ious_sorted) // 2
+        if len(matched_ious_sorted) % 2 == 1:
+            matched_iou_median = float(matched_ious_sorted[mid])
+        else:
+            matched_iou_median = float((matched_ious_sorted[mid - 1] + matched_ious_sorted[mid]) / 2.0)
     metrics = {
         "scheme": "scheme2_box_matched_incomplete_label_safe",
         "num_images": len(ids),
@@ -789,22 +891,39 @@ def evaluate_records_scheme2(
         "bbox_f1": float(f1),
         "bbox_AP50_image_mean": float(sum_ap50 / max(1, len(ids))),
         "bbox_AP5095_image_mean": float(sum_ap5095 / max(1, len(ids))),
+        "bbox_AP50_global": float(bbox_ap50_global),
+        "bbox_AP5095_global": float(bbox_ap5095_global),
+        "bbox_precision_iou75": float(strict_precision),
+        "bbox_recall_iou75": float(strict_recall),
+        "bbox_f1_iou75": float(strict_f1),
+        "bbox_count_mae": float(count_abs_err_sum / max(1, len(ids))),
+        "bbox_count_rmse": float(math.sqrt(count_sq_err_sum / max(1, len(ids)))),
+        "bbox_count_bias": float(count_bias_sum / max(1, len(ids))),
+        "bbox_matched_iou_mean": float(sum(matched_ious) / max(1, len(matched_ious))),
+        "bbox_matched_iou_median": float(matched_iou_median),
         "pose_pck_thr": float(pck_thr),
         "pose_num_gt_valid_total": int(pose_gt_valid_total),
         "pose_num_gt_valid_on_matched_boxes": int(pose_gt_valid),
         "pose_num_gt_valid_unmatched_box": int(max(0, pose_gt_valid_total - pose_gt_valid)),
+        "pose_valid_box_recall": float(pose_gt_valid / max(1, pose_gt_valid_total)),
         "pose_pck_on_matched_boxes": float(pose_kpt_correct / max(1, pose_kpt_total)),
         "pose_pck_all_gt_visible": float(pose_kpt_correct / max(1, pose_visible_kpt_total_all_gt)),
         "pose_visible_kpt_correct": int(pose_kpt_correct),
         "pose_visible_kpt_total_on_matched_boxes": int(pose_kpt_total),
         "pose_visible_kpt_total_all_gt": int(pose_visible_kpt_total_all_gt),
         "pose_mean_oks_on_matched_boxes": float(sum(pose_oks_values) / max(1, len(pose_oks_values))),
+        "attribute_gender_total_all_gt": int(gender_total_all_gt),
         "attribute_gender_total": int(gender_total),
         "attribute_gender_acc": float(gender_correct / max(1, gender_total)),
+        "attribute_gender_box_recall": float(gender_total / max(1, gender_total_all_gt)),
+        "attribute_gender_e2e_acc": float(gender_correct / max(1, gender_total_all_gt)),
         "attribute_gender_missing_pred": int(gender_missing_pred),
+        "attribute_age_total_all_gt": int(age_total_all_gt),
         "attribute_age_total": int(age_total),
         "attribute_age_mae": float(age_abs_err_sum / max(1, age_total - age_missing_pred)),
         "attribute_age_acc10": float(age_acc10 / max(1, age_total)),
+        "attribute_age_box_recall": float(age_total / max(1, age_total_all_gt)),
+        "attribute_age_acc10_e2e": float(age_acc10 / max(1, age_total_all_gt)),
         "attribute_age_missing_pred": int(age_missing_pred),
     }
     metrics["per_image"] = per_image

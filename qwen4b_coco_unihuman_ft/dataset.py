@@ -8,7 +8,12 @@ from PIL import Image
 from torch.utils.data import Dataset
 
 from .convert_coco_unihuman import _build_target_text
-from .prompts import build_box_pose_attribute_prompt
+from .prompts import (
+    DEFAULT_ASSISTANT_PREFIX_TAG,
+    build_box_pose_attribute_prompt,
+    build_vl_chat_text,
+    strip_answer_prefix,
+)
 
 
 def load_jsonl(path: str) -> List[Dict[str, Any]]:
@@ -73,11 +78,20 @@ class SFTCollator:
         self.processor = processor
         self.tokenizer = tokenizer
         self.max_length = int(max_length)
+        self.assistant_prefix = DEFAULT_ASSISTANT_PREFIX_TAG
 
     def __call__(self, samples: List[Dict[str, Any]]) -> Dict[str, torch.Tensor]:
-        prompts = [s["prompt"] + "\n" for s in samples]
-        targets = [s["target_text"] for s in samples]
-        texts = [p + t for p, t in zip(prompts, targets)]
+        prompts = [str(s["prompt"]) for s in samples]
+        targets = [strip_answer_prefix(str(s["target_text"])) for s in samples]
+        prefixes = [
+            build_vl_chat_text(
+                processor=self.processor,
+                prompt=prompt,
+                assistant_prefix=self.assistant_prefix,
+            )
+            for prompt in prompts
+        ]
+        texts = [p + t for p, t in zip(prefixes, targets)]
         images = [s["image"] for s in samples]
 
         batch = self.processor(
@@ -90,7 +104,7 @@ class SFTCollator:
         )
         labels = batch["input_ids"].clone()
         prefix_lens = [
-            len(self.tokenizer(p, add_special_tokens=False).input_ids) for p in prompts
+            len(self.tokenizer(p, add_special_tokens=False).input_ids) for p in prefixes
         ]
         for i, plen in enumerate(prefix_lens):
             labels[i, : min(plen, labels.shape[1])] = -100

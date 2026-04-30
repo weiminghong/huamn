@@ -29,6 +29,13 @@ dataloader_num_workers: 2
 report_to: "none"
 extra_prompt: null
 
+swanlab:
+  enable: false
+  project: "human-box-pose-attr-sft"
+  experiment_name: "qwen4b-coco-unihuman-sft"
+  preview_samples: 4
+  preview_max_new_tokens: 1024
+
 lora:
   enable: false
   r: 16
