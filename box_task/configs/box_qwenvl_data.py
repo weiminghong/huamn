@@ -1,5 +1,5 @@
 CONFIG = {
-    "model_name_or_path": "Qwen/Qwen2.5-VL-3B-Instruct",
+    "model_name_or_path": "/home/priv/project/model/Qwen3.5-4B",
     "data": {
         "train": {
             "image_dir": "data/human/images/train",
