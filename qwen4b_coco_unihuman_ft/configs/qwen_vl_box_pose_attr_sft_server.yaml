@@ -7,12 +7,12 @@ output_dir: "/home/priv/wmh_project/coco_person/outputs/qwen_vl_box_pose_attr_sf
 seed: 42
 max_train_samples: null
 max_val_samples: null
-max_length: 4096
+max_length: 3072
 
-train_batch_size: 1
+train_batch_size: 2
 eval_batch_size: 1
-gradient_accumulation_steps: 16
-learning_rate: 1.0e-5
+gradient_accumulation_steps: 8
+learning_rate: 5.0e-5
 weight_decay: 0.01
 num_train_epochs: 2
 warmup_ratio: 0.03
@@ -50,7 +50,7 @@ swanlab:
 
 lora:
   enable: true
-  r: 16
+  r: 8
   alpha: 32
   dropout: 0.05
-  target_modules: ["q_proj", "k_proj", "v_proj", "o_proj"]
+  target_modules: "all-linear"

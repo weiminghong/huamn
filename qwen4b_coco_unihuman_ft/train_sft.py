@@ -96,13 +96,21 @@ def maybe_apply_lora(model, cfg: Dict[str, Any]):
 
     from peft import LoraConfig, get_peft_model
 
+    target_modules = lora_cfg.get("target_modules", ["q_proj", "k_proj", "v_proj", "o_proj"])
+    if isinstance(target_modules, str):
+        target_modules_cfg = target_modules
+    elif isinstance(target_modules, (list, tuple)):
+        target_modules_cfg = list(target_modules)
+    else:
+        raise ValueError(f"Unsupported lora.target_modules: {target_modules!r}")
+
     peft_cfg = LoraConfig(
         r=int(lora_cfg.get("r", 16)),
         lora_alpha=int(lora_cfg.get("alpha", 32)),
         lora_dropout=float(lora_cfg.get("dropout", 0.05)),
         bias="none",
         task_type="CAUSAL_LM",
-        target_modules=list(lora_cfg.get("target_modules", ["q_proj", "k_proj", "v_proj", "o_proj"])),
+        target_modules=target_modules_cfg,
     )
     model = get_peft_model(model, peft_cfg)
     model.print_trainable_parameters()
