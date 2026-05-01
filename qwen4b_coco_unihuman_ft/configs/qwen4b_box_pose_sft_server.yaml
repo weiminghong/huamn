@@ -21,6 +21,10 @@ logging_steps: 10
 save_steps: 200
 eval_steps: 200
 save_total_limit: 2
+logging_first_step: true
+load_best_model_at_end: true
+metric_for_best_model: "eval_loss"
+greater_is_better: false
 
 bf16: true
 fp16: false
@@ -30,11 +34,19 @@ report_to: "none"
 extra_prompt: null
 
 swanlab:
-  enable: false
+  enable: true
   project: "human-box-pose-attr-sft"
+  workspace: "wmh"
   experiment_name: "qwen4b-box-pose-sft-server"
+  mode: "cloud"
   preview_samples: 4
   preview_max_new_tokens: 1024
+  stage_eval:
+    enable: true
+    samples: 16
+    seed: 42
+    iou_thr: 0.5
+    pck_thr: 0.2
 
 lora:
   enable: true
