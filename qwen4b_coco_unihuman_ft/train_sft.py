@@ -9,6 +9,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import torch
 from transformers import (
+    AutoConfig,
     AutoModelForCausalLM,
     AutoProcessor,
     AutoTokenizer,
@@ -21,6 +22,10 @@ try:
     from transformers import AutoModelForVision2Seq
 except Exception:
     AutoModelForVision2Seq = None
+try:
+    from transformers.models.qwen3_5.modeling_qwen3_5 import Qwen3_5ForConditionalGeneration
+except Exception:
+    Qwen3_5ForConditionalGeneration = None
 
 from qwen4b_coco_unihuman_ft.dataset import CocoUniHumanSFTDataset, SFTCollator
 from qwen4b_coco_unihuman_ft.eval_scheme2 import (
@@ -73,20 +78,65 @@ def get_dtype(cfg: Dict[str, Any]):
 
 
 def build_model(model_name_or_path: str, torch_dtype):
-    if AutoModelForVision2Seq is not None:
+    cfg = AutoConfig.from_pretrained(model_name_or_path, trust_remote_code=True)
+    has_vision = bool(getattr(cfg, "vision_config", None))
+    kwargs = {
+        "torch_dtype": torch_dtype,
+        "trust_remote_code": True,
+        "low_cpu_mem_usage": True,
+    }
+    if has_vision and Qwen3_5ForConditionalGeneration is not None:
         try:
-            return AutoModelForVision2Seq.from_pretrained(
-                model_name_or_path,
-                torch_dtype=torch_dtype,
-                trust_remote_code=True,
-            )
+            return Qwen3_5ForConditionalGeneration.from_pretrained(model_name_or_path, **kwargs)
         except Exception:
             pass
-    return AutoModelForCausalLM.from_pretrained(
-        model_name_or_path,
-        torch_dtype=torch_dtype,
-        trust_remote_code=True,
-    )
+    if AutoModelForVision2Seq is not None:
+        try:
+            return AutoModelForVision2Seq.from_pretrained(model_name_or_path, **kwargs)
+        except Exception:
+            pass
+    return AutoModelForCausalLM.from_pretrained(model_name_or_path, **kwargs)
+
+
+def _supports_vision_training(model, processor) -> bool:
+    if getattr(processor, "image_processor", None) is None:
+        return False
+    cfg = getattr(model, "config", None)
+    if cfg is not None and getattr(cfg, "vision_config", None) is not None:
+        return True
+    for attr_name in ("visual", "vision_tower", "vision_model"):
+        if hasattr(model, attr_name):
+            return True
+        inner = getattr(model, "model", None)
+        if inner is not None and hasattr(inner, attr_name):
+            return True
+    return False
+
+
+def _iter_signature_sources(model):
+    seen = set()
+    for obj in (model, getattr(model, "base_model", None), getattr(model, "model", None)):
+        if obj is None:
+            continue
+        obj_id = id(obj)
+        if obj_id in seen:
+            continue
+        seen.add(obj_id)
+        yield obj
+
+
+def _model_accepts_vision_inputs(model) -> bool:
+    keys = set()
+    for obj in _iter_signature_sources(model):
+        for fn_name in ("forward", "prepare_inputs_for_generation"):
+            fn = getattr(obj, fn_name, None)
+            if fn is None:
+                continue
+            try:
+                keys.update(inspect.signature(fn).parameters.keys())
+            except Exception:
+                continue
+    return any(k in keys for k in ("pixel_values", "image_grid_thw", "images"))
 
 
 def maybe_apply_lora(model, cfg: Dict[str, Any]):
@@ -501,10 +551,16 @@ def _filter_generate_inputs(model, inputs: Dict[str, Any]) -> Dict[str, Any]:
         "token_type_ids",
         "past_key_values",
         "use_cache",
-        "pixel_values",
-        "image_grid_thw",
-        "images",
     }
+    for obj in _iter_signature_sources(model):
+        for fn_name in ("forward", "prepare_inputs_for_generation"):
+            fn = getattr(obj, fn_name, None)
+            if fn is None:
+                continue
+            try:
+                accepted.update(inspect.signature(fn).parameters.keys())
+            except Exception:
+                continue
     return {k: v for k, v in inputs.items() if k in accepted}
 
 
@@ -617,7 +673,19 @@ def main() -> None:
         )
 
     model = build_model(model_name_or_path=model_name_or_path, torch_dtype=get_dtype(cfg))
+    if not _supports_vision_training(model, processor):
+        raise ValueError(
+            "This training pipeline expects a vision-language model with image inputs, "
+            f"but `model_name_or_path={model_name_or_path}` does not expose a vision tower. "
+            "Use a VL checkpoint such as Qwen2.5-VL instead of a text-only Qwen model."
+        )
     model = maybe_apply_lora(model, cfg)
+    if not _model_accepts_vision_inputs(model):
+        raise ValueError(
+            "Loaded model/adapter stack does not expose vision generate inputs "
+            "(`pixel_values` / `image_grid_thw`) after wrapping. "
+            f"Current model_name_or_path={model_name_or_path}."
+        )
     if bool(cfg.get("gradient_checkpointing", False)):
         model.gradient_checkpointing_enable()
 

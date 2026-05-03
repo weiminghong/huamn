@@ -119,6 +119,32 @@ def _extract_tensor_from_output(output: Any) -> Any:
     return None
 
 
+def _forward_qwen_vision_module(vision_module: Any, pixel_values: Any, image_grid_thw: Optional[Any] = None) -> Any:
+    torch = _optional_import_torch()
+    for fn_name in ("forward", "__call__"):
+        fn = getattr(vision_module, fn_name, None)
+        if fn is None:
+            continue
+        kwargs = _filter_kwargs(
+            fn,
+            {
+                "pixel_values": pixel_values,
+                "image_grid_thw": image_grid_thw,
+                "grid_thw": image_grid_thw,
+                "output_hidden_states": True,
+                "return_dict": True,
+            },
+        )
+        try:
+            output = fn(**kwargs)
+            tensor = _extract_tensor_from_output(output)
+            if tensor is not None and torch.is_tensor(tensor):
+                return tensor
+        except Exception:
+            continue
+    raise RuntimeError("Failed to extract vision features from the provided Qwen vision module.")
+
+
 def load_qwen_vl_model(
     model_name_or_path: str,
     adapter_path: str = "",
@@ -192,33 +218,14 @@ def prepare_processor_image_inputs(processor: Any, image: Any) -> Dict[str, Any]
 
 
 def extract_qwen_vision_features(model: Any, pixel_values: Any, image_grid_thw: Optional[Any] = None) -> Any:
-    torch = _optional_import_torch()
     vision_module, _ = resolve_vision_module(model)
     patch_size = extract_patch_size(vision_module)
     if image_grid_thw is None:
         image_grid_thw = build_qwen_image_grid(pixel_values, patch_size=patch_size)
-
-    for fn_name in ("forward", "__call__"):
-        fn = getattr(vision_module, fn_name, None)
-        if fn is None:
-            continue
-        kwargs = _filter_kwargs(
-            fn,
-            {
-                "pixel_values": pixel_values,
-                "image_grid_thw": image_grid_thw,
-                "grid_thw": image_grid_thw,
-                "output_hidden_states": True,
-                "return_dict": True,
-            },
-        )
-        try:
-            output = fn(**kwargs)
-            tensor = _extract_tensor_from_output(output)
-            if tensor is not None and torch.is_tensor(tensor):
-                return tensor
-        except Exception:
-            continue
+    try:
+        return _forward_qwen_vision_module(vision_module, pixel_values=pixel_values, image_grid_thw=image_grid_thw)
+    except Exception:
+        pass
 
     for fn_name in ("get_image_features", "extract_image_features"):
         fn = getattr(model, fn_name, None)
@@ -242,6 +249,14 @@ def extract_qwen_vision_features(model: Any, pixel_values: Any, image_grid_thw: 
             continue
 
     raise RuntimeError("Failed to extract vision features from the loaded Qwen-VL model.")
+
+
+def extract_qwen_vision_features_from_module(
+    vision_module: Any, pixel_values: Any, image_grid_thw: Optional[Any] = None
+) -> Any:
+    if image_grid_thw is None:
+        image_grid_thw = build_qwen_image_grid(pixel_values, patch_size=extract_patch_size(vision_module))
+    return _forward_qwen_vision_module(vision_module, pixel_values=pixel_values, image_grid_thw=image_grid_thw)
 
 
 def token_sequence_to_feature_map(tokens: Any, image_size: Optional[Tuple[int, int]] = None, patch_size: int = 14) -> Any:

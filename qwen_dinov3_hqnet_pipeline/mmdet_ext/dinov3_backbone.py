@@ -1,10 +1,18 @@
 from __future__ import annotations
 
-from typing import Any, List, Sequence, Tuple
+from typing import Any, List, Optional, Sequence, Tuple
 
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
+from qwen_dinov3_hqnet_pipeline.common.qwen_utils import (
+    extract_patch_size,
+    extract_qwen_vision_features_from_module,
+    load_qwen_vl_model,
+    resolve_vision_module,
+    token_sequence_to_feature_map,
+)
 
 try:
     from mmdet.models.builder import BACKBONES
@@ -31,21 +39,7 @@ def _select_hidden_states(hidden_states: Sequence[torch.Tensor], out_indices: Se
 
 
 def _tokens_to_map(tokens: torch.Tensor, image_hw: Tuple[int, int], patch_size: int) -> torch.Tensor:
-    if tokens.ndim == 4:
-        return tokens
-    batch, num_tokens, channels = tokens.shape
-    if int((num_tokens - 1) ** 0.5) ** 2 == num_tokens - 1:
-        tokens = tokens[:, 1:, :]
-        num_tokens = tokens.shape[1]
-    height = max(1, image_hw[0] // patch_size)
-    width = max(1, image_hw[1] // patch_size)
-    if height * width != num_tokens:
-        side = int(num_tokens**0.5)
-        height = side
-        width = max(1, num_tokens // max(1, side))
-    usable = min(num_tokens, height * width)
-    tokens = tokens[:, :usable, :]
-    return tokens.transpose(1, 2).reshape(batch, channels, height, width)
+    return token_sequence_to_feature_map(tokens, image_size=image_hw, patch_size=patch_size)
 
 
 @_register_backbone
@@ -133,3 +127,113 @@ class DINOv3PyramidBackbone(nn.Module):
             pooled = F.avg_pool2d(feats[-1], kernel_size=2, stride=2, ceil_mode=True)
             feats.append(self.proj_layers[len(feats)](pooled) if len(feats) < len(self.proj_layers) else pooled)
         return tuple(feats[: self.num_outs])
+
+
+@_register_backbone
+class FrozenQwenDINOv3Backbone(DINOv3PyramidBackbone):
+    """Online Stage2 backbone: frozen Qwen image encoder -> bridge -> DINOv3 -> HQNet."""
+
+    def __init__(
+        self,
+        qwen_model_name_or_path: str,
+        qwen_adapter_path: str = "",
+        qwen_torch_dtype: str = "bfloat16",
+        qwen_merge_lora: bool = True,
+        qwen_input_mean: Sequence[float] = (123.675, 116.28, 103.53),
+        qwen_input_std: Sequence[float] = (58.395, 57.12, 57.375),
+        bridge_hidden_channels: int = 64,
+        fusion_mode: str = "add",
+        bridge_scale: float = 1.0,
+        qwen_image_mean: Optional[Sequence[float]] = None,
+        qwen_image_std: Optional[Sequence[float]] = None,
+        qwen_rescale_factor: Optional[float] = None,
+        freeze_qwen: bool = True,
+        **kwargs,
+    ) -> None:
+        super().__init__(**kwargs)
+        self.fusion_mode = str(fusion_mode)
+        if self.fusion_mode not in {"add", "replace"}:
+            raise ValueError(f"Unsupported fusion_mode={self.fusion_mode}")
+        self.freeze_qwen = bool(freeze_qwen)
+        self.bridge_scale = nn.Parameter(torch.tensor(float(bridge_scale), dtype=torch.float32))
+
+        qwen_model, qwen_processor = load_qwen_vl_model(
+            model_name_or_path=qwen_model_name_or_path,
+            adapter_path=qwen_adapter_path,
+            torch_dtype=qwen_torch_dtype,
+            device="cpu",
+            merge_lora=bool(qwen_merge_lora),
+        )
+        qwen_vision, _ = resolve_vision_module(qwen_model)
+        self.qwen_vision = qwen_vision
+        self.qwen_patch_size = extract_patch_size(self.qwen_vision)
+        if self.freeze_qwen:
+            for param in self.qwen_vision.parameters():
+                param.requires_grad = False
+
+        processor_mean = None
+        processor_std = None
+        processor_rescale = None
+        image_processor = getattr(qwen_processor, "image_processor", None)
+        if image_processor is not None:
+            processor_mean = getattr(image_processor, "image_mean", None)
+            processor_std = getattr(image_processor, "image_std", None)
+            processor_rescale = getattr(image_processor, "rescale_factor", None)
+
+        if qwen_image_mean is None:
+            qwen_image_mean = processor_mean or (0.5, 0.5, 0.5)
+        if qwen_image_std is None:
+            qwen_image_std = processor_std or (0.5, 0.5, 0.5)
+        if qwen_rescale_factor is None:
+            qwen_rescale_factor = float(processor_rescale) if processor_rescale is not None else (1.0 / 255.0)
+
+        self.register_buffer("qwen_input_mean", torch.tensor(list(qwen_input_mean), dtype=torch.float32).view(1, 3, 1, 1))
+        self.register_buffer("qwen_input_std", torch.tensor(list(qwen_input_std), dtype=torch.float32).view(1, 3, 1, 1))
+        self.register_buffer("qwen_image_mean", torch.tensor(list(qwen_image_mean), dtype=torch.float32).view(1, 3, 1, 1))
+        self.register_buffer("qwen_image_std", torch.tensor(list(qwen_image_std), dtype=torch.float32).view(1, 3, 1, 1))
+        self.qwen_rescale_factor = float(qwen_rescale_factor)
+
+        self.qwen_bridge = nn.Sequential(
+            nn.LazyConv2d(int(bridge_hidden_channels), kernel_size=1),
+            nn.GELU(),
+            nn.Conv2d(int(bridge_hidden_channels), 3, kernel_size=1),
+        )
+
+        del qwen_model
+        del qwen_processor
+
+    def train(self, mode: bool = True):
+        super().train(mode)
+        if self.freeze_qwen:
+            self.qwen_vision.eval()
+        return self
+
+    def _prepare_qwen_pixels(self, x: torch.Tensor) -> torch.Tensor:
+        pixels = x.float()
+        pixels = pixels * self.qwen_input_std + self.qwen_input_mean
+        pixels = pixels * self.qwen_rescale_factor
+        pixels = (pixels - self.qwen_image_mean) / self.qwen_image_std
+        return pixels.to(device=x.device, dtype=next(self.qwen_vision.parameters()).dtype)
+
+    def _extract_qwen_feature_map(self, x: torch.Tensor) -> torch.Tensor:
+        pixel_values = self._prepare_qwen_pixels(x)
+        with torch.no_grad():
+            qwen_tokens = extract_qwen_vision_features_from_module(self.qwen_vision, pixel_values=pixel_values)
+        return token_sequence_to_feature_map(
+            qwen_tokens,
+            image_size=tuple(pixel_values.shape[-2:]),
+            patch_size=self.qwen_patch_size,
+        )
+
+    def _build_dino_input(self, x: torch.Tensor) -> torch.Tensor:
+        qwen_feature_map = self._extract_qwen_feature_map(x)
+        bridge = self.qwen_bridge(qwen_feature_map.to(dtype=x.dtype))
+        bridge = F.interpolate(bridge, size=tuple(x.shape[-2:]), mode="bilinear", align_corners=False)
+        bridge = torch.tanh(bridge)
+        if self.fusion_mode == "replace":
+            return self.bridge_scale.to(dtype=x.dtype) * bridge
+        return x + self.bridge_scale.to(dtype=x.dtype) * bridge
+
+    def forward(self, x: torch.Tensor):
+        dino_input = self._build_dino_input(x)
+        return super().forward(dino_input)

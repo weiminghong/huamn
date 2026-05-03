@@ -9,18 +9,18 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 HQNET_ROOT = REPO_ROOT / "COCO-UniHuman-main" / "HumanQueryNet"
-DEFAULT_CONFIG = REPO_ROOT / "qwen_dinov3_hqnet_pipeline" / "configs" / "stage2_distill_hqnet_dinov3.py"
+DEFAULT_CONFIG = REPO_ROOT / "qwen_dinov3_hqnet_pipeline" / "configs" / "stage2_qwen_ie_dinov3_hqnet.py"
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Launch Stage2 DINOv3 + HumanQueryNet training.")
+    parser = argparse.ArgumentParser(description="Launch online Stage2 Frozen-Qwen-IE -> DINOv3 -> HumanQueryNet training.")
     parser.add_argument("--config", type=str, default=str(DEFAULT_CONFIG))
     parser.add_argument("--train-ann-json", type=str, required=True)
     parser.add_argument("--val-ann-json", type=str, required=True)
     parser.add_argument("--train-image-root", type=str, required=True)
     parser.add_argument("--val-image-root", type=str, required=True)
-    parser.add_argument("--train-teacher-index", type=str, default="")
-    parser.add_argument("--val-teacher-index", type=str, default="")
+    parser.add_argument("--qwen-model-name-or-path", type=str, required=True)
+    parser.add_argument("--qwen-adapter-path", type=str, default="")
     parser.add_argument("--dino-model-name", type=str, default="facebook/dinov3-vits16-pretrain-lvd1689m")
     parser.add_argument("--work-dir", type=str, required=True)
     parser.add_argument("--gpu-id", type=int, default=0)
@@ -37,12 +37,10 @@ def main() -> None:
     env["COCO_UNIHUMAN_VAL_JSON"] = str(args.val_ann_json)
     env["COCO_UNIHUMAN_TRAIN_IMG_ROOT"] = str(args.train_image_root)
     env["COCO_UNIHUMAN_VAL_IMG_ROOT"] = str(args.val_image_root)
+    env["STAGE1_QWEN_MODEL_NAME_OR_PATH"] = str(args.qwen_model_name_or_path)
+    env["STAGE1_QWEN_ADAPTER_PATH"] = str(args.qwen_adapter_path)
     env["DINOV3_MODEL_NAME"] = str(args.dino_model_name)
     env["STAGE2_WORK_DIR"] = str(args.work_dir)
-    if args.train_teacher_index:
-        env["STAGE1_TRAIN_TEACHER_INDEX"] = str(args.train_teacher_index)
-    if args.val_teacher_index:
-        env["STAGE1_VAL_TEACHER_INDEX"] = str(args.val_teacher_index)
 
     py_path_parts = [str(REPO_ROOT), str(HQNET_ROOT)]
     old_py_path = env.get("PYTHONPATH", "")
