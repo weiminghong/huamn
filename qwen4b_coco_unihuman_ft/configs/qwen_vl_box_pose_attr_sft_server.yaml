@@ -2,17 +2,17 @@ model_name_or_path: "/home/priv/project/model/Qwen3.5-4B"
 train_jsonl: "/home/priv/wmh_project/coco_person/ft_box_pose_attr_data/train.jsonl"
 val_jsonl: "/home/priv/wmh_project/coco_person/ft_box_pose_attr_data/val.jsonl"
 image_root: "/home/priv/wmh_project/coco_person/images"
-output_dir: "/home/priv/wmh_project/coco_person/outputs/qwen_vl_box_pose_attr_sft"
+output_dir: "/home/priv/wmh_project/coco_person/outputs/qwen35_vl_box_pose_attr_sft_simple"
 
 seed: 42
 max_train_samples: null
 max_val_samples: null
-max_length: 3072
+max_length: 2048
 
-train_batch_size: 2
+train_batch_size: 1
 eval_batch_size: 1
-gradient_accumulation_steps: 8
-learning_rate: 5.0e-5
+gradient_accumulation_steps: 16
+learning_rate: 1.0e-5
 weight_decay: 0.01
 num_train_epochs: 2
 warmup_ratio: 0.03
@@ -37,7 +37,7 @@ swanlab:
   enable: true
   project: "human-box-pose-attr-sft"
   workspace: "wmh"
-  experiment_name: "qwen-vl-box-pose-attr"
+  experiment_name: "qwen35-vl-box-pose-attr-simple"
   mode: "cloud"
   preview_samples: 4
   preview_max_new_tokens: 1024
@@ -56,4 +56,4 @@ lora:
   freeze_llm: false
   freeze_vit: true
   freeze_aligner: true
-  target_modules: "all-linear"
+  target_modules: ["q_proj", "k_proj", "v_proj", "o_proj"]
