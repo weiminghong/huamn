@@ -139,6 +139,57 @@ def _model_accepts_vision_inputs(model) -> bool:
     return any(k in keys for k in ("pixel_values", "image_grid_thw", "images"))
 
 
+def _resolve_module_group(module_name: str) -> str:
+    name = module_name.lower()
+    if any(key in name for key in ("visual", "vision_tower", "vision_model", "vit", "image_tower", "video_tower")):
+        return "vit"
+    if any(key in name for key in ("aligner", "projector", "multi_modal_projector", "mm_projector", "merger")):
+        return "aligner"
+    return "llm"
+
+
+def _resolve_lora_target_modules(model, target_modules, lora_cfg: Dict[str, Any]):
+    if not isinstance(target_modules, str):
+        if isinstance(target_modules, (list, tuple)):
+            return list(target_modules)
+        raise ValueError(f"Unsupported lora.target_modules: {target_modules!r}")
+    if target_modules != "all-linear":
+        return target_modules
+
+    freeze_llm = bool(lora_cfg.get("freeze_llm", False))
+    freeze_vit = bool(lora_cfg.get("freeze_vit", True))
+    freeze_aligner = bool(lora_cfg.get("freeze_aligner", True))
+    allow_group = {
+        "llm": not freeze_llm,
+        "vit": not freeze_vit,
+        "aligner": not freeze_aligner,
+    }
+
+    supported_types = [torch.nn.Linear, torch.nn.Embedding, torch.nn.Conv2d]
+    try:
+        from transformers.pytorch_utils import Conv1D
+
+        supported_types.append(Conv1D)
+    except Exception:
+        pass
+    supported_types = tuple(supported_types)
+
+    names = set()
+    for module_name, module in model.named_modules():
+        if not module_name:
+            continue
+        module_group = _resolve_module_group(module_name)
+        if allow_group.get(module_group, False) and isinstance(module, supported_types):
+            names.add(module_name.split(".")[-1])
+    if not names:
+        raise ValueError(
+            "lora.target_modules='all-linear' did not resolve to any supported module names "
+            f"for the current model under freeze settings: "
+            f"freeze_llm={freeze_llm}, freeze_vit={freeze_vit}, freeze_aligner={freeze_aligner}."
+        )
+    return sorted(names)
+
+
 def maybe_apply_lora(model, cfg: Dict[str, Any]):
     lora_cfg = cfg.get("lora", {})
     if not isinstance(lora_cfg, dict) or not bool(lora_cfg.get("enable", False)):
@@ -147,12 +198,7 @@ def maybe_apply_lora(model, cfg: Dict[str, Any]):
     from peft import LoraConfig, get_peft_model
 
     target_modules = lora_cfg.get("target_modules", ["q_proj", "k_proj", "v_proj", "o_proj"])
-    if isinstance(target_modules, str):
-        target_modules_cfg = target_modules
-    elif isinstance(target_modules, (list, tuple)):
-        target_modules_cfg = list(target_modules)
-    else:
-        raise ValueError(f"Unsupported lora.target_modules: {target_modules!r}")
+    target_modules_cfg = _resolve_lora_target_modules(model, target_modules, lora_cfg)
 
     peft_cfg = LoraConfig(
         r=int(lora_cfg.get("r", 16)),
@@ -163,6 +209,13 @@ def maybe_apply_lora(model, cfg: Dict[str, Any]):
         target_modules=target_modules_cfg,
     )
     model = get_peft_model(model, peft_cfg)
+    print(
+        "[LoRA] "
+        f"freeze_llm={bool(lora_cfg.get('freeze_llm', False))}, "
+        f"freeze_vit={bool(lora_cfg.get('freeze_vit', True))}, "
+        f"freeze_aligner={bool(lora_cfg.get('freeze_aligner', True))}, "
+        f"target_modules={target_modules_cfg}"
+    )
     model.print_trainable_parameters()
     return model
 

@@ -53,4 +53,7 @@ lora:
   r: 8
   alpha: 32
   dropout: 0.05
+  freeze_llm: false
+  freeze_vit: true
+  freeze_aligner: true
   target_modules: "all-linear"
