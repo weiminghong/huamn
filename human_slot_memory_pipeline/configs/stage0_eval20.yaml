@@ -11,7 +11,8 @@ paths:
 
 stage1:
   max_length: 2048
-  max_new_tokens: 1024
+  max_new_tokens: 768
+  repair_max_new_tokens: 512
 
 optimization:
   bf16: true

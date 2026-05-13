@@ -11,8 +11,14 @@ from PIL import Image
 
 from human_slot_memory_pipeline.human_slot_memory.config import load_config
 from human_slot_memory_pipeline.human_slot_memory.prompts import (
-    DEFAULT_ASSISTANT_PREFIX_STAGE1,
-    build_stage1_probe_prompt,
+    DEFAULT_ASSISTANT_PREFIX_STAGE0,
+    STAGE0_REPAIR_PROMPT,
+    build_stage0_probe_prompt,
+)
+from human_slot_memory_pipeline.human_slot_memory.stage0_xml import (
+    contains_think_tokens,
+    prediction_needs_repair,
+    truncate_to_first_answer,
 )
 from human_slot_memory_pipeline.human_slot_memory.stage1_data import convert_raw_annotations_to_stage1_records
 from qwen4b_coco_unihuman_ft.eval_scheme2 import evaluate_records_scheme2
@@ -39,22 +45,36 @@ def load_model(model_path: str, adapter_path: str = "", use_bf16: bool = True):
     return processor, model
 
 
-def build_chat_text(processor: Any, prompt: str) -> str:
+def build_inputs(processor: Any, prompt: str, assistant_prefix: str, image: Image.Image, max_length: int) -> Dict[str, Any]:
     messages = [{"role": "user", "content": [{"type": "image"}, {"type": "text", "text": prompt}]}]
-    return processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True) + DEFAULT_ASSISTANT_PREFIX_STAGE1
-
-
-def run_one(processor: Any, model: Any, image_path: str, prompt: str, max_length: int, max_new_tokens: int) -> str:
-    image = Image.open(image_path).convert("RGB")
-    text = build_chat_text(processor, prompt)
-    inputs = processor(
+    text = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True) + assistant_prefix
+    return processor(
         text=[text],
         images=[image],
         return_tensors="pt",
         truncation=True,
         max_length=max_length,
     )
-    device = next(model.parameters()).device
+
+
+def repair_once(
+    processor: Any,
+    model: Any,
+    device: torch.device,
+    raw_text: str,
+    max_length: int,
+    max_new_tokens: int,
+    pad_token_id: int | None,
+) -> str:
+    repair_text = STAGE0_REPAIR_PROMPT + raw_text.strip()
+    messages = [{"role": "user", "content": [{"type": "text", "text": repair_text}]}]
+    text = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True) + DEFAULT_ASSISTANT_PREFIX_STAGE0
+    inputs = processor(
+        text=[text],
+        return_tensors="pt",
+        truncation=True,
+        max_length=max_length,
+    )
     inputs = {key: value.to(device) if hasattr(value, "to") else value for key, value in inputs.items()}
     with torch.no_grad():
         generated = model.generate(
@@ -62,10 +82,78 @@ def run_one(processor: Any, model: Any, image_path: str, prompt: str, max_length
             max_new_tokens=max_new_tokens,
             do_sample=False,
             num_beams=1,
+            pad_token_id=pad_token_id,
         )
     input_len = inputs["input_ids"].shape[1]
     pred_suffix = processor.batch_decode(generated[:, input_len:], skip_special_tokens=True)[0]
-    return DEFAULT_ASSISTANT_PREFIX_STAGE1 + pred_suffix
+    return DEFAULT_ASSISTANT_PREFIX_STAGE0 + pred_suffix
+
+
+def run_one(
+    processor: Any,
+    model: Any,
+    image_path: str,
+    prompt: str,
+    max_length: int,
+    max_new_tokens: int,
+    repair_max_new_tokens: int,
+) -> Dict[str, Any]:
+    image = Image.open(image_path).convert("RGB")
+    assistant_prefix = DEFAULT_ASSISTANT_PREFIX_STAGE0
+    inputs = build_inputs(
+        processor=processor,
+        prompt=prompt,
+        assistant_prefix=assistant_prefix,
+        image=image,
+        max_length=max_length,
+    )
+    device = next(model.parameters()).device
+    inputs = {key: value.to(device) if hasattr(value, "to") else value for key, value in inputs.items()}
+    tokenizer = getattr(processor, "tokenizer", None)
+    eos_token_id = getattr(tokenizer, "eos_token_id", None) if tokenizer is not None else None
+    pad_token_id = getattr(tokenizer, "pad_token_id", None) if tokenizer is not None else eos_token_id
+
+    with torch.no_grad():
+        generated = model.generate(
+            **inputs,
+            max_new_tokens=max_new_tokens,
+            do_sample=False,
+            num_beams=1,
+            pad_token_id=pad_token_id,
+        )
+    input_len = inputs["input_ids"].shape[1]
+    pred_suffix = processor.batch_decode(generated[:, input_len:], skip_special_tokens=True)[0]
+    raw_prediction_text = assistant_prefix + pred_suffix
+
+    image_size = image.size
+    need_repair, cleaned_prediction_text = prediction_needs_repair(raw_prediction_text, image_size=image_size)
+    repaired_prediction_text = ""
+    repaired = False
+    if need_repair:
+        repaired_prediction_text = truncate_to_first_answer(
+            repair_once(
+                processor=processor,
+                model=model,
+                device=device,
+                raw_text=raw_prediction_text,
+                max_length=max_length,
+                max_new_tokens=repair_max_new_tokens,
+                pad_token_id=pad_token_id,
+            )
+        )
+        repaired_need, repaired_cleaned = prediction_needs_repair(repaired_prediction_text, image_size=image_size)
+        cleaned_prediction_text = repaired_cleaned
+        repaired = not repaired_need
+
+    return {
+        "raw_prediction_text": raw_prediction_text,
+        "prediction_text": truncate_to_first_answer(cleaned_prediction_text),
+        "contains_raw_think": contains_think_tokens(raw_prediction_text),
+        "contains_final_think": contains_think_tokens(cleaned_prediction_text),
+        "repaired": repaired,
+        "repair_attempted": need_repair,
+        "repaired_prediction_text": repaired_prediction_text,
+    }
 
 
 def main() -> None:
@@ -94,17 +182,26 @@ def main() -> None:
     )
     model.eval().to(str(cfg.runtime.get("device", "cuda")))
 
-    prompt = build_stage1_probe_prompt()
+    prompt = build_stage0_probe_prompt()
     pred_rows: List[Dict[str, Any]] = []
+    raw_think_count = 0
+    final_think_count = 0
+    repaired_count = 0
+    repair_attempt_count = 0
     for gt_record in gt_subset:
-        prediction_text = run_one(
+        result = run_one(
             processor=processor,
             model=model,
             image_path=str(gt_record["image_abs"]),
             prompt=prompt,
             max_length=int(cfg.stage1.get("max_length", 2048)),
-            max_new_tokens=int(cfg.stage1.get("max_new_tokens", 1024)),
+            max_new_tokens=int(cfg.stage1.get("max_new_tokens", 768)),
+            repair_max_new_tokens=int(cfg.stage1.get("repair_max_new_tokens", 512)),
         )
+        raw_think_count += int(result["contains_raw_think"])
+        final_think_count += int(result["contains_final_think"])
+        repaired_count += int(result["repaired"])
+        repair_attempt_count += int(result["repair_attempted"])
         pred_rows.append(
             {
                 "id": gt_record["id"],
@@ -112,7 +209,10 @@ def main() -> None:
                 "image_abs": gt_record["image_abs"],
                 "width": gt_record["width"],
                 "height": gt_record["height"],
-                "prediction_text": prediction_text,
+                "prediction_text": result["prediction_text"],
+                "raw_prediction_text": result["raw_prediction_text"],
+                "repair_attempted": result["repair_attempted"],
+                "repaired": result["repaired"],
             }
         )
 
@@ -124,6 +224,10 @@ def main() -> None:
     )
     metrics["source_stats"] = source_stats
     metrics["adapter_path"] = adapter_path
+    metrics["raw_think_rate"] = raw_think_count / max(num_samples, 1)
+    metrics["final_think_rate"] = final_think_count / max(num_samples, 1)
+    metrics["repair_attempt_rate"] = repair_attempt_count / max(num_samples, 1)
+    metrics["repair_success_rate"] = repaired_count / max(repair_attempt_count, 1)
 
     pred_path = Path(output_dir) / f"{output_name}_predictions.jsonl"
     metrics_path = Path(output_dir) / f"{output_name}_metrics.json"
