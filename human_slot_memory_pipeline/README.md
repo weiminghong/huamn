@@ -9,13 +9,13 @@ The pipeline is organized around three trainable stages:
 
 1. **Stage-1: Structured MLLM teacher**
    - Qwen-VL learns to decompose an image into person-level structured slots.
-   - Each slot may contain box, pose, segmentation, attributes, action, relation, and caption fields.
+   - Each slot may contain box, pose, attributes, action, relation, and caption fields.
    - Missing annotations are represented with task masks instead of negative labels.
 
 2. **Stage-2: Dense human student**
    - DINOv3 features are decoded into dense person queries.
    - Person slots from the Stage-1 teacher supervise query semantics through slot alignment.
-   - Box, pose, segmentation, attribute, and action heads are wired as separate modules.
+   - Box, pose, attribute, and action heads are wired as separate modules.
 
 3. **Stage-3: Dense-to-language memory loop**
    - Dense predictions are compressed into Human Memory Tokens.
@@ -77,4 +77,4 @@ PYTHONPATH=/home/priv/wmh_project/human python -m human_slot_memory_pipeline.too
 The current scaffold now covers:
 - Stage-0 probe on raw v1 labels for `box`, `pose`, `gender`, `age`
 - Stage-1 raw-v1 to SFT materialization plus legacy trainer handoff
-- Stage-2 dense student with `box`, `pose`, `segment`, `attr(valid-aware)` heads
+- Stage-2 dense student with `box`, `pose`, and `attr(valid-aware)` heads

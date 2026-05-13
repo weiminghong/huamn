@@ -30,21 +30,10 @@ def _normalize_box(coco_bbox: List[float]) -> Optional[List[float]]:
     return [x, y, x + w, y + h]
 
 
-def _normalize_segmentation(segmentation: Any) -> Optional[List[List[float]]]:
-    if not isinstance(segmentation, list) or not segmentation:
-        return None
-    polygons: List[List[float]] = []
-    for polygon in segmentation:
-        if isinstance(polygon, list) and len(polygon) >= 6:
-            polygons.append([float(value) for value in polygon])
-    return polygons or None
-
-
 def _build_slot(annotation: Dict[str, Any], slot_id: int) -> PersonSlot:
     valid = annotation.get("valid", {}) if isinstance(annotation.get("valid"), dict) else {}
     box_xyxy = _normalize_box(annotation.get("bbox"))
     pose = _normalize_keypoints(annotation.get("keypoints", []))
-    segmentation = _normalize_segmentation(annotation.get("segmentation"))
     attributes: Dict[str, Any] = {}
     if "gender" in annotation:
         attributes["gender"] = annotation["gender"]
@@ -54,15 +43,12 @@ def _build_slot(annotation: Dict[str, Any], slot_id: int) -> PersonSlot:
     task_mask = TaskMask(
         box=bool(valid.get("bboxes", 1)) and box_xyxy is not None,
         pose=bool(valid.get("keypoints_2d", 0)) and pose is not None,
-        segmentation=bool(valid.get("segmentation", 0)) and segmentation is not None,
         attr=bool(valid.get("gender", 0) or valid.get("age", 0)) and bool(attributes),
     )
     return PersonSlot(
         slot_id=slot_id,
         box_xyxy=box_xyxy,
         pose17_xyv=pose,
-        segmentation=segmentation,
-        parsing=segmentation,
         attributes=attributes,
         task_mask=task_mask,
     )

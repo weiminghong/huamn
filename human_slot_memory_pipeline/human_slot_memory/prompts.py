@@ -138,5 +138,5 @@ def build_stage1_probe_prompt() -> str:
 
 def build_stage3_prompt(question: str | None = None) -> str:
     if question:
-        return "Answer using the provided Human Memory Tokens.\nQuestion: " + question.strip()
-    return "Generate a grounded human-centric caption using the provided Human Memory Tokens."
+        return "Answer using the provided Human Memory Tokens with box, pose, and attribute grounding.\nQuestion: " + question.strip()
+    return "Generate a grounded human-centric caption using the provided Human Memory Tokens with box, pose, and attribute details."

@@ -18,8 +18,6 @@ stage2:
   max_queries: 32
   loss_weight_box: 2.0
   loss_weight_pose: 2.0
-  loss_weight_seg_bce: 2.0
-  loss_weight_seg_dice: 2.0
   loss_weight_attr: 1.0
   loss_weight_slot_align: 1.0
 

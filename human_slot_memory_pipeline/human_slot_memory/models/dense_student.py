@@ -4,7 +4,7 @@ import torch
 from torch import nn
 
 from .dinov3_backbone import DinoV3Backbone
-from .heads import AttributeHead, BoxHead, PlaceholderRelationHead, PoseHead, SegmentationHead
+from .heads import AttributeHead, BoxHead, PlaceholderRelationHead, PoseHead
 from .slot_router import HumanSlotRouter
 
 
@@ -28,7 +28,6 @@ class DenseHumanStudent(nn.Module):
         self.box_head = BoxHead(hidden_dim)
         self.pose_head = PoseHead(hidden_dim)
         self.attr_head = AttributeHead(hidden_dim)
-        self.segmentation_head = SegmentationHead(hidden_dim)
         self.relation_head = PlaceholderRelationHead(hidden_dim)
 
     def forward(self, pixel_values: torch.Tensor) -> dict[str, torch.Tensor]:
@@ -40,7 +39,6 @@ class DenseHumanStudent(nn.Module):
             "validity_logits": routed["validity_logits"],
             "box_xyxy_norm": self.box_head(queries),
             "pose17_xyv_norm": self.pose_head(queries),
-            "mask_logits": self.segmentation_head(queries, features.feature_map),
             "relation_logits": self.relation_head(queries),
         }
         outputs.update(self.attr_head(queries))
