@@ -1,0 +1,32 @@
+project:
+  name: human-slot-memory-stage2
+  seed: 42
+  output_dir: /home/priv/wmh_project/coco_person/outputs/hsm_stage2_dense_student
+
+paths:
+  dinov3_model: /home/priv/wmh_project/models/dinov3/vit_base_patch16_dinov3.lvd1689m
+  teacher_slot_cache: /home/priv/wmh_project/coco_person/outputs/hsm_stage1_teacher/slot_cache
+  train_ann_json: /home/priv/wmh_project/coco_person/labels/coco_unihuman_train_v1.json
+  val_ann_json: /home/priv/wmh_project/coco_person/labels/coco_unihuman_val_v1.json
+  train_image_root: /home/priv/wmh_project/coco_person/images
+  val_image_root: /home/priv/wmh_project/coco_person/val/val2017
+
+stage2:
+  enabled: true
+  freeze_dinov3: true
+  hidden_dim: 256
+  max_queries: 32
+  loss_weight_box: 2.0
+  loss_weight_pose: 2.0
+  loss_weight_seg_bce: 2.0
+  loss_weight_seg_dice: 2.0
+  loss_weight_attr: 1.0
+  loss_weight_slot_align: 1.0
+
+optimization:
+  batch_size: 1
+  num_workers: 4
+  learning_rate: 1.0e-4
+  weight_decay: 0.01
+  bf16: true
+  fp16: false

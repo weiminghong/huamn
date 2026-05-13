@@ -1,0 +1,24 @@
+project:
+  name: human-slot-memory-prompt-debug10
+  seed: 42
+  output_dir: /home/priv/wmh_project/coco_person/outputs/hsm_prompt_debug10
+
+paths:
+  qwen_model: /home/priv/project/model/Qwen3.5-4B
+  adapter_path: /home/priv/wmh_project/coco_person/outputs/qwen35_vl_box_pose_attr_sft_simple/checkpoint-800
+  val_jsonl: /home/priv/wmh_project/coco_person/ft_box_pose_attr_data/val.jsonl
+  image_root: /home/priv/wmh_project/coco_person/val/val2017
+
+stage1:
+  max_length: 2048
+  max_new_tokens: 1024
+  max_slots: 32
+
+optimization:
+  bf16: true
+  fp16: false
+
+runtime:
+  num_samples: 10
+  batch_size: 1
+  device: cuda

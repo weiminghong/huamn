@@ -1,0 +1,27 @@
+project:
+  name: human-slot-memory-stage3
+  seed: 42
+  output_dir: /home/priv/wmh_project/coco_person/outputs/hsm_stage3_memory_loop
+
+paths:
+  qwen_model: /home/priv/project/model/Qwen3.5-4B
+  dinov3_model: /home/priv/wmh_project/models/dinov3/vit_base_patch16_dinov3.lvd1689m
+  dense_checkpoint: /home/priv/wmh_project/coco_person/outputs/hsm_stage2_dense_student/checkpoint-last
+  train_ann_json: /home/priv/wmh_project/coco_person/labels/coco_unihuman_train_v1.json
+  val_ann_json: /home/priv/wmh_project/coco_person/labels/coco_unihuman_val_v1.json
+  train_image_root: /home/priv/wmh_project/coco_person/images
+  val_image_root: /home/priv/wmh_project/coco_person/val/val2017
+
+stage3:
+  enabled: true
+  memory_tokens: 32
+  loss_weight_text: 1.0
+  loss_weight_consistency: 0.5
+
+optimization:
+  batch_size: 1
+  num_workers: 4
+  learning_rate: 5.0e-6
+  weight_decay: 0.01
+  bf16: true
+  fp16: false

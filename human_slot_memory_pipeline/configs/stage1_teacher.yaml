@@ -1,0 +1,65 @@
+project:
+  name: human-slot-memory-stage1
+  seed: 42
+  output_dir: /home/priv/wmh_project/coco_person/outputs/hsm_stage1_teacher
+
+paths:
+  qwen_model: /home/priv/project/model/Qwen3.5-4B
+  train_ann_json: /home/priv/wmh_project/coco_person/labels/coco_unihuman_train_v1.json
+  val_ann_json: /home/priv/wmh_project/coco_person/labels/coco_unihuman_val_v1.json
+  train_image_root: /home/priv/wmh_project/coco_person/images
+  val_image_root: /home/priv/wmh_project/coco_person/val/val2017
+
+stage1:
+  enabled: true
+  freeze_vision_tower: true
+  freeze_llm: false
+  run_legacy_sft: true
+  max_slots: 32
+  max_length: 2048
+  max_new_tokens: 1024
+  num_train_epochs: 2
+  loss_weight_text: 1.0
+
+optimization:
+  batch_size: 1
+  gradient_accumulation_steps: 16
+  eval_batch_size: 1
+  num_workers: 4
+  gradient_checkpointing: true
+  learning_rate: 1.0e-5
+  weight_decay: 0.01
+  warmup_ratio: 0.05
+  bf16: true
+  fp16: false
+
+report_to: none
+
+swanlab:
+  enable: true
+  project: human-slot-memory-stage1
+  workspace: wmh
+  experiment_name: human-slot-memory-stage1
+  mode: cloud
+  preview_samples: 4
+  preview_max_new_tokens: 1024
+  stage_eval:
+    enable: true
+    samples: 16
+    seed: 42
+    iou_thr: 0.5
+    pck_thr: 0.2
+
+lora:
+  enable: true
+  r: 8
+  alpha: 32
+  dropout: 0.05
+  freeze_llm: false
+  freeze_vit: true
+  freeze_aligner: true
+  target_modules: ["q_proj", "k_proj", "v_proj", "o_proj"]
+
+runtime:
+  max_train_samples: null
+  max_val_samples: null

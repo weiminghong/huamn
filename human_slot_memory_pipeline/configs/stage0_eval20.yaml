@@ -1,0 +1,24 @@
+project:
+  name: human-slot-memory-stage0-eval20
+  seed: 42
+  output_dir: /home/priv/wmh_project/coco_person/outputs/hsm_stage0_eval20
+
+paths:
+  qwen_model: /home/priv/project/model/Qwen3.5-4B
+  adapter_path: ""
+  val_ann_json: /home/priv/wmh_project/coco_person/labels/coco_unihuman_val_v1.json
+  val_image_root: /home/priv/wmh_project/coco_person/val/val2017
+
+stage1:
+  max_length: 2048
+  max_new_tokens: 1024
+
+optimization:
+  bf16: true
+  fp16: false
+
+runtime:
+  num_samples: 20
+  device: cuda
+  iou_thr: 0.5
+  pck_thr: 0.2

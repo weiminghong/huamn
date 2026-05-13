@@ -1,0 +1,52 @@
+project:
+  name: human-slot-memory-debug
+  seed: 42
+  output_dir: /home/priv/wmh_project/coco_person/outputs/human_slot_memory_debug
+
+paths:
+  qwen_model: /home/priv/project/model/Qwen3.5-4B
+  dinov3_model: /home/priv/wmh_project/models/dinov3/vit_base_patch16_dinov3.lvd1689m
+  train_ann_json: /home/priv/wmh_project/coco_person/labels/coco_unihuman_train_v1.json
+  val_ann_json: /home/priv/wmh_project/coco_person/labels/coco_unihuman_val_v1.json
+  train_image_root: /home/priv/wmh_project/coco_person/images
+  val_image_root: /home/priv/wmh_project/coco_person/val/val2017
+
+stage1:
+  enabled: true
+  freeze_vision_tower: true
+  freeze_llm: false
+  max_slots: 32
+  max_length: 2048
+  loss_weight_text: 1.0
+
+stage2:
+  enabled: true
+  freeze_dinov3: true
+  hidden_dim: 256
+  max_queries: 32
+  loss_weight_box: 2.0
+  loss_weight_pose: 2.0
+  loss_weight_seg_bce: 2.0
+  loss_weight_seg_dice: 2.0
+  loss_weight_attr: 1.0
+  loss_weight_slot_align: 1.0
+
+stage3:
+  enabled: true
+  memory_tokens: 32
+  loss_weight_text: 1.0
+  loss_weight_consistency: 0.5
+
+optimization:
+  batch_size: 1
+  gradient_accumulation_steps: 8
+  num_workers: 0
+  learning_rate: 1.0e-4
+  weight_decay: 0.01
+  warmup_ratio: 0.05
+  bf16: true
+  fp16: false
+
+runtime:
+  dry_run: true
+  device: cuda
