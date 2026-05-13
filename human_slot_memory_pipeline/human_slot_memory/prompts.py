@@ -16,6 +16,7 @@ Each <person> block must contain <box>, <pose>, <gender>, <age>, and <score> tag
 Rules:
 - Output exactly one <answer>...</answer> block.
 - Do not output <think>, </think>, markdown, JSON, analysis, or duplicated answers.
+- Detect all visible persons, including small, crowded, truncated, and partially occluded people.
 - Coordinates are normalized to [0,1000].
 - Box uses [x1,y1,x2,y2].
 - Pose contains exactly 17 keypoints in COCO order:
@@ -26,6 +27,8 @@ Rules:
 - If a keypoint is missing, output exactly [0,0,0].
 - Gender: 0 male, 1 female, -1 unknown.
 - Age: use years if known, otherwise -1.
+- Do not skip a visible person because pose, gender, or age is uncertain.
+- For small or hard persons, still output the person box and fill unknown pose with [0,0,0], gender with -1, and age with -1.
 - If no visible person exists, output exactly <answer></answer>.
 
 Example:
