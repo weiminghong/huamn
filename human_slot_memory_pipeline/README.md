@@ -3,6 +3,8 @@
 This directory is an isolated research scaffold for the bidirectional human slot memory idea.
 It does not modify or depend on the older training directories.
 
+For a more complete design and implementation description, see `human_slot_memory_pipeline/PIPELINE.md`.
+
 ## Idea
 
 The pipeline is organized around three trainable stages:
