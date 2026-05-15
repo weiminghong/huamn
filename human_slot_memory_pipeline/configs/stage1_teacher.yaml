@@ -1,14 +1,14 @@
 project:
   name: human-slot-memory-stage1
   seed: 42
-  output_dir: /home/priv/wmh_project/coco_person/outputs/hsm_stage1_teacher
+  output_dir: /home/weiminghong/humanslot/outputs/hsm_stage1_teacher
 
 paths:
-  qwen_model: /home/priv/project/model/Qwen3.5-4B
-  train_ann_json: /home/priv/wmh_project/coco_person/labels/coco_unihuman_train_v1.json
-  val_ann_json: /home/priv/wmh_project/coco_person/labels/coco_unihuman_val_v1.json
-  train_image_root: /home/priv/wmh_project/coco_person/images
-  val_image_root: /home/priv/wmh_project/coco_person/val/val2017
+  qwen_model: /share2/program/weiminghong/model/Qwen3.5-4B
+  train_ann_json: /share2/program/weiminghong/coco/unihuman_label/coco_unihuman_train_v1.json
+  val_ann_json: /share2/program/weiminghong/coco/unihuman_label/coco_unihuman_val_v1.json
+  train_image_root: /share2/program/weiminghong/coco/train2017
+  val_image_root: /share2/program/weiminghong/coco/val2017
 
 stage1:
   enabled: true

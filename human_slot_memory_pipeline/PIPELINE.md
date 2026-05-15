@@ -181,8 +181,8 @@ The repository currently organizes the idea into four stages:
 
 These stages share the same raw supervision source:
 
-- `/home/priv/wmh_project/coco_person/labels/coco_unihuman_train_v1.json`
-- `/home/priv/wmh_project/coco_person/labels/coco_unihuman_val_v1.json`
+- `/share2/program/weiminghong/coco/unihuman_label/coco_unihuman_train_v1.json`
+- `/share2/program/weiminghong/coco/unihuman_label/coco_unihuman_val_v1.json`
 
 ## 3. Data Representation
 

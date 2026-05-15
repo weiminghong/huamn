@@ -1,13 +1,13 @@
 project:
   name: human-slot-memory-prompt-debug10
   seed: 42
-  output_dir: /home/priv/wmh_project/coco_person/outputs/hsm_prompt_debug10
+  output_dir: /home/weiminghong/humanslot/outputs/hsm_prompt_debug10
 
 paths:
-  qwen_model: /home/priv/project/model/Qwen3.5-4B
-  adapter_path: /home/priv/wmh_project/coco_person/outputs/qwen35_vl_box_pose_attr_sft_simple/checkpoint-800
-  val_jsonl: /home/priv/wmh_project/coco_person/ft_box_pose_attr_data/val.jsonl
-  image_root: /home/priv/wmh_project/coco_person/val/val2017
+  qwen_model: /share2/program/weiminghong/model/Qwen3.5-4B
+  adapter_path: ""
+  val_jsonl: /home/weiminghong/humanslot/outputs/hsm_stage1_teacher/stage1_sft_data/val.jsonl
+  image_root: /share2/program/weiminghong/coco/val2017
 
 stage1:
   max_length: 2048

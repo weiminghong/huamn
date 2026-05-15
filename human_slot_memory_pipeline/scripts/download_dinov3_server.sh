@@ -2,8 +2,8 @@
 set -euo pipefail
 
 MODEL_ID="${MODEL_ID:-timm/vit_base_patch16_dinov3.lvd1689m}"
-LOCAL_DIR="${LOCAL_DIR:-/home/priv/wmh_project/models/dinov3/vit_base_patch16_dinov3.lvd1689m}"
-PYTHON_BIN="${PYTHON_BIN:-/home/priv/miniconda3/envs/human_v2/bin/python}"
+LOCAL_DIR="${LOCAL_DIR:-/share2/program/DINOV3/DINOV3-safetensor/dinov3-vitb16-pretrain-lvd1689m}"
+PYTHON_BIN="${PYTHON_BIN:-python3}"
 export HF_ENDPOINT="${HF_ENDPOINT:-https://hf-mirror.com}"
 
 mkdir -p "${LOCAL_DIR}"
