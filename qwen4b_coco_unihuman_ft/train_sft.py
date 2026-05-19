@@ -17,6 +17,7 @@ from transformers import (
     TrainerCallback,
     TrainingArguments,
 )
+from transformers.trainer_utils import get_last_checkpoint
 
 try:
     from transformers import AutoModelForVision2Seq
@@ -48,6 +49,14 @@ def parse_args() -> argparse.Namespace:
         "--config",
         type=str,
         default="qwen4b_coco_unihuman_ft/configs/qwen4b_box_pose_sft.yaml",
+    )
+    parser.add_argument(
+        "--resume-from-checkpoint",
+        type=str,
+        nargs="?",
+        const="last",
+        default="",
+        help="Resume from a specific checkpoint path, or use 'last' to resume from the latest checkpoint in output_dir.",
     )
     return parser.parse_args()
 
@@ -775,7 +784,19 @@ def main() -> None:
         data_collator=collator,
         callbacks=callbacks,
     )
-    trainer.train()
+    resume_from_checkpoint: Optional[str] = None
+    if args.resume_from_checkpoint:
+        requested = str(args.resume_from_checkpoint).strip()
+        if requested == "last":
+            resume_from_checkpoint = get_last_checkpoint(str(cfg["output_dir"]))
+            if not resume_from_checkpoint:
+                raise ValueError(
+                    f"--resume-from-checkpoint=last was requested, but no checkpoint was found under {cfg['output_dir']}"
+                )
+        else:
+            resume_from_checkpoint = requested
+        print(json.dumps({"resume_from_checkpoint": resume_from_checkpoint}, ensure_ascii=False))
+    trainer.train(resume_from_checkpoint=resume_from_checkpoint)
     trainer.save_model()
     if has_eval:
         metrics = trainer.evaluate()

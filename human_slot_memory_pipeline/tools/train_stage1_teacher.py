@@ -20,6 +20,13 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Stage-1 structured MLLM teacher entry point.")
     parser.add_argument("--config", default="human_slot_memory_pipeline/configs/stage1_teacher.yaml")
     parser.add_argument("--prepare-only", action="store_true")
+    parser.add_argument(
+        "--resume-from-checkpoint",
+        nargs="?",
+        const="last",
+        default="",
+        help="Resume the downstream legacy SFT from a specific checkpoint path, or 'last' for the latest checkpoint.",
+    )
     return parser.parse_args()
 
 
@@ -98,6 +105,8 @@ def main() -> None:
     existing = env.get("PYTHONPATH", "")
     env["PYTHONPATH"] = str(repo_root) if not existing else str(repo_root) + os.pathsep + existing
     command = [sys.executable, "-m", "qwen4b_coco_unihuman_ft.train_sft", "--config", str(legacy_cfg_path)]
+    if args.resume_from_checkpoint:
+        command.extend(["--resume-from-checkpoint", str(args.resume_from_checkpoint)])
     subprocess.run(command, check=True, cwd=str(repo_root), env=env)
 
 
