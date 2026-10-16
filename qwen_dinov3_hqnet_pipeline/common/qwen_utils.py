@@ -129,6 +129,7 @@ def _forward_qwen_vision_module(vision_module: Any, pixel_values: Any, image_gri
             fn,
             {
                 "pixel_values": pixel_values,
+                "hidden_states": pixel_values,
                 "image_grid_thw": image_grid_thw,
                 "grid_thw": image_grid_thw,
                 "output_hidden_states": True,
@@ -145,6 +146,74 @@ def _forward_qwen_vision_module(vision_module: Any, pixel_values: Any, image_gri
     raise RuntimeError("Failed to extract vision features from the provided Qwen vision module.")
 
 
+
+def _maybe_add_human_stage1_special_tokens(processor: Any, model: Any) -> None:
+    tokenizer = getattr(processor, "tokenizer", None)
+    if tokenizer is None or not hasattr(model, "resize_token_embeddings"):
+        return
+    specials = ["<box>", "<pose>", "<seg>"]
+    existing = list(getattr(tokenizer, "additional_special_tokens", []) or [])
+    to_add = [tok for tok in specials if tok not in existing]
+    if to_add:
+        tokenizer.add_special_tokens({"additional_special_tokens": existing + to_add})
+    model.resize_token_embeddings(len(tokenizer))
+
+
+def _resolve_checkpoint_processor_path(adapter_path: str) -> Optional[Path]:
+    if not adapter_path:
+        return None
+    adapter = Path(adapter_path)
+    candidates = (adapter.parent / "processor", adapter / "processor")
+    for candidate in candidates:
+        if (candidate / "tokenizer.json").exists() or (candidate / "processor_config.json").exists():
+            return candidate
+    return None
+
+
+def _adapter_vocab_size(adapter_path: str) -> Optional[int]:
+    if not adapter_path:
+        return None
+    model_file = Path(adapter_path) / "adapter_model.safetensors"
+    if not model_file.exists():
+        return None
+    try:
+        from safetensors import safe_open
+    except Exception:
+        return None
+    with safe_open(str(model_file), framework="pt", device="cpu") as f:
+        for key in f.keys():
+            if "embed_tokens.lora_embedding_A" in key:
+                return int(f.get_tensor(key).shape[1])
+            if "lm_head.lora_B" in key:
+                return int(f.get_tensor(key).shape[0])
+    return None
+
+
+def _resize_for_stage1_adapter(processor: Any, model: Any, adapter_path: str) -> None:
+    tokenizer = getattr(processor, "tokenizer", None)
+    checkpoint_processor = _resolve_checkpoint_processor_path(adapter_path)
+    if tokenizer is not None and checkpoint_processor is not None and hasattr(model, "resize_token_embeddings"):
+        # A finalized Stage1 checkpoint owns its tokenizer contract. In particular,
+        # Stage1-v3 stores <person>/<pose>/<seg> at fixed trainable-token indices.
+        # Adding legacy tokens here would silently change the vocabulary before PEFT
+        # loads the trainable token rows.
+        target_vocab = len(tokenizer)
+        current_embeddings = model.get_input_embeddings() if hasattr(model, "get_input_embeddings") else None
+        current_vocab = int(getattr(current_embeddings, "num_embeddings", 0) or 0)
+        if target_vocab != current_vocab:
+            model.resize_token_embeddings(target_vocab)
+        return
+
+    _maybe_add_human_stage1_special_tokens(processor, model)
+    target_vocab = _adapter_vocab_size(adapter_path)
+    if target_vocab is None or not hasattr(model, "resize_token_embeddings"):
+        return
+    current_embeddings = model.get_input_embeddings() if hasattr(model, "get_input_embeddings") else None
+    current_vocab = int(getattr(current_embeddings, "num_embeddings", 0) or 0)
+    if target_vocab > current_vocab:
+        model.resize_token_embeddings(target_vocab)
+
+
 def load_qwen_vl_model(
     model_name_or_path: str,
     adapter_path: str = "",
@@ -156,6 +225,10 @@ def load_qwen_vl_model(
     from transformers import AutoConfig, AutoModelForCausalLM, AutoProcessor
 
     try:
+        from transformers import AutoModelForImageTextToText
+    except Exception:
+        AutoModelForImageTextToText = None
+    try:
         from transformers import AutoModelForVision2Seq
     except Exception:
         AutoModelForVision2Seq = None
@@ -166,11 +239,21 @@ def load_qwen_vl_model(
         "float32": torch.float32,
         None: torch.float32,
     }[torch_dtype]
-    processor = AutoProcessor.from_pretrained(model_name_or_path, trust_remote_code=True)
+    processor_path = _resolve_checkpoint_processor_path(adapter_path) or Path(model_name_or_path)
+    processor = AutoProcessor.from_pretrained(str(processor_path), trust_remote_code=True)
     cfg = AutoConfig.from_pretrained(model_name_or_path, trust_remote_code=True)
     has_vision = bool(getattr(cfg, "vision_config", None))
     model = None
-    if has_vision and AutoModelForVision2Seq is not None:
+    if has_vision and AutoModelForImageTextToText is not None:
+        try:
+            model = AutoModelForImageTextToText.from_pretrained(
+                model_name_or_path,
+                trust_remote_code=True,
+                torch_dtype=dtype,
+            )
+        except Exception:
+            model = None
+    if model is None and has_vision and AutoModelForVision2Seq is not None:
         try:
             model = AutoModelForVision2Seq.from_pretrained(
                 model_name_or_path,
@@ -188,6 +271,7 @@ def load_qwen_vl_model(
     if adapter_path:
         from peft import PeftModel
 
+        _resize_for_stage1_adapter(processor, model, adapter_path)
         model = PeftModel.from_pretrained(model, adapter_path)
         if merge_lora and hasattr(model, "merge_and_unload"):
             model = model.merge_and_unload()
@@ -235,7 +319,9 @@ def extract_qwen_vision_features(model: Any, pixel_values: Any, image_grid_thw: 
             fn,
             {
                 "pixel_values": pixel_values,
+                "hidden_states": pixel_values,
                 "image_grid_thw": image_grid_thw,
+                "grid_thw": image_grid_thw,
                 "output_hidden_states": True,
                 "return_dict": True,
             },

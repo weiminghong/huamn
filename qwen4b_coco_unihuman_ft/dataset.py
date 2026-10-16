@@ -7,7 +7,7 @@ import torch
 from PIL import Image
 from torch.utils.data import Dataset
 
-from .convert_coco_unihuman import _build_target_text
+from .output_protocol import FORMAT_COMPACT_TAG, build_target_text, normalize_target_format
 from .prompts import (
     DEFAULT_ASSISTANT_PREFIX_TAG,
     build_box_pose_attribute_prompt,
@@ -34,12 +34,16 @@ class CocoUniHumanSFTDataset(Dataset):
         image_root: Optional[str] = None,
         max_samples: Optional[int] = None,
         extra_prompt: Optional[str] = None,
+        target_format: str = FORMAT_COMPACT_TAG,
+        force_rebuild_target_text: bool = False,
     ) -> None:
         self.records = load_jsonl(jsonl_path)
         if max_samples is not None:
             self.records = self.records[: int(max_samples)]
         self.image_root = image_root
         self.extra_prompt = extra_prompt
+        self.target_format = normalize_target_format(target_format)
+        self.force_rebuild_target_text = bool(force_rebuild_target_text)
 
     def __len__(self) -> int:
         return len(self.records)
@@ -59,10 +63,17 @@ class CocoUniHumanSFTDataset(Dataset):
             raise FileNotFoundError(f"Image not found: {image_path}")
 
         image = Image.open(image_path).convert("RGB")
-        prompt = build_box_pose_attribute_prompt(self.extra_prompt)
+        prompt = build_box_pose_attribute_prompt(self.extra_prompt, output_format=self.target_format)
         target_text = str(rec.get("target_text", "")).strip()
-        if not target_text or not target_text.lower().startswith("<answer"):
-            target_text = _build_target_text(rec)
+        record_format = str(rec.get("target_format", "")).strip()
+        if (
+            self.force_rebuild_target_text
+            or not target_text
+            or not target_text.lower().startswith("<answer")
+            or (record_format and normalize_target_format(record_format) != self.target_format)
+            or (not record_format and self.target_format != "tag")
+        ):
+            target_text = build_target_text(rec, target_format=self.target_format)
 
         return {
             "id": rec.get("id", str(idx)),
@@ -70,6 +81,7 @@ class CocoUniHumanSFTDataset(Dataset):
             "image_path": image_path,
             "prompt": prompt,
             "target_text": target_text,
+            "target_format": self.target_format,
         }
 
 
@@ -80,9 +92,15 @@ class SFTCollator:
         self.max_length = int(max_length)
         self.assistant_prefix = DEFAULT_ASSISTANT_PREFIX_TAG
 
+    def _append_eos(self, text: str) -> str:
+        eos = getattr(self.tokenizer, "eos_token", None)
+        if eos and not text.endswith(str(eos)):
+            return text + str(eos)
+        return text
+
     def __call__(self, samples: List[Dict[str, Any]]) -> Dict[str, torch.Tensor]:
         prompts = [str(s["prompt"]) for s in samples]
-        targets = [strip_answer_prefix(str(s["target_text"])) for s in samples]
+        targets = [self._append_eos(strip_answer_prefix(str(s["target_text"]))) for s in samples]
         prefixes = [
             build_vl_chat_text(
                 processor=self.processor,

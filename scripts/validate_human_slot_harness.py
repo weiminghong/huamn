@@ -1,0 +1,315 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+from typing import Any
+
+
+REQUIRED_OUTPUTS = {"box", "segment", "pose", "age", "gender"}
+REQUIRED_FORBIDDEN = {
+    "HQNet shared five-task decoder",
+    "SAM image encoder in the mainline",
+    "ViTPose/RTMPose image encoder in the mainline",
+    "raw contour mask generation",
+    "raw multi-person pose coordinate generation",
+    "Mask2Former or MaskDINO mainline decoder",
+}
+
+
+def load(path: Path) -> Any:
+    with path.open("r", encoding="utf-8") as handle:
+        return json.load(handle)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--harness", default="research_harness")
+    parser.add_argument("--proposal", default="")
+    parser.add_argument("--output", default="")
+    args = parser.parse_args()
+
+    root = Path(args.harness)
+    checks = []
+    errors = []
+
+    def check(name: str, condition: bool, detail: str) -> None:
+        checks.append({"name": name, "pass": bool(condition), "detail": detail})
+        if not condition:
+            errors.append(f"{name}: {detail}")
+
+    requirements = load(root / "requirements.json")
+    state = load(root / "state.json")
+    goal = load(Path(state["paper_goal_file"]))
+    ledger = load(Path(state["evidence_ledger_file"]))
+    active_path = root / "branches" / (
+        state["active_mainline"] + ".json"
+    )
+    stage01 = load(root / "stage0_stage1_readiness.json")
+    active = load(active_path)
+    closed = load(root / "branches" / "CLOSED_STAGE1_BRANCHES.json")
+    evidence_by_id = {item["id"]: item for item in ledger["entries"]}
+
+    stage0 = requirements["immutable_requirements"]["stage0"]
+    stage1 = requirements["immutable_requirements"]["stage1"]
+    stage2 = requirements["immutable_requirements"]["stage2"]
+    stage3 = requirements["immutable_requirements"]["stage3"]
+    paper = requirements["immutable_requirements"]["paper"]
+
+    check(
+        "stage0_outputs_complete",
+        set(stage0["outputs"]) == REQUIRED_OUTPUTS,
+        f"outputs={stage0['outputs']}",
+    )
+    check(
+        "stage0_arms_locked",
+        set(stage0["arms"])
+        == {
+            "S0_NATIVE_QWEN_NUMERIC_JSON",
+        },
+        f"arms={stage0['arms']}",
+    )
+    check(
+        "stage1_outputs_complete",
+        set(stage1["outputs"]) == REQUIRED_OUTPUTS,
+        f"outputs={stage1['outputs']}",
+    )
+    check(
+        "stage1_lisa_pose_routing_contract",
+        "native Qwen text decoder" in stage1["decoder_contract"]
+        and "<SEG>" in stage1["decoder_contract"] and "<POSE>" in stage1["decoder_contract"],
+        stage1["decoder_contract"],
+    )
+    check(
+        "stage1_loss_contract",
+        stage1["loss"]
+        == "Text cross-entropy plus mature mask BCE/focal/dice and SimCC pose/visibility losses.",
+        stage1["loss"],
+    )
+    check(
+        "stage1_forbidden_complete",
+        REQUIRED_FORBIDDEN.issubset(
+            set(stage1["forbidden_mainline_components"])
+        ),
+        "all prohibited specialist Stage-1 paths must remain explicit",
+    )
+    check(
+        "stage1_joint_tuning",
+        {"Qwen Vision", "vision merger", "Qwen LLM"}.issubset(
+            set(stage1["joint_tuning"])
+        ),
+        f"joint_tuning={stage1['joint_tuning']}",
+    )
+    check(
+        "active_branch_matches_state",
+        active["branch_id"] == state["active_mainline"]
+        and active["status"] == "admitted_mainline",
+        f"state={state['active_mainline']} branch={active['branch_id']}",
+    )
+    check(
+        "active_branch_lisa_pose_routing_decoder",
+        active["representation"]["decoder"]
+        == "native Qwen text decoder for Human Slot, box, gender, and age; LISA-style <SEG> and <POSE> hidden-state routing into mature Qwen-native dense decoders",
+        active["representation"]["decoder"],
+    )
+    check(
+        "active_branch_has_falsifier",
+        bool(active.get("falsifier")),
+        "mainline branch requires an explicit falsifier",
+    )
+    check(
+        "active_branch_has_all_gates",
+        set(active["gates"]) == {
+            "G0_codec",
+            "G1_overfit_64",
+            "G2_pilot_generated_validation",
+            "G3_full_stage1",
+        },
+        f"gates={list(active['gates'])}",
+    )
+    check(
+        "stage2_visual_freeze",
+        "Stage-1 Qwen Vision" in stage2["frozen"]
+        and "Stage-1 vision merger" in stage2["frozen"],
+        f"frozen={stage2['frozen']}",
+    )
+    check(
+        "stage2_rgb_input",
+        "the same raw RGB image to DINOv3" in stage2["inputs"],
+        f"inputs={stage2['inputs']}",
+    )
+    check(
+        "stage3_full_vlm_freeze",
+        "entire Stage-1 VLM" in stage3["frozen"],
+        f"frozen={stage3['frozen']}",
+    )
+    check(
+        "paper_story_locked",
+        paper["story_center"]
+        == "Progressive transfer across Stage-1, Stage-2, and Stage-3.",
+        paper["story_center"],
+    )
+    check(
+        "closed_branches_closed",
+        all(
+            str(branch["status"]).startswith("closed_")
+            for branch in closed["branches"]
+        ),
+        "every rejected architecture must remain closed",
+    )
+    admitted_actions = {
+        "A001_IMPLEMENT_GENERATIVE_CODEC": "G0_codec",
+        "A002_IMPLEMENT_G1_OVERFIT64": "G1_overfit_64",
+        "A002_FREEZE_STAGE0_STAGE1_INTERFACE": "S0_G0_INTERFACE",
+        "A003_FREEZE_BOX_CONDITIONED_INTERFACE": "G0_box_conditioned_interface",
+        "A004_FREEZE_MATURE_HUMAN_QUERY_INTERFACE": "G0_mature_human_query_interface",
+        "A005_FREEZE_LISA_POSE_ROUTING_INTERFACE": "G0_lisa_pose_routing_interface",
+        "A006_RUN_G1_OVERFIT64": "G1_overfit_64",
+        "A007_RUN_DECODER_WARMUP": "G1_overfit_64",
+        "A008_RUN_FULL_JOINT": "USER_AUTHORIZED_FULL_TRAINING",
+    }
+    next_action = state["next_action"]
+    check(
+        "next_action_is_admitted",
+        next_action["id"] in admitted_actions
+        and next_action["admission_gate"] == admitted_actions[next_action["id"]],
+        json.dumps(next_action, sort_keys=True),
+    )
+    check(
+        "project_agents_present",
+        Path("AGENTS.md").is_file(),
+        "project-level instructions must persist",
+    )
+    goal_claim_ids = {item["id"] for item in goal["claims"]}
+    state_claim_ids = {item["id"] for item in state["active_claims"]}
+    check(
+        "goal_claims_match_state",
+        goal_claim_ids == state_claim_ids,
+        f"goal={sorted(goal_claim_ids)} state={sorted(state_claim_ids)}",
+    )
+    check(
+        "ledger_pending_claims_match_goal",
+        set(ledger["summary"]["paper_claims_pending"]) == goal_claim_ids,
+        json.dumps(ledger["summary"], sort_keys=True),
+    )
+    check(
+        "ledger_has_no_premature_claim",
+        ledger["summary"]["paper_claims_established"] == [],
+        json.dumps(ledger["summary"]["paper_claims_established"]),
+    )
+    check(
+        "ledger_records_g0_pass",
+        evidence_by_id["E007_G0_REAL_CODEC_AUDIT"]["status"]
+        == "verified_gate_pass",
+        evidence_by_id["E007_G0_REAL_CODEC_AUDIT"]["status"],
+    )
+    check(
+        "ledger_records_lisa_pose_g0_pass",
+        evidence_by_id["E021_LISA_POSE_G0"]["status"] == "verified_gate_pass",
+        evidence_by_id["E021_LISA_POSE_G0"]["status"],
+    )
+    check(
+        "ledger_records_g1_diagnostic_completion",
+        evidence_by_id["E008_G1_OVERFIT64"]["status"] == "completed_diagnostic_not_g1_pass",
+        evidence_by_id["E008_G1_OVERFIT64"]["status"],
+    )
+    check(
+        "goal_preserves_lisa_pose_routing_stage1",
+        "normal text decoder emits person slots" in goal["scientific_object"]["stage1"],
+        goal["scientific_object"]["stage1"],
+    )
+    check(
+        "goal_summary_present",
+        (root / "GOAL_AND_EVIDENCE.md").is_file(),
+        "human-readable goal and evidence summary must persist",
+    )
+    check(
+        "stage0_stage1_not_prematurely_qualified",
+        stage01["overall"]["stage0_qualified"] is False
+        and stage01["overall"]["stage1_qualified"] is False
+        and stage01["overall"]["stage2_admitted"] is False,
+        json.dumps(stage01["overall"], sort_keys=True),
+    )
+    check(
+        "stage0_has_only_native_arm",
+        {item["id"] for item in stage01["stage0"]["required_arms"]}
+        == {
+            "S0_NATIVE_QWEN_NUMERIC_JSON",
+        },
+        json.dumps(stage01["stage0"]["required_arms"], sort_keys=True),
+    )
+    check(
+        "stage1_has_zero_step_initialization_control",
+        stage01["stage1"]["pre_tuning_control"].startswith(
+            "S1_INIT_"
+        ),
+        stage01["stage1"]["pre_tuning_control"],
+    )
+    check(
+        "ledger_records_stage0_closed_as_motivation",
+        evidence_by_id["E014_CURRENT_STAGE0_BASELINE"]["status"]
+        == "closed_as_motivation_context",
+        evidence_by_id["E014_CURRENT_STAGE0_BASELINE"]["status"],
+    )
+    check(
+        "ledger_records_stage1_init_verified_in_g0",
+        evidence_by_id["E015_STAGE1_CODEC_INITIALIZATION_CONTROL"]["status"]
+        == "verified_in_g0_preoptimizer_manifest",
+        evidence_by_id["E015_STAGE1_CODEC_INITIALIZATION_CONTROL"]["status"],
+    )
+    check(
+        "requested_full_training_is_next",
+        state["next_action"]["id"]
+        == "A008_RUN_FULL_JOINT",
+        state["next_action"]["id"],
+    )
+
+    if args.proposal:
+        proposal = load(Path(args.proposal))
+        components = set(
+            proposal.get("stage1", {}).get(
+                "architecture_components", []
+            )
+        )
+        forbidden = set(stage1["forbidden_mainline_components"])
+        check(
+            "proposal_preserves_stage1_decoder_contract",
+            not bool(components & forbidden),
+            f"forbidden_components={sorted(components & forbidden)}",
+        )
+        check(
+            "proposal_has_admission_fields",
+            all(
+                proposal.get(name)
+                for name in (
+                    "paper_claim",
+                    "hypothesis",
+                    "falsifier",
+                    "paper_destination",
+                    "controls",
+                    "cost",
+                    "reopen_condition",
+                )
+            ),
+            "proposal admission fields are incomplete",
+        )
+
+    report = {
+        "schema": "human-slot-harness-validation-v1",
+        "pass": not errors,
+        "checks": checks,
+        "errors": errors,
+        "active_mainline": state["active_mainline"],
+        "current_stage": state["current_stage"],
+        "next_action": state["next_action"]["id"],
+    }
+    output = json.dumps(report, indent=2) + "\n"
+    if args.output:
+        Path(args.output).write_text(output, encoding="utf-8")
+    print(output, end="")
+    return 0 if report["pass"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

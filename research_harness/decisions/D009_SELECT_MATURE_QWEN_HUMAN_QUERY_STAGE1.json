@@ -1,0 +1,9 @@
+{
+  "schema": "human-slot-decision-v1",
+  "id": "D009_SELECT_MATURE_QWEN_HUMAN_QUERY_STAGE1",
+  "date": "2026-08-30",
+  "status": "accepted_user_architecture_choice",
+  "decision": "Use HQNet shared Human Queries and mature DINO/MaskDINO/PETR/attribute heads for official Stage-1 outputs. Qwen supplies semantic conditioning and receives Human Queries as person-slot soft tokens.",
+  "reason": "This is the highest-confidence route to normal mask and pose AP while preserving the three-stage transfer story.",
+  "consequence": "Close decoder-minimal C as a control and freeze D interface before implementation."
+}

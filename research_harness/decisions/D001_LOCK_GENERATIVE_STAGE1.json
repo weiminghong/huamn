@@ -1,0 +1,19 @@
+{
+  "schema": "human-slot-decision-event-v1",
+  "decision_id": "D001_LOCK_GENERATIVE_STAGE1",
+  "time": "2026-08-30T18:30:00+08:00",
+  "decision": "Lock Stage-1 to normal autoregressive Qwen decoding for all five tasks and close specialist Stage-1 head routes.",
+  "rationale": "The scientific object is representation transfer from a human-adapted generative VLM. Replacing its outputs with HQNet, SAM, ROI heatmaps, regression heads, or hidden-state mask decoders changes that object even when those routes improve accuracy.",
+  "evidence": [
+    "Explicit user correction in the current Codex task",
+    "The dense-head pilot optimized successfully but did not test the requested architecture",
+    "KptLLM++ demonstrates direct textual coordinate decoding for keypoints",
+    "HiMTok and direct contour approaches demonstrate autoregressive mask representations without external segmentation tools"
+  ],
+  "updates": {
+    "active_mainline": "B_STAGE1_GENERATIVE_HUMAN_SERIALIZATION_V1",
+    "next_gate": "G0_codec",
+    "closed_branches": "research_harness/branches/CLOSED_STAGE1_BRANCHES.json"
+  },
+  "reopen_condition": "Only an explicit user decision changing the Stage-1 decoder contract."
+}

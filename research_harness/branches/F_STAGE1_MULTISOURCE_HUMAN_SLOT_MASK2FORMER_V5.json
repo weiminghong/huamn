@@ -1,0 +1,134 @@
+{
+  "schema": "human-slot-experiment-proposal-v1",
+  "branch_id": "F_STAGE1_MULTISOURCE_HUMAN_SLOT_MASK2FORMER_V5",
+  "status": "implemented_preflight_not_admitted_for_training",
+  "stage": "Stage-1 successor",
+  "paper_claim": "Human adaptation learned from partially labeled multi-source human tasks produces visual and person-semantic representations that improve a matched DINOv3 grounder.",
+  "hypothesis": "Task-valid multi-source supervision, named pose serialization and person-conditioned Mask2Former decoding will teach Qwen Vision transferable human structure without an external RGB encoder.",
+  "falsifier": "Close or revise the branch if generated Human Slot ownership fails, if dense losses do not causally reach Qwen Vision, or if adapted frozen Qwen features do not beat base-Qwen features in matched DINO transfer.",
+  "paper_destination": [
+    "successor Stage-1 architecture",
+    "multi-source dataset table",
+    "task-valid sampling ablation",
+    "Stage-2 visual transfer",
+    "Stage-3 semantic transfer"
+  ],
+  "datasets": {
+    "coco_unihuman": {
+      "known_train_images": 64115,
+      "tasks": ["box", "pose", "segment", "age", "gender"],
+      "status": "available"
+    },
+    "mhp_v2": {
+      "known_train_images": 15403,
+      "tasks": ["box", "pose", "parsing"],
+      "status": "missing_on_server"
+    },
+    "psg": {
+      "known_total_images": 49000,
+      "tasks": ["box", "segment", "relation"],
+      "status": "missing_on_server"
+    },
+    "vaw": {
+      "known_total_images": 72274,
+      "tasks": ["box", "segment_partial", "attribute"],
+      "status": "missing_on_server"
+    }
+  },
+  "data_contract": {
+    "unit": "image record with deterministic person slots, scene entities and relation edges",
+    "missing_labels": "explicit valid=false; never converted to negatives",
+    "pose": "COCO-17 and MHP-16 map by joint name to a 21-joint union; MHP visibility 0/1/2 is converted to canonical COCO-style 2/1/0",
+    "segment": "COCO binary person mask remains distinct from MHP parsing",
+    "parsing": "official MHP-59 instance-level label map",
+    "relations": "person subject and object endpoint identity are preserved",
+    "cross_dataset_join": "exact source identifiers first; otherwise mutual-best IoU above a fixed threshold and ambiguity margin; rejected matches remain unmerged",
+    "split_policy": "global image identity audit prevents COCO/VG/PSG overlap across train and evaluation"
+  },
+  "representation": {
+    "human_slot": "one generated <human> token per deterministic person record",
+    "text_tasks": "box, named 21-joint pose coordinates, age, gender, attributes and relations",
+    "segment": "<human> state plus segment task embedding conditions a Mask2Former person query",
+    "parsing": "<human> state plus 58 part embeddings condition Mask2Former part queries",
+    "owner_binding": "one person assignment is shared by every task",
+    "mainline_rgb_encoder": "Qwen Vision only"
+  },
+  "implementation_provenance": {
+    "faithful_reuse": [
+      "Transformers Mask2FormerPixelDecoder",
+      "Transformers Mask2FormerMaskedAttentionDecoder"
+    ],
+    "necessary_adaptation": [
+      "equal-grid Qwen intermediate features are converted to P4/P8/P16/P32",
+      "learned Mask2Former queries are replaced by person-owned LLM query content",
+      "binary segment and MHP part queries share the dense decoder"
+    ],
+    "custom_components": [
+      "canonical multi-source schema",
+      "task-first sqrt-size dataset sampler",
+      "Qwen-to-Mask2Former bridge",
+      "person and part query construction"
+    ],
+    "pretrained_mask2former_weights": "not yet available or loaded",
+    "external_rgb_encoder": false
+  },
+  "training": {
+    "sampling": "choose task first, then dataset proportional to sqrt(eligible records); retain controlled joint packets",
+    "parameter_scope": "Vision all-block LoRA, full merger, LLM attention/MLP LoRA, special rows, bridge and dense decoder",
+    "losses": {
+      "text": "autoregressive cross-entropy on present task fields only",
+      "segment": "BCE plus Dice",
+      "parsing": "59-class CE plus foreground-part Dice"
+    },
+    "evaluation_cadence": "once per exact completed epoch",
+    "checkpoint_cadence": "recovery only; independent of evaluation"
+  },
+  "evaluation": {
+    "coco_unihuman": "paper-aligned no-small COCO/HQNet protocol",
+    "mhp_parsing": "official mIoU, APp50, APpvol and PCP50",
+    "mhp_pose": "native MHP-16 protocol, separately reported",
+    "psg_relation": "official R@K and mR@K with person-relation subset",
+    "vaw_attribute": "official mAP/mA/F1",
+    "aggregation_rule": "never average incompatible scorers or units into one AP"
+  },
+  "gates": {
+    "V5_G0_SCHEMA_INTERFACE": {
+      "status": "passed_cpu_and_real_coco3",
+      "requirements": [
+        "schema validation",
+        "pose topology mapping",
+        "missing-label masking",
+        "task eligibility",
+        "person ownership",
+        "Mask2Former shape and gradient path"
+      ]
+    },
+    "V5_G1_COCO_SMALL_GENERATED": {
+      "status": "pending",
+      "requirement": "free-generation Human Slot and dense geometry learnability on a small frozen set"
+    },
+    "V5_G2_COCO_FULL": {
+      "status": "pending",
+      "requirement": "COCO-UniHuman official evaluation plus base/adapted frozen probes"
+    },
+    "V5_G3_MULTISOURCE": {
+      "status": "blocked_by_assets_and_official_loaders",
+      "requirement": "native per-dataset official evaluation and matched transfer controls"
+    }
+  },
+  "controls": [
+    "DINO-only",
+    "DINO plus frozen base-Qwen visual features",
+    "DINO plus frozen v5-Qwen visual features",
+    "v5 visual transfer plus frozen semantic states",
+    "image shuffle",
+    "person-state shuffle",
+    "full external Mask2Former upper bound"
+  ],
+  "cost": {
+    "current_data_disk_free_gib": 7.8,
+    "gpu": "no new GPU run authorized or queued",
+    "storage_blocker": "MHP, PSG and VAW assets do not fit the current free-space budget without a storage decision"
+  },
+  "reopen_condition": "Official source assets, annotation decoders, split de-duplication and scorer parity must pass before multi-source training."
+}

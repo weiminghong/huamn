@@ -1,0 +1,1010 @@
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import math
+import os
+import random
+import shutil
+import time
+from pathlib import Path
+from typing import Any, Dict, Mapping, Tuple
+
+import numpy as np
+import torch
+from torch.utils.data import DataLoader
+from transformers import AutoProcessor
+
+from human_lisa_qwen_v1.data_v1 import CocoUniHumanV1Dataset
+from human_lisa_qwen_v1.modeling import load_qwen_vl_backbone
+
+from .collator_v4 import Stage1V4Collator
+from .modeling_v4 import Stage1V4Model
+from .schema_v4 import PROMPT_V4, SPECIAL_TOKENS_V4, THINKING_MODE_V4
+from .token_rows_v4 import add_v4_special_tokens
+from .training_v4 import (
+    apply_visual_lora,
+    assert_finite_optimizer,
+    assert_finite_parameters,
+    build_optimizer,
+    clip_gradients_by_group,
+    EpochRandomSampler,
+    gradient_norms_by_family,
+    move_to_device,
+    scheduled_route_loss_weights,
+    set_step_learning_rates,
+    suppress_zero_lr_gradients,
+    trainable_manifest,
+    trainable_merger_state,
+    unfreeze_visual_merger,
+)
+
+
+METADATA_KEYS = {
+    "label_audit",
+    "sample_ids",
+    "target_texts",
+    "source_ann_ids",
+    "sequence_lengths",
+}
+
+TOKEN_INIT_SOURCE_TEXT = {"pose": "pose", "seg": "seg"}
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--train-ann",
+        default="/root/autodl-tmp/coco/unihuman_label/coco_unihuman_train_v1.json",
+    )
+    parser.add_argument(
+        "--train-image-root",
+        default="/root/autodl-tmp/coco/train2017",
+    )
+    parser.add_argument(
+        "--model",
+        default="/root/autodl-tmp/model/Qwen3.5-4B",
+    )
+    parser.add_argument("--output-dir", required=True)
+    parser.add_argument("--resume-from", default="")
+    parser.add_argument(
+        "--profile", choices=["head_only", "vision_tuned"], default="vision_tuned"
+    )
+    parser.add_argument("--max-samples", type=int, default=None)
+    parser.add_argument("--epochs", type=int, default=1)
+    parser.add_argument("--max-optimizer-steps", type=int, default=0)
+    parser.add_argument("--stop-after-optimizer-steps", type=int, default=0)
+    parser.add_argument("--stop-after-epoch", type=int, default=0)
+    parser.add_argument("--batch-size", type=int, default=4)
+    parser.add_argument("--grad-accum-steps", type=int, default=4)
+    parser.add_argument("--num-workers", type=int, default=4)
+    parser.add_argument("--max-length", type=int, default=5000)
+    parser.add_argument("--horizontal-flip-prob", type=float, default=0.0)
+    parser.add_argument("--visual-lora-start-block", type=int, default=16)
+    parser.add_argument("--lora-r", type=int, default=8)
+    parser.add_argument("--lora-alpha", type=int, default=16)
+    parser.add_argument("--lora-dropout", type=float, default=0.05)
+    parser.add_argument("--visual-lr", type=float, default=1e-5)
+    parser.add_argument("--merger-lr", type=float, default=1e-5)
+    parser.add_argument("--token-lr", type=float, default=2e-5)
+    parser.add_argument(
+        "--token-init", choices=["semantic", "zero"], default="semantic"
+    )
+    parser.add_argument("--head-lr", type=float, default=2e-4)
+    parser.add_argument("--weight-decay", type=float, default=0.01)
+    parser.add_argument("--warmup-ratio", type=float, default=0.03)
+    parser.add_argument("--decoder-warmup-steps", type=int, default=200)
+    parser.add_argument("--visual-warmup-steps", type=int, default=200)
+    parser.add_argument("--grad-clip", type=float, default=1.0)
+    parser.add_argument("--token-grad-clip", type=float, default=1.0)
+    parser.add_argument("--decoder-dim", type=int, default=256)
+    parser.add_argument("--decoder-heads", type=int, default=8)
+    parser.add_argument("--decoder-layers", type=int, default=2)
+    parser.add_argument("--text-structure-weight", type=float, default=0.25)
+    parser.add_argument("--text-box-weight", type=float, default=1.0)
+    parser.add_argument("--text-pose-route-weight", type=float, default=0.25)
+    parser.add_argument("--text-seg-route-weight", type=float, default=0.25)
+    parser.add_argument("--route-loss-start-weight", type=float, default=0.02)
+    parser.add_argument("--route-loss-hold-steps", type=int, default=100)
+    parser.add_argument("--route-loss-warmup-steps", type=int, default=400)
+    parser.add_argument("--text-gender-weight", type=float, default=1.0)
+    parser.add_argument("--text-age-weight", type=float, default=1.0)
+    parser.add_argument("--pose-l1-weight", type=float, default=1.0)
+    parser.add_argument("--pose-oks-weight", type=float, default=1.0)
+    parser.add_argument("--pose-visibility-weight", type=float, default=0.25)
+    parser.add_argument("--mask-bce-weight", type=float, default=1.0)
+    parser.add_argument("--mask-dice-weight", type=float, default=1.0)
+    parser.add_argument("--text-task-weight", type=float, default=1.0)
+    parser.add_argument("--pose-task-weight", type=float, default=1.0)
+    parser.add_argument("--seg-task-weight", type=float, default=1.0)
+    parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--log-every", type=int, default=10)
+    parser.add_argument("--save-every", type=int, default=1000)
+    parser.add_argument("--data-only-batches", type=int, default=0)
+    parser.add_argument(
+        "--bf16", action=argparse.BooleanOptionalAction, default=True
+    )
+    parser.add_argument(
+        "--deterministic", action=argparse.BooleanOptionalAction, default=True
+    )
+    return parser.parse_args()
+
+
+def configure_determinism(enabled: bool) -> None:
+    if not enabled:
+        return
+    os.environ.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
+    torch.use_deterministic_algorithms(True)
+    torch.backends.cudnn.benchmark = False
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cuda.matmul.allow_tf32 = False
+    torch.backends.cudnn.allow_tf32 = False
+
+
+def set_seed(seed: int) -> None:
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+
+
+def hidden_size_from_config(model: torch.nn.Module) -> int:
+    config = getattr(model, "config", None)
+    for candidate in [
+        getattr(config, "text_config", None),
+        getattr(config, "llm_config", None),
+        config,
+    ]:
+        if candidate is not None and getattr(candidate, "hidden_size", None):
+            return int(candidate.hidden_size)
+    return int(model.get_input_embeddings().embedding_dim)
+
+
+def prepare_processor(model_path: str):
+    processor = AutoProcessor.from_pretrained(
+        model_path, trust_remote_code=True
+    )
+    processor.tokenizer.padding_side = "right"
+    if processor.tokenizer.pad_token_id is None:
+        processor.tokenizer.pad_token = processor.tokenizer.eos_token
+    existing = list(
+        getattr(processor.tokenizer, "additional_special_tokens", []) or []
+    )
+    additions = [token for token in SPECIAL_TOKENS_V4 if token not in existing]
+    if additions:
+        processor.tokenizer.add_special_tokens(
+            {"additional_special_tokens": existing + additions}
+        )
+    return processor
+
+
+def build_dataset_and_loader(args: argparse.Namespace, processor, token_ids):
+    dataset = CocoUniHumanV1Dataset(
+        args.train_ann,
+        args.train_image_root,
+        training=True,
+        horizontal_flip_prob=args.horizontal_flip_prob,
+        max_samples=args.max_samples,
+        decode_eval_segmentation=False,
+    )
+    collator = Stage1V4Collator(
+        processor=processor,
+        token_ids=token_ids,
+        prompt=PROMPT_V4,
+        max_length=args.max_length,
+    )
+    sampler = EpochRandomSampler(dataset, seed=args.seed)
+    loader_generator = torch.Generator()
+    loader_generator.manual_seed(args.seed)
+    loader = DataLoader(
+        dataset,
+        batch_size=args.batch_size,
+        shuffle=False,
+        sampler=sampler,
+        generator=loader_generator,
+        num_workers=args.num_workers,
+        pin_memory=True,
+        persistent_workers=args.num_workers > 0,
+        collate_fn=collator,
+        drop_last=False,
+    )
+    return dataset, loader, sampler, loader_generator
+
+
+def text_weights(args: argparse.Namespace) -> Dict[str, float]:
+    return {
+        "structure": args.text_structure_weight,
+        "box": args.text_box_weight,
+        "pose_route": args.text_pose_route_weight,
+        "seg_route": args.text_seg_route_weight,
+        "gender": args.text_gender_weight,
+        "age": args.text_age_weight,
+    }
+
+
+def component_weights(args: argparse.Namespace) -> Dict[str, float]:
+    return {
+        "pose_l1": args.pose_l1_weight,
+        "pose_oks": args.pose_oks_weight,
+        "pose_visibility": args.pose_visibility_weight,
+        "mask_bce": args.mask_bce_weight,
+        "mask_dice": args.mask_dice_weight,
+    }
+
+
+def task_weights(args: argparse.Namespace) -> Dict[str, float]:
+    return {
+        "text": args.text_task_weight,
+        "pose": args.pose_task_weight,
+        "seg": args.seg_task_weight,
+    }
+
+
+def build_model(args: argparse.Namespace, processor, dtype: torch.dtype):
+    base = load_qwen_vl_backbone(args.model, dtype)
+    token_ids = add_v4_special_tokens(processor, base)
+    base.requires_grad_(False)
+    visual_targets = []
+    merger_manifest: Dict[str, Any] = {
+        "parameters": 0,
+        "tensors": 0,
+        "examples": [],
+    }
+    if args.profile == "vision_tuned":
+        base, visual_targets = apply_visual_lora(
+            base,
+            start_block=args.visual_lora_start_block,
+            rank=args.lora_r,
+            alpha=args.lora_alpha,
+            dropout=args.lora_dropout,
+        )
+        merger_manifest = unfreeze_visual_merger(base)
+    if hasattr(base, "gradient_checkpointing_enable"):
+        base.gradient_checkpointing_enable()
+    if hasattr(base, "enable_input_require_grads"):
+        base.enable_input_require_grads()
+    config = getattr(base, "config", None)
+    image_token_id = int(getattr(config, "image_token_id", 248056))
+    vision_config = getattr(config, "vision_config", None)
+    merge_size = int(getattr(vision_config, "spatial_merge_size", 2))
+    model = Stage1V4Model(
+        base_model=base,
+        hidden_size=hidden_size_from_config(base),
+        token_ids=token_ids,
+        image_token_id=image_token_id,
+        visual_merge_size=merge_size,
+        decoder_dim=args.decoder_dim,
+        decoder_heads=args.decoder_heads,
+        decoder_layers=args.decoder_layers,
+        text_task_weights=text_weights(args),
+        component_weights=component_weights(args),
+        task_weights=task_weights(args),
+    )
+    token_initialization: Dict[str, Any] = {"mode": args.token_init}
+    if args.token_init == "semantic":
+        source_ids = {
+            name: [
+                int(value)
+                for value in processor.tokenizer(
+                    text, add_special_tokens=False
+                )["input_ids"]
+            ]
+            for name, text in TOKEN_INIT_SOURCE_TEXT.items()
+        }
+        if any(not values for values in source_ids.values()):
+            raise RuntimeError(
+                f"semantic token initialization produced an empty source: {source_ids}"
+            )
+        token_initialization.update(
+            {
+                "source_text": dict(TOKEN_INIT_SOURCE_TEXT),
+                "source_token_ids": source_ids,
+                "rows": model.token_rows.initialize_from_source_ids(
+                    base,
+                    [source_ids["pose"], source_ids["seg"]],
+                ),
+            }
+        )
+    else:
+        token_initialization["rows"] = [
+            {
+                "target_token_id": int(token_ids[name]),
+                "source_token_ids": [],
+                "delta_norm": 0.0,
+            }
+            for name in ("pose", "seg")
+        ]
+    return (
+        model,
+        token_ids,
+        visual_targets,
+        merger_manifest,
+        token_initialization,
+    )
+
+
+def append_jsonl(path: Path, payload: Dict[str, Any]) -> None:
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(payload, sort_keys=True) + "\n")
+        handle.flush()
+
+
+def scalar_outputs(outputs: Dict[str, Any]) -> Dict[str, float]:
+    result = {}
+    for name, value in outputs.items():
+        if torch.is_tensor(value) and value.numel() == 1:
+            result[name] = float(value.detach().float().cpu().item())
+    return result
+
+
+def state_checksum(module: torch.nn.Module) -> str:
+    digest = hashlib.sha256()
+    for name, value in sorted(module.state_dict().items()):
+        digest.update(name.encode("utf-8"))
+        digest.update(value.detach().cpu().view(torch.uint8).numpy().tobytes())
+    return digest.hexdigest()
+
+
+def capture_rng_state() -> Dict[str, Any]:
+    return {
+        "python": random.getstate(),
+        "numpy": np.random.get_state(),
+        "torch_cpu": torch.get_rng_state(),
+        "torch_cuda_all": (
+            torch.cuda.get_rng_state_all() if torch.cuda.is_available() else None
+        ),
+    }
+
+
+def restore_rng_state(state: Mapping[str, Any]) -> None:
+    random.setstate(state["python"])
+    np.random.set_state(state["numpy"])
+    torch.set_rng_state(state["torch_cpu"])
+    cuda_state = state.get("torch_cuda_all")
+    if torch.cuda.is_available() and cuda_state is not None:
+        torch.cuda.set_rng_state_all(cuda_state)
+
+
+def restore_named_parameters(
+    model: torch.nn.Module,
+    state: Mapping[str, torch.Tensor],
+    *,
+    label: str,
+) -> None:
+    parameters = dict(model.named_parameters())
+    unknown = sorted(set(state) - set(parameters))
+    if unknown:
+        raise RuntimeError(f"{label} has unknown parameters: {unknown[:8]}")
+    for name, value in state.items():
+        target = parameters[name]
+        if target.shape != value.shape:
+            raise RuntimeError(
+                f"{label} shape mismatch for {name}: "
+                f"{tuple(value.shape)} vs {tuple(target.shape)}"
+            )
+        target.data.copy_(value.to(device=target.device, dtype=target.dtype))
+
+
+def find_run_manifest(checkpoint: Path) -> Tuple[Path, Dict[str, Any]]:
+    for candidate in (
+        checkpoint / "manifest.json",
+        checkpoint.parent / "manifest.json",
+        checkpoint.parent.parent / "manifest.json",
+    ):
+        if candidate.is_file():
+            return candidate, json.loads(candidate.read_text(encoding="utf-8"))
+    raise FileNotFoundError(f"cannot find run manifest near {checkpoint}")
+
+
+def resume_signature(
+    args: argparse.Namespace, *, images: int, total_steps: int
+) -> Dict[str, Any]:
+    return {
+        "version": "stage1_v4_resume_v2",
+        "model": os.path.realpath(args.model),
+        "train_ann": os.path.realpath(args.train_ann),
+        "train_image_root": os.path.realpath(args.train_image_root),
+        "images": int(images),
+        "profile": args.profile,
+        "max_samples": args.max_samples,
+        "epochs": args.epochs,
+        "total_steps": int(total_steps),
+        "batch_size": args.batch_size,
+        "grad_accum_steps": args.grad_accum_steps,
+        "max_length": args.max_length,
+        "horizontal_flip_prob": args.horizontal_flip_prob,
+        "deterministic": args.deterministic,
+        "seed": args.seed,
+        "bf16": args.bf16,
+        "visual_lora_start_block": args.visual_lora_start_block,
+        "lora_r": args.lora_r,
+        "lora_alpha": args.lora_alpha,
+        "lora_dropout": args.lora_dropout,
+        "visual_lr": args.visual_lr,
+        "merger_lr": args.merger_lr,
+        "token_lr": args.token_lr,
+        "token_init": args.token_init,
+        "token_init_source_text": dict(TOKEN_INIT_SOURCE_TEXT),
+        "thinking_mode": THINKING_MODE_V4,
+        "head_lr": args.head_lr,
+        "weight_decay": args.weight_decay,
+        "warmup_ratio": args.warmup_ratio,
+        "decoder_warmup_steps": args.decoder_warmup_steps,
+        "visual_warmup_steps": args.visual_warmup_steps,
+        "zero_lr_gradient_policy": "set_to_none",
+        "grad_clip": args.grad_clip,
+        "token_grad_clip": args.token_grad_clip,
+        "decoder_dim": args.decoder_dim,
+        "decoder_heads": args.decoder_heads,
+        "decoder_layers": args.decoder_layers,
+        "text_weights": text_weights(args),
+        "route_loss_schedule": {
+            "start_weight": args.route_loss_start_weight,
+            "hold_steps": args.route_loss_hold_steps,
+            "warmup_steps": args.route_loss_warmup_steps,
+        },
+        "component_weights": component_weights(args),
+        "task_weights": task_weights(args),
+    }
+
+
+def signature_checksum(signature: Mapping[str, Any]) -> str:
+    payload = json.dumps(signature, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def load_training_checkpoint(
+    checkpoint_dir: str,
+    *,
+    model: Stage1V4Model,
+    optimizer: torch.optim.Optimizer,
+    current_signature: Mapping[str, Any],
+    profile: str,
+) -> Tuple[Dict[str, Any], Path, Path]:
+    checkpoint = Path(checkpoint_dir).resolve()
+    if not (checkpoint / "_SUCCESS").is_file():
+        raise RuntimeError(
+            f"checkpoint is incomplete or predates exact v4 resume: {checkpoint}"
+        )
+    manifest_path, source_manifest = find_run_manifest(checkpoint)
+    source_signature = source_manifest.get("resume_signature")
+    if source_signature is None:
+        raise RuntimeError("source manifest has no exact-resume signature")
+    if source_signature != dict(current_signature):
+        keys = sorted(set(source_signature) | set(current_signature))
+        differences = {
+            key: {
+                "checkpoint": source_signature.get(key),
+                "current": current_signature.get(key),
+            }
+            for key in keys
+            if source_signature.get(key) != current_signature.get(key)
+        }
+        raise RuntimeError(
+            "resume configuration mismatch: "
+            + json.dumps(differences, sort_keys=True)
+        )
+    training_state = torch.load(
+        checkpoint / "training_state.pt",
+        map_location="cpu",
+        weights_only=False,
+    )
+    if int(training_state.get("format_version", 0)) != 2:
+        raise RuntimeError("unsupported v4 training-state format")
+    expected_checksum = signature_checksum(current_signature)
+    if training_state.get("resume_signature_sha256") != expected_checksum:
+        raise RuntimeError("training state and run manifest signatures differ")
+
+    if profile == "vision_tuned":
+        from peft import set_peft_model_state_dict
+        from peft.utils.save_and_load import load_peft_weights
+
+        adapter_dir = checkpoint / "base_or_adapter"
+        adapter_state = load_peft_weights(str(adapter_dir), device="cpu")
+        load_result = set_peft_model_state_dict(
+            model.base_model, adapter_state, adapter_name="default"
+        )
+        if getattr(load_result, "unexpected_keys", None):
+            raise RuntimeError(
+                "unexpected adapter keys while resuming: "
+                f"{load_result.unexpected_keys[:8]}"
+            )
+        if getattr(load_result, "mismatched_keys", None):
+            raise RuntimeError(
+                "mismatched adapter keys while resuming: "
+                f"{load_result.mismatched_keys[:8]}"
+            )
+
+    model.load_task_state(str(checkpoint / "stage1_v4_tasks.pt"))
+    merger_path = checkpoint / "visual_merger.pt"
+    if profile == "vision_tuned" and not merger_path.is_file():
+        raise FileNotFoundError(f"missing visual merger state: {merger_path}")
+    if merger_path.is_file():
+        merger_state = torch.load(
+            merger_path, map_location="cpu", weights_only=True
+        )
+        restore_named_parameters(model, merger_state, label="visual merger")
+    optimizer.load_state_dict(training_state["optimizer"])
+    assert_finite_parameters(model)
+    assert_finite_optimizer(optimizer)
+    restore_rng_state(training_state["rng_state"])
+    return training_state, checkpoint, manifest_path
+
+
+def save_checkpoint(
+    output_dir: Path,
+    *,
+    model: Stage1V4Model,
+    processor,
+    optimizer: torch.optim.Optimizer,
+    optimizer_step: int,
+    micro_step: int,
+    epoch: int,
+    epoch_index: int,
+    next_batch_index: int,
+    total_steps: int,
+    elapsed_seconds: float,
+    run_signature: Mapping[str, Any],
+    profile: str,
+) -> None:
+    if output_dir.exists():
+        raise FileExistsError(f"refusing to overwrite checkpoint: {output_dir}")
+    temporary = output_dir.with_name(f".{output_dir.name}.tmp")
+    if temporary.exists():
+        shutil.rmtree(temporary)
+    rng_state = capture_rng_state()
+    try:
+        temporary.mkdir(parents=True, exist_ok=False)
+        model.save_task_state(str(temporary))
+        processor.save_pretrained(temporary / "processor")
+        merger_state = trainable_merger_state(model)
+        if merger_state:
+            torch.save(merger_state, temporary / "visual_merger.pt")
+        if profile == "vision_tuned":
+            model.base_model.save_pretrained(temporary / "base_or_adapter")
+        torch.save(
+            {
+                "format_version": 2,
+                "optimizer": optimizer.state_dict(),
+                "optimizer_step": int(optimizer_step),
+                "micro_step": int(micro_step),
+                "epoch": int(epoch),
+                "epoch_index": int(epoch_index),
+                "next_batch_index": int(next_batch_index),
+                "total_steps": int(total_steps),
+                "elapsed_seconds": float(elapsed_seconds),
+                "resume_signature_sha256": signature_checksum(run_signature),
+                "rng_state": rng_state,
+            },
+            temporary / "training_state.pt",
+        )
+        (temporary / "_SUCCESS").write_text("complete\n", encoding="utf-8")
+        os.replace(temporary, output_dir)
+    except Exception:
+        shutil.rmtree(temporary, ignore_errors=True)
+        raise
+    finally:
+        restore_rng_state(rng_state)
+
+
+def data_only_check(args, loader, output: Path) -> None:
+    audits = []
+    for batch_index, batch in enumerate(loader):
+        audits.extend(batch["label_audit"])
+        if batch_index + 1 >= args.data_only_batches:
+            break
+    if not audits:
+        raise RuntimeError("data-only check produced no samples")
+    summary = {
+        "batches": min(args.data_only_batches, len(loader)),
+        "samples": len(audits),
+        "max_persons": max(item["persons"] for item in audits),
+        "max_total_tokens": max(item["total_tokens"] for item in audits),
+        "max_target_tokens": max(item["target_tokens"] for item in audits),
+        "pose_labels": sum(item["pose_labels"] for item in audits),
+        "seg_labels": sum(item["seg_labels"] for item in audits),
+    }
+    (output / "data_only.json").write_text(
+        json.dumps({"summary": summary, "samples": audits}, indent=2),
+        encoding="utf-8",
+    )
+    print(json.dumps(summary, indent=2))
+
+
+def main() -> None:
+    args = parse_args()
+    if args.max_length != 5000:
+        raise ValueError("v4 requires max_length=5000 with no truncation")
+    if args.epochs <= 0 or args.batch_size <= 0 or args.grad_accum_steps <= 0:
+        raise ValueError("epochs and batch settings must be positive")
+    if args.route_loss_start_weight < 0:
+        raise ValueError("route loss start weight must be non-negative")
+    if args.grad_clip <= 0 or args.token_grad_clip <= 0:
+        raise ValueError("gradient clip norms must be positive")
+    if args.decoder_warmup_steps < 0 or args.visual_warmup_steps < 0:
+        raise ValueError(
+            "decoder and visual warmup steps must be non-negative"
+        )
+    if args.route_loss_hold_steps < 0 or args.route_loss_warmup_steps < 0:
+        raise ValueError("route loss schedule steps must be non-negative")
+    if args.stop_after_optimizer_steps < 0 or args.stop_after_epoch < 0:
+        raise ValueError("runtime stop controls must be non-negative")
+    if args.resume_from and args.horizontal_flip_prob != 0:
+        raise ValueError(
+            "exact v4 resume requires horizontal_flip_prob=0; "
+            "worker augmentation RNG cannot be replayed exactly"
+        )
+    configure_determinism(args.deterministic)
+    output = Path(args.output_dir)
+    output.mkdir(parents=True, exist_ok=True)
+    if (output / "manifest.json").exists() and not args.resume_from:
+        raise FileExistsError(
+            f"output already contains a run manifest: {output}"
+        )
+    set_seed(args.seed)
+    processor = prepare_processor(args.model)
+    token_ids = {
+        name: int(processor.tokenizer.convert_tokens_to_ids(token))
+        for name, token in zip(("pose", "seg"), SPECIAL_TOKENS_V4)
+    }
+    dataset, loader, sampler, loader_generator = build_dataset_and_loader(
+        args, processor, token_ids
+    )
+    if args.data_only_batches > 0:
+        data_only_check(args, loader, output)
+        return
+    if not torch.cuda.is_available():
+        raise RuntimeError("full v4 training requires CUDA")
+    device = torch.device("cuda")
+    dtype = torch.bfloat16 if args.bf16 else torch.float32
+    (
+        model,
+        token_ids,
+        visual_targets,
+        merger_manifest,
+        token_initialization,
+    ) = build_model(args, processor, dtype)
+    model.to(device)
+    model.train()
+    manifest = trainable_manifest(model)
+    optimizer, optimizer_manifest = build_optimizer(
+        model,
+        visual_lr=args.visual_lr,
+        merger_lr=args.merger_lr,
+        token_lr=args.token_lr,
+        head_lr=args.head_lr,
+        weight_decay=args.weight_decay,
+    )
+    full_batches_per_epoch = math.ceil(len(dataset) / args.batch_size)
+    steps_per_epoch = math.ceil(
+        full_batches_per_epoch / args.grad_accum_steps
+    )
+    planned_steps = steps_per_epoch * args.epochs
+    total_steps = (
+        min(planned_steps, args.max_optimizer_steps)
+        if args.max_optimizer_steps > 0
+        else planned_steps
+    )
+    if total_steps <= 0:
+        raise ValueError("training schedule has no optimizer steps")
+    warmup_steps = max(1, int(round(total_steps * args.warmup_ratio)))
+    current_signature = resume_signature(
+        args, images=len(dataset), total_steps=total_steps
+    )
+
+    optimizer_step = 0
+    micro_step = 0
+    start_epoch = 0
+    resume_batch_index = 0
+    prior_elapsed_seconds = 0.0
+    resume_record = None
+    if args.resume_from:
+        resume_state, resolved_checkpoint, source_manifest_path = (
+            load_training_checkpoint(
+                args.resume_from,
+                model=model,
+                optimizer=optimizer,
+                current_signature=current_signature,
+                profile=args.profile,
+            )
+        )
+        optimizer_step = int(resume_state["optimizer_step"])
+        micro_step = int(resume_state["micro_step"])
+        start_epoch = int(resume_state["epoch_index"])
+        resume_batch_index = int(resume_state["next_batch_index"])
+        prior_elapsed_seconds = float(
+            resume_state.get("elapsed_seconds", 0.0)
+        )
+        if resume_batch_index == full_batches_per_epoch:
+            start_epoch += 1
+            resume_batch_index = 0
+        if not 0 <= resume_batch_index < full_batches_per_epoch:
+            raise RuntimeError(
+                f"invalid resumed batch index: {resume_batch_index}"
+            )
+        if resume_batch_index % args.grad_accum_steps != 0:
+            raise RuntimeError(
+                "checkpoint is not on an optimizer boundary: "
+                f"batch {resume_batch_index}"
+            )
+        if optimizer_step >= total_steps or start_epoch >= args.epochs:
+            raise RuntimeError(
+                "checkpoint already reached the requested training schedule"
+            )
+        resume_record = {
+            "checkpoint": str(resolved_checkpoint),
+            "source_manifest": str(source_manifest_path),
+            "optimizer_step": optimizer_step,
+            "micro_step": micro_step,
+            "epoch_index": start_epoch,
+            "next_batch_index": resume_batch_index,
+        }
+
+    run_manifest = {
+        "version": "stage1_v4",
+        "profile": args.profile,
+        "model": args.model,
+        "train_ann": args.train_ann,
+        "train_image_root": args.train_image_root,
+        "images": len(dataset),
+        "batch_size": args.batch_size,
+        "grad_accum_steps": args.grad_accum_steps,
+        "effective_batch_size": args.batch_size * args.grad_accum_steps,
+        "epochs": args.epochs,
+        "total_steps": total_steps,
+        "max_length": args.max_length,
+        "truncation": False,
+        "horizontal_flip_prob": args.horizontal_flip_prob,
+        "deterministic": args.deterministic,
+        "seed": args.seed,
+        "prompt": PROMPT_V4,
+        "thinking_mode": THINKING_MODE_V4,
+        "token_ids": token_ids,
+        "token_initialization": token_initialization,
+        "decoder": {
+            "dim": args.decoder_dim,
+            "heads": args.decoder_heads,
+            "layers": args.decoder_layers,
+        },
+        "learning_rate_schedule": {
+            "kind": "linear_warmup_then_cosine",
+            "global_warmup_steps": warmup_steps,
+            "decoder_warmup_steps": args.decoder_warmup_steps,
+            "visual_warmup_steps": args.visual_warmup_steps,
+            "visual_thaw": "linear",
+            "zero_lr_gradients": "set_to_none",
+        },
+        "text_weights": text_weights(args),
+        "route_loss_schedule": {
+            "start_weight": args.route_loss_start_weight,
+            "hold_steps": args.route_loss_hold_steps,
+            "warmup_steps": args.route_loss_warmup_steps,
+            "final_pose_weight": args.text_pose_route_weight,
+            "final_seg_weight": args.text_seg_route_weight,
+        },
+        "gradient_clipping": {
+            "token_rows_max_norm": args.token_grad_clip,
+            "non_token_max_norm": args.grad_clip,
+        },
+        "component_weights": component_weights(args),
+        "task_weights": task_weights(args),
+        "visual_lora_targets": visual_targets,
+        "merger": merger_manifest,
+        "trainable": manifest,
+        "optimizer": optimizer_manifest,
+        "resume_signature": current_signature,
+        "resume_signature_sha256": signature_checksum(current_signature),
+        "resume": resume_record,
+        "runtime_controls": {
+            "stop_after_optimizer_steps": args.stop_after_optimizer_steps,
+            "stop_after_epoch": args.stop_after_epoch,
+        },
+        "decoder_start_checksum": {
+            "pose": state_checksum(model.pose_decoder),
+            "mask": state_checksum(model.mask_decoder),
+        },
+    }
+    manifest_tmp = output / ".manifest.json.tmp"
+    manifest_tmp.write_text(
+        json.dumps(run_manifest, indent=2, sort_keys=True), encoding="utf-8"
+    )
+    os.replace(manifest_tmp, output / "manifest.json")
+    processor.save_pretrained(output / "processor")
+    events_path = output / "events.jsonl"
+    if resume_record is not None:
+        append_jsonl(events_path, {"event": "resume", **resume_record})
+    optimizer.zero_grad(set_to_none=True)
+    torch.cuda.reset_peak_memory_stats(device)
+    start_time = time.time() - prior_elapsed_seconds
+    stop = False
+    stop_reason = ""
+    next_batch_index = resume_batch_index
+
+    for epoch in range(start_epoch, args.epochs):
+        epoch_start_batch = resume_batch_index if epoch == start_epoch else 0
+        sample_offset = min(
+            len(dataset), epoch_start_batch * args.batch_size
+        )
+        sampler.set_epoch(epoch, start_index=sample_offset)
+        loader_generator.manual_seed(args.seed + epoch)
+        next_batch_index = epoch_start_batch
+        for local_batch_index, batch in enumerate(loader):
+            batch_index = epoch_start_batch + local_batch_index
+            group_start = (
+                batch_index // args.grad_accum_steps
+            ) * args.grad_accum_steps
+            group_size = min(
+                args.grad_accum_steps, full_batches_per_epoch - group_start
+            )
+            metadata = {name: batch[name] for name in METADATA_KEYS}
+            model_batch = {
+                name: value
+                for name, value in batch.items()
+                if name not in METADATA_KEYS
+            }
+            model_batch = move_to_device(model_batch, device)
+            route_schedule_step = optimizer_step
+            current_route_weights = scheduled_route_loss_weights(
+                optimizer_step=route_schedule_step,
+                start_weight=args.route_loss_start_weight,
+                final_pose_weight=args.text_pose_route_weight,
+                final_seg_weight=args.text_seg_route_weight,
+                hold_steps=args.route_loss_hold_steps,
+                warmup_steps=args.route_loss_warmup_steps,
+            )
+            model.text_task_weights.update(current_route_weights)
+            with torch.autocast(
+                device_type="cuda",
+                dtype=torch.bfloat16,
+                enabled=args.bf16,
+            ):
+                outputs = model(**model_batch)
+                loss = outputs["loss"] / group_size
+            if not torch.isfinite(loss):
+                raise FloatingPointError(
+                    f"non-finite loss at micro step {micro_step + 1}"
+                )
+            loss.backward()
+            micro_step += 1
+            should_step = (
+                (batch_index + 1) % args.grad_accum_steps == 0
+                or batch_index + 1 == full_batches_per_epoch
+            )
+            if not should_step:
+                continue
+            rates = set_step_learning_rates(
+                optimizer,
+                optimizer_step=optimizer_step,
+                total_steps=total_steps,
+                warmup_steps=warmup_steps,
+                decoder_warmup_steps=args.decoder_warmup_steps,
+                visual_warmup_steps=args.visual_warmup_steps,
+            )
+            zero_lr_suppression = suppress_zero_lr_gradients(optimizer)
+            gradient_norms = gradient_norms_by_family(model)
+            global_norm = math.sqrt(
+                sum(value * value for value in gradient_norms.values())
+            )
+            gradient_clipping = clip_gradients_by_group(
+                model,
+                token_rows_max_norm=args.token_grad_clip,
+                non_token_max_norm=args.grad_clip,
+            )
+            optimizer.step()
+            optimizer.zero_grad(set_to_none=True)
+            optimizer_step += 1
+            next_batch_index = batch_index + 1
+            assert_finite_parameters(model)
+            assert_finite_optimizer(optimizer)
+            event = {
+                "event": "optimizer_step",
+                "epoch": epoch + 1,
+                "batch_index": batch_index,
+                "optimizer_step": optimizer_step,
+                "micro_step": micro_step,
+                "elapsed_seconds": time.time() - start_time,
+                "losses": scalar_outputs(outputs),
+                "text_token_counts": outputs["text_token_counts"],
+                "gradient_norms": gradient_norms,
+                "global_gradient_norm_before_clip": global_norm,
+                "gradient_clipping": gradient_clipping,
+                "zero_lr_gradient_suppression": zero_lr_suppression,
+                "learning_rates": rates,
+                "route_loss_schedule_step": route_schedule_step,
+                "route_loss_weights": dict(current_route_weights),
+                "cuda_memory": {
+                    "max_allocated_bytes": int(
+                        torch.cuda.max_memory_allocated(device)
+                    ),
+                    "max_reserved_bytes": int(
+                        torch.cuda.max_memory_reserved(device)
+                    ),
+                },
+                "batch_audit": metadata["label_audit"],
+            }
+            append_jsonl(events_path, event)
+            torch.cuda.reset_peak_memory_stats(device)
+            if optimizer_step % args.log_every == 0 or optimizer_step == 1:
+                print(json.dumps(event, sort_keys=True), flush=True)
+            if args.save_every > 0 and optimizer_step % args.save_every == 0:
+                save_checkpoint(
+                    output / f"step-{optimizer_step}",
+                    model=model,
+                    processor=processor,
+                    optimizer=optimizer,
+                    optimizer_step=optimizer_step,
+                    micro_step=micro_step,
+                    epoch=epoch + 1,
+                    epoch_index=epoch,
+                    next_batch_index=next_batch_index,
+                    total_steps=total_steps,
+                    elapsed_seconds=time.time() - start_time,
+                    run_signature=current_signature,
+                    profile=args.profile,
+                )
+            if optimizer_step >= total_steps:
+                stop = True
+                stop_reason = "schedule_complete"
+                break
+            if (
+                args.stop_after_optimizer_steps > 0
+                and optimizer_step >= args.stop_after_optimizer_steps
+            ):
+                stop = True
+                stop_reason = "optimizer_step_pause"
+                break
+
+        epoch_completed = next_batch_index >= full_batches_per_epoch
+        if not stop and not epoch_completed:
+            raise RuntimeError("epoch ended before all batches were consumed")
+        if epoch_completed:
+            checkpoint_name = f"epoch-{epoch + 1}-step-{optimizer_step}"
+            checkpoint_epoch_index = epoch + 1
+            checkpoint_next_batch = 0
+        else:
+            checkpoint_name = f"stopped-epoch-{epoch + 1}-step-{optimizer_step}"
+            checkpoint_epoch_index = epoch
+            checkpoint_next_batch = next_batch_index
+        save_checkpoint(
+            output / checkpoint_name,
+            model=model,
+            processor=processor,
+            optimizer=optimizer,
+            optimizer_step=optimizer_step,
+            micro_step=micro_step,
+            epoch=epoch + 1,
+            epoch_index=checkpoint_epoch_index,
+            next_batch_index=checkpoint_next_batch,
+            total_steps=total_steps,
+            elapsed_seconds=time.time() - start_time,
+            run_signature=current_signature,
+            profile=args.profile,
+        )
+        resume_batch_index = 0
+        if (
+            not stop
+            and args.stop_after_epoch > 0
+            and epoch + 1 >= args.stop_after_epoch
+        ):
+            stop = True
+            stop_reason = "epoch_pause"
+        if stop:
+            break
+
+    finished = optimizer_step >= total_steps
+    append_jsonl(
+        events_path,
+        {
+            "event": "complete" if finished else "paused",
+            "reason": "schedule_complete" if finished else stop_reason,
+            "optimizer_step": optimizer_step,
+            "micro_step": micro_step,
+            "elapsed_seconds": time.time() - start_time,
+        },
+    )
+
+
+if __name__ == "__main__":
+    main()

@@ -4,8 +4,35 @@ import json
 import math
 import os
 import random
+import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+
+
+def _early_set_cuda_visible_devices_from_argv() -> None:
+    config_path = ""
+    argv = list(sys.argv[1:])
+    for i, tok in enumerate(argv):
+        if tok == "--config" and i + 1 < len(argv):
+            config_path = argv[i + 1]
+        elif tok.startswith("--config="):
+            config_path = tok.split("=", 1)[1]
+    if not config_path:
+        return
+    try:
+        import yaml  # type: ignore
+
+        with open(config_path, "r", encoding="utf-8") as f:
+            cfg = yaml.safe_load(f) or {}
+    except Exception:
+        return
+    if isinstance(cfg, dict) and cfg.get("cuda_visible_devices", None) is not None:
+        value = str(cfg.get("cuda_visible_devices", "")).strip()
+        if value:
+            os.environ["CUDA_VISIBLE_DEVICES"] = value
+
+
+_early_set_cuda_visible_devices_from_argv()
 
 import torch
 from transformers import (
@@ -28,6 +55,10 @@ try:
 except Exception:
     Qwen3_5ForConditionalGeneration = None
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
 from qwen4b_coco_unihuman_ft.dataset import CocoUniHumanSFTDataset, SFTCollator
 from qwen4b_coco_unihuman_ft.eval_scheme2 import (
     dump_json,
@@ -41,6 +72,7 @@ from qwen4b_coco_unihuman_ft.prompts import (
     DEFAULT_ASSISTANT_PREFIX_TAG,
     build_vl_chat_text,
 )
+from qwen4b_coco_unihuman_ft.output_protocol import FORMAT_COMPACT_TAG, normalize_target_format
 
 
 def parse_args() -> argparse.Namespace:
@@ -257,6 +289,7 @@ def _build_training_arguments(cfg: Dict[str, Any], has_eval: bool) -> TrainingAr
         "load_best_model_at_end",
         "metric_for_best_model",
         "greater_is_better",
+        "max_steps",
     )
     for key in optional_keys:
         if key in cfg:
@@ -451,7 +484,7 @@ class SwanLabVisualCallback(TrainerCallback):
         tokenizer = getattr(self.processor, "tokenizer", None)
         eos_token_id = getattr(tokenizer, "eos_token_id", None) if tokenizer is not None else None
         pad_token_id = getattr(tokenizer, "pad_token_id", None) if tokenizer is not None else eos_token_id
-        max_new_tokens = int(self.swanlab_cfg.get("preview_max_new_tokens", 1024))
+        max_new_tokens = int(self.swanlab_cfg.get("preview_max_new_tokens", 4096))
         preview_limit = min(int(self.swanlab_cfg.get("preview_samples", 0)), len(indices))
         pred_rows: List[Dict[str, Any]] = []
         preview_images: List[Any] = []
@@ -672,7 +705,7 @@ def _log_swanlab_predictions(
             gen_inputs = _filter_generate_inputs(model, inputs)
             gen_ids = model.generate(
                 **gen_inputs,
-                max_new_tokens=int(swanlab_cfg.get("preview_max_new_tokens", 1024)),
+                max_new_tokens=int(swanlab_cfg.get("preview_max_new_tokens", 4096)),
                 do_sample=False,
                 num_beams=1,
                 pad_token_id=pad_token_id,
@@ -724,6 +757,8 @@ def main() -> None:
         image_root=cfg.get("image_root", None),
         max_samples=cfg.get("max_train_samples", None),
         extra_prompt=cfg.get("extra_prompt", None),
+        target_format=normalize_target_format(cfg.get("target_format", FORMAT_COMPACT_TAG)),
+        force_rebuild_target_text=bool(cfg.get("force_rebuild_target_text", True)),
     )
     val_dataset = None
     if cfg.get("val_jsonl"):
@@ -732,6 +767,8 @@ def main() -> None:
             image_root=cfg.get("image_root", None),
             max_samples=cfg.get("max_val_samples", None),
             extra_prompt=cfg.get("extra_prompt", None),
+            target_format=normalize_target_format(cfg.get("target_format", FORMAT_COMPACT_TAG)),
+            force_rebuild_target_text=bool(cfg.get("force_rebuild_target_text", True)),
         )
 
     model = build_model(model_name_or_path=model_name_or_path, torch_dtype=get_dtype(cfg))

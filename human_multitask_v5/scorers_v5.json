@@ -1,0 +1,10 @@
+{
+  "coco_bbox": null,
+  "coco_keypoints": null,
+  "coco_segm": null,
+  "hqnet_attribute": null,
+  "mhp_official": null,
+  "mhp_pose16": null,
+  "openpsg_official": null,
+  "vaw_official": null
+}

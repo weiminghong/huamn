@@ -1,0 +1,455 @@
+from __future__ import annotations
+
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Sequence, Tuple
+
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+from .collator_v2 import CE_TASK_IDS
+from .heads_v2 import (
+    BoxFreeJointQueryPoseDecoder,
+    MultiScalePersonMaskDecoder,
+    MultiScaleVisualNeck,
+    mask_bce_dice_loss,
+    oks_loss,
+    require_exact_token_states,
+)
+
+
+DEFAULT_LOSS_WEIGHTS_V2 = {
+    "ce": 1.0,
+    "pose_l1": 10.0,
+    "pose_oks": 4.0,
+    "pose_visibility": 1.0,
+    "pose_center": 5.0,
+    "pose_aux": 0.5,
+    "mask_bce": 2.0,
+    "mask_dice": 5.0,
+}
+
+
+def _weighted_mean(values: List[Tuple[torch.Tensor, int]], reference: torch.Tensor) -> torch.Tensor:
+    total = sum(weight for _, weight in values)
+    if total <= 0:
+        return reference.sum() * 0
+    return sum(value * weight for value, weight in values) / total
+
+
+def causal_language_losses(
+    logits: torch.Tensor,
+    labels: torch.Tensor,
+    weights: Optional[torch.Tensor],
+    task_ids: Optional[torch.Tensor],
+    logit_positions: torch.Tensor,
+) -> Dict[str, torch.Tensor]:
+    shift_logits = logits.float().contiguous()
+    target_positions = logit_positions + 1
+    shift_labels = labels.index_select(1, target_positions).contiguous()
+    valid = shift_labels.ne(-100)
+    token_loss = F.cross_entropy(
+        shift_logits.reshape(-1, shift_logits.shape[-1]),
+        shift_labels.reshape(-1),
+        ignore_index=-100,
+        reduction="none",
+    ).reshape_as(shift_labels)
+    effective = valid.to(token_loss.dtype)
+    if weights is not None:
+        effective = effective * weights.index_select(1, target_positions).to(token_loss)
+    result = {"ce_loss": (token_loss * effective).sum() / effective.sum().clamp(min=1.0)}
+    predictions = shift_logits.argmax(dim=-1)
+    if task_ids is not None:
+        shifted_tasks = task_ids.index_select(1, target_positions)
+        for task_name, task_id in CE_TASK_IDS.items():
+            mask = effective * shifted_tasks.eq(task_id).to(effective.dtype)
+            result[f"ce_{task_name}"] = (token_loss * mask).sum() / mask.sum().clamp(min=1.0)
+            result[f"acc_{task_name}"] = ((predictions == shift_labels).to(mask.dtype) * mask).sum() / mask.sum().clamp(min=1.0)
+    return result
+
+
+def _find_vision_module(model: nn.Module) -> nn.Module:
+    candidates = [module for module in model.modules() if module.__class__.__name__ == "Qwen3_5VisionModel"]
+    if len(candidates) != 1:
+        raise RuntimeError(f"expected one Qwen3_5VisionModel, found {len(candidates)}")
+    return candidates[0]
+
+
+def _raster_indices(height: int, width: int, merge_size: int, device: torch.device) -> torch.Tensor:
+    if height % merge_size or width % merge_size:
+        raise RuntimeError("raw visual grid is not divisible by merge size")
+    hpos, wpos = torch.meshgrid(torch.arange(height, device=device), torch.arange(width, device=device), indexing="ij")
+    shape = (height // merge_size, merge_size, width // merge_size, merge_size)
+    hpos = hpos.reshape(shape).transpose(1, 2).flatten()
+    wpos = wpos.reshape(shape).transpose(1, 2).flatten()
+    return hpos * width + wpos
+
+
+class Stage1V2Model(nn.Module):
+    def __init__(
+        self,
+        *,
+        base_model: nn.Module,
+        text_hidden_size: int,
+        token_ids: Dict[str, int],
+        vision_layer_indices: Sequence[int] = (8, 16, 24),
+        decoder_dim: int = 256,
+        decoder_heads: int = 8,
+        pose_decoder_layers: int = 2,
+        visual_merge_size: int = 2,
+        max_people: int = 25,
+        use_person_rank_queries: bool = True,
+        use_visual_person_reference: bool = True,
+        use_reference_feature_sampling: bool = True,
+        loss_weights: Optional[Dict[str, float]] = None,
+    ) -> None:
+        super().__init__()
+        self.base_model = base_model
+        self.token_ids = {name: int(value) for name, value in token_ids.items()}
+        self.vision_layer_indices = tuple(int(value) for value in vision_layer_indices)
+        self.visual_merge_size = int(visual_merge_size)
+        self.decoder_dim = int(decoder_dim)
+        self.decoder_heads = int(decoder_heads)
+        self.pose_decoder_layers = int(pose_decoder_layers)
+        self.max_people = int(max_people)
+        self.use_person_rank_queries = bool(use_person_rank_queries)
+        self.use_visual_person_reference = bool(use_visual_person_reference)
+        self.use_reference_feature_sampling = bool(use_reference_feature_sampling)
+        self.loss_weights = dict(DEFAULT_LOSS_WEIGHTS_V2)
+        if loss_weights:
+            self.loss_weights.update({name: float(value) for name, value in loss_weights.items()})
+        vision_module = _find_vision_module(base_model)
+        object.__setattr__(self, "_vision_module_ref", vision_module)
+        vision_hidden_size = int(vision_module.config.hidden_size)
+        self.visual_neck = MultiScaleVisualNeck(vision_hidden_size, len(self.vision_layer_indices), decoder_dim)
+        self.pose_decoder = BoxFreeJointQueryPoseDecoder(
+            text_hidden_size,
+            decoder_dim=decoder_dim,
+            num_heads=decoder_heads,
+            num_layers=pose_decoder_layers,
+            num_feature_levels=3,
+            max_people=self.max_people,
+            use_person_rank_queries=self.use_person_rank_queries,
+            use_visual_person_reference=self.use_visual_person_reference,
+            use_reference_feature_sampling=self.use_reference_feature_sampling,
+        )
+        self.mask_decoder = MultiScalePersonMaskDecoder(
+            text_hidden_size, decoder_dim=decoder_dim, num_heads=decoder_heads,
+            max_people=self.max_people, use_person_rank_queries=self.use_person_rank_queries,
+        )
+        self._captured_vision_output: Any = None
+        self._vision_hook_handle = vision_module.register_forward_hook(self._capture_vision_output, with_kwargs=True)
+        if hasattr(self.base_model, "config"):
+            self.base_model.config.use_cache = False
+
+    def _capture_vision_output(self, module: nn.Module, args: Any, kwargs: Any, output: Any) -> None:
+        del module, args, kwargs
+        self._captured_vision_output = output
+
+    def _forward_backbone(
+        self,
+        *,
+        input_ids: torch.Tensor,
+        attention_mask: Optional[torch.Tensor],
+        image_grid_thw: torch.Tensor,
+        logit_positions: Optional[torch.Tensor] = None,
+        **base_kwargs: Any,
+    ) -> Tuple[Any, torch.Tensor, List[Tuple[List[torch.Tensor], torch.Tensor]]]:
+        self._captured_vision_output = None
+        outputs = self.base_model(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            image_grid_thw=image_grid_thw,
+            labels=None,
+            output_hidden_states=True,
+            return_dict=True,
+            use_cache=False,
+            logits_to_keep=1 if logit_positions is None else logit_positions,
+            **base_kwargs,
+        )
+        vision_output = self._captured_vision_output
+        self._captured_vision_output = None
+        if vision_output is None or getattr(vision_output, "hidden_states", None) is None:
+            raise RuntimeError("Qwen vision tower did not expose hidden states")
+        all_layers = vision_output.hidden_states
+        if max(self.vision_layer_indices) >= len(all_layers):
+            raise RuntimeError(f"vision layer request {self.vision_layer_indices} exceeds {len(all_layers)} states")
+        selected = [all_layers[index] for index in self.vision_layer_indices]
+        feature_maps: List[Tuple[List[torch.Tensor], torch.Tensor]] = []
+        offset = 0
+        for grid in image_grid_thw:
+            temporal, height, width = [int(value) for value in grid.detach().cpu().tolist()]
+            if temporal != 1:
+                raise RuntimeError("Stage1 V2 accepts still images only")
+            count = temporal * height * width
+            layers = [value[offset : offset + count] for value in selected]
+            raster = _raster_indices(height, width, self.visual_merge_size, layers[0].device)
+            feature_maps.append(self.visual_neck(layers, raster_indices=raster, spatial_shape=(height, width)))
+            offset += count
+        if offset != int(selected[0].shape[0]):
+            raise RuntimeError("vision feature split did not consume every raw patch token")
+        return outputs, outputs.hidden_states[-1], feature_maps
+
+    def forward(
+        self,
+        *,
+        input_ids: torch.Tensor,
+        attention_mask: Optional[torch.Tensor],
+        labels: torch.Tensor,
+        image_grid_thw: torch.Tensor,
+        language_loss_weights: Optional[torch.Tensor],
+        language_task_ids: Optional[torch.Tensor],
+        num_persons: Sequence[int],
+        box_targets: Sequence[torch.Tensor],
+        pose_targets: Sequence[torch.Tensor],
+        pose_areas: Sequence[torch.Tensor],
+        seg_targets: Sequence[torch.Tensor],
+        pose_person_indices: Sequence[torch.Tensor],
+        seg_person_indices: Sequence[torch.Tensor],
+        original_sizes: Sequence[Tuple[int, int]],
+        return_predictions: bool = False,
+        **base_kwargs: Any,
+    ) -> Dict[str, Any]:
+        logit_positions = labels[:, 1:].ne(-100).any(dim=0).nonzero(as_tuple=False).flatten()
+        if logit_positions.numel() == 0:
+            raise RuntimeError("batch has no supervised assistant token")
+        outputs, hidden, visual_features = self._forward_backbone(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            image_grid_thw=image_grid_thw,
+            logit_positions=logit_positions,
+            **base_kwargs,
+        )
+        language = causal_language_losses(
+            outputs.logits, labels, language_loss_weights, language_task_ids, logit_positions
+        )
+        reference = hidden
+        people_states = require_exact_token_states(
+            input_ids=input_ids,
+            hidden=hidden,
+            labels=labels,
+            token_id=self.token_ids["person"],
+            expected_counts=num_persons,
+            task_name="person",
+        )
+        pose_states_all = require_exact_token_states(
+            input_ids=input_ids,
+            hidden=hidden,
+            labels=labels,
+            token_id=self.token_ids["pose"],
+            expected_counts=num_persons,
+            task_name="pose",
+        )
+        seg_states_all = require_exact_token_states(
+            input_ids=input_ids,
+            hidden=hidden,
+            labels=labels,
+            token_id=self.token_ids["seg"],
+            expected_counts=num_persons,
+            task_name="seg",
+        )
+        batch_size = input_ids.shape[0]
+        if not all(
+            len(values) == batch_size
+            for values in [
+                num_persons,
+                box_targets,
+                pose_targets,
+                pose_areas,
+                seg_targets,
+                pose_person_indices,
+                seg_person_indices,
+                original_sizes,
+                visual_features,
+            ]
+        ):
+            raise ValueError("task target lists must match batch size")
+
+        pose_l1_values: List[Tuple[torch.Tensor, int]] = []
+        pose_oks_values: List[Tuple[torch.Tensor, int]] = []
+        pose_vis_values: List[Tuple[torch.Tensor, int]] = []
+        pose_center_values: List[Tuple[torch.Tensor, int]] = []
+        pose_aux_values: List[Tuple[torch.Tensor, int]] = []
+        mask_bce_values: List[Tuple[torch.Tensor, int]] = []
+        mask_dice_values: List[Tuple[torch.Tensor, int]] = []
+        predictions: List[Dict[str, torch.Tensor]] = []
+
+        for batch_index in range(batch_size):
+            pose_indices = pose_person_indices[batch_index].to(hidden.device, dtype=torch.long)
+            seg_indices = seg_person_indices[batch_index].to(hidden.device, dtype=torch.long)
+            person_pose = people_states[batch_index].index_select(0, pose_indices)
+            pose_states = pose_states_all[batch_index].index_select(0, pose_indices)
+            person_seg = people_states[batch_index].index_select(0, seg_indices)
+            seg_states = seg_states_all[batch_index].index_select(0, seg_indices)
+            pyramid, mask_features = visual_features[batch_index]
+            predicted_pose, predicted_visibility, auxiliary_pose, predicted_center = self.pose_decoder(
+                person_pose,
+                pose_states,
+                pyramid,
+                person_indices=pose_indices,
+            )
+            pose_target = pose_targets[batch_index].to(device=hidden.device, dtype=hidden.dtype)
+            area_target = pose_areas[batch_index].to(device=hidden.device, dtype=hidden.dtype)
+            pose_count = int(pose_target.shape[0])
+            if pose_count:
+                target_visibility = pose_target[..., 2].long().clamp(0, 2)
+                visible = target_visibility > 0
+                if visible.any():
+                    visible_count = int(visible.sum().item())
+                    pose_l1_values.append((F.l1_loss(predicted_pose[visible], pose_target[..., :2][visible]), visible_count * 2))
+                    for auxiliary in auxiliary_pose:
+                        pose_aux_values.append((F.l1_loss(auxiliary[visible], pose_target[..., :2][visible]), visible_count * 2))
+                pose_vis_values.append((F.cross_entropy(predicted_visibility.reshape(-1, 3), target_visibility.reshape(-1)), pose_count * 17))
+                pose_boxes = box_targets[batch_index].to(device=hidden.device, dtype=hidden.dtype).index_select(0, pose_indices)
+                target_center = 0.5 * (pose_boxes[:, :2] + pose_boxes[:, 2:])
+                pose_center_values.append((F.l1_loss(predicted_center, target_center), pose_count * 2))
+                image_size = torch.tensor([original_sizes[batch_index]], device=hidden.device, dtype=hidden.dtype).expand(pose_count, -1)
+                pose_oks_values.append((oks_loss(predicted_pose, pose_target[..., :2], target_visibility, area_target, image_size), pose_count))
+
+            predicted_masks = self.mask_decoder(person_seg, seg_states, pyramid[0], mask_features, person_indices=seg_indices)
+            seg_target = seg_targets[batch_index].to(device=hidden.device)
+            seg_count = int(seg_target.shape[0])
+            if seg_count:
+                bce, dice = mask_bce_dice_loss(predicted_masks, seg_target)
+                mask_bce_values.append((bce, seg_count))
+                mask_dice_values.append((dice, seg_count))
+            if return_predictions:
+                predictions.append(
+                    {
+                        "pose_xy": predicted_pose,
+                        "pose_visibility": predicted_visibility,
+                        "pose_center": predicted_center,
+                        "mask_logits": predicted_masks,
+                        "pose_person_indices": pose_indices,
+                        "seg_person_indices": seg_indices,
+                    }
+                )
+
+        raw_losses: Dict[str, torch.Tensor] = {
+            **language,
+            "pose_l1": _weighted_mean(pose_l1_values, reference),
+            "pose_oks": _weighted_mean(pose_oks_values, reference),
+            "pose_visibility": _weighted_mean(pose_vis_values, reference),
+            "pose_center": _weighted_mean(pose_center_values, reference),
+            "pose_aux": _weighted_mean(pose_aux_values, reference),
+            "mask_bce": _weighted_mean(mask_bce_values, reference),
+            "mask_dice": _weighted_mean(mask_dice_values, reference),
+        }
+        total = raw_losses["ce_loss"] * self.loss_weights["ce"]
+        result: Dict[str, Any] = dict(raw_losses)
+        for name in ["pose_l1", "pose_oks", "pose_visibility", "pose_center", "pose_aux", "mask_bce", "mask_dice"]:
+            weighted = raw_losses[name] * self.loss_weights[name]
+            result[f"weighted_{name}"] = weighted
+            total = total + weighted
+        result["loss"] = total
+        result["valid_pose_count"] = input_ids.new_tensor(sum(len(value) for value in pose_targets))
+        result["valid_seg_count"] = input_ids.new_tensor(sum(len(value) for value in seg_targets))
+        result["person_count"] = input_ids.new_tensor(sum(int(value) for value in num_persons))
+        if return_predictions:
+            result["predictions"] = predictions
+        return result
+
+    @torch.no_grad()
+    def decode_dense_from_inputs(
+        self,
+        *,
+        input_ids: torch.Tensor,
+        attention_mask: Optional[torch.Tensor],
+        image_grid_thw: torch.Tensor,
+        target_start: int,
+        person_count: int,
+        **base_kwargs: Any,
+    ) -> Dict[str, torch.Tensor]:
+        outputs, hidden, visual_features = self._forward_backbone(
+            input_ids=input_ids,
+            attention_mask=attention_mask,
+            image_grid_thw=image_grid_thw,
+            **base_kwargs,
+        )
+        del outputs
+        if input_ids.shape[0] != 1 or len(visual_features) != 1:
+            raise ValueError("dense generated decoding currently accepts one image")
+        counts = [int(person_count)]
+        person = require_exact_token_states(
+            input_ids=input_ids, hidden=hidden, labels=None, token_id=self.token_ids["person"],
+            expected_counts=counts, task_name="person", minimum_position=target_start,
+        )[0]
+        pose = require_exact_token_states(
+            input_ids=input_ids, hidden=hidden, labels=None, token_id=self.token_ids["pose"],
+            expected_counts=counts, task_name="pose", minimum_position=target_start,
+        )[0]
+        seg = require_exact_token_states(
+            input_ids=input_ids, hidden=hidden, labels=None, token_id=self.token_ids["seg"],
+            expected_counts=counts, task_name="seg", minimum_position=target_start,
+        )[0]
+        pyramid, mask_features = visual_features[0]
+        pose_xy, pose_visibility, _, pose_center = self.pose_decoder(person, pose, pyramid)
+        mask_logits = self.mask_decoder(person, seg, pyramid[0], mask_features)
+        person_positions = (
+            input_ids[0].eq(self.token_ids["person"])
+            & torch.arange(input_ids.shape[1], device=input_ids.device).ge(int(target_start))
+        ).nonzero(as_tuple=False).flatten()
+        preceding = (person_positions - 1).clamp(min=0)
+        logits = self.base_model.get_output_embeddings()(hidden[0].index_select(0, preceding)).float()
+        person_probability = logits.softmax(dim=-1)[:, self.token_ids["person"]]
+        return {
+            "pose_xy": pose_xy,
+            "pose_visibility_logits": pose_visibility,
+            "pose_center": pose_center,
+            "mask_logits": mask_logits,
+            "person_probability": person_probability,
+        }
+
+    def save_task_modules(self, directory: str) -> None:
+        output = Path(directory)
+        output.mkdir(parents=True, exist_ok=True)
+        torch.save(
+            {
+                "visual_neck": self.visual_neck.state_dict(),
+                "pose_decoder": self.pose_decoder.state_dict(),
+                "mask_decoder": self.mask_decoder.state_dict(),
+                "token_ids": self.token_ids,
+                "vision_layer_indices": list(self.vision_layer_indices),
+                "visual_merge_size": self.visual_merge_size,
+                "loss_weights": self.loss_weights,
+                "decoder_dim": self.decoder_dim,
+                "decoder_heads": self.decoder_heads,
+                "pose_decoder_layers": self.pose_decoder_layers,
+                "max_people": self.max_people,
+                "use_person_rank_queries": self.use_person_rank_queries,
+                "use_visual_person_reference": self.use_visual_person_reference,
+                "use_reference_feature_sampling": self.use_reference_feature_sampling,
+            },
+            output / "stage1_v2_task_modules.pt",
+        )
+
+    def load_task_modules(self, path: str) -> None:
+        state = torch.load(path, map_location="cpu", weights_only=False)
+        if state["token_ids"] != self.token_ids:
+            raise RuntimeError("checkpoint special-token ids do not match")
+        if tuple(state["vision_layer_indices"]) != self.vision_layer_indices:
+            raise RuntimeError("checkpoint vision layers do not match")
+        if int(state["visual_merge_size"]) != self.visual_merge_size:
+            raise RuntimeError("checkpoint visual merge size does not match")
+        if int(state.get("decoder_dim", self.decoder_dim)) != self.decoder_dim:
+            raise RuntimeError("checkpoint decoder dimension does not match")
+        if int(state.get("decoder_heads", self.decoder_heads)) != self.decoder_heads:
+            raise RuntimeError("checkpoint decoder head count does not match")
+        if int(state.get("pose_decoder_layers", self.pose_decoder_layers)) != self.pose_decoder_layers:
+            raise RuntimeError("checkpoint pose layer count does not match")
+        if int(state.get("max_people", 25)) != self.max_people:
+            raise RuntimeError("checkpoint person-query count does not match")
+        if bool(state.get("use_person_rank_queries", False)) != self.use_person_rank_queries:
+            raise RuntimeError("checkpoint person-rank query mode does not match")
+        if bool(state.get("use_visual_person_reference", False)) != self.use_visual_person_reference:
+            raise RuntimeError("checkpoint visual-person-reference mode does not match")
+        if bool(state.get("use_reference_feature_sampling", False)) != self.use_reference_feature_sampling:
+            raise RuntimeError("checkpoint reference-feature-sampling mode does not match")
+        self.visual_neck.load_state_dict(state["visual_neck"], strict=True)
+        self.pose_decoder.load_state_dict(state["pose_decoder"], strict=True)
+        self.mask_decoder.load_state_dict(state["mask_decoder"], strict=True)
+        loaded_weights = {name: float(value) for name, value in state["loss_weights"].items()}
+        self.loss_weights = dict(DEFAULT_LOSS_WEIGHTS_V2)
+        self.loss_weights.update(loaded_weights)
+        if "pose_center" not in loaded_weights:
+            self.loss_weights["pose_center"] = 0.0

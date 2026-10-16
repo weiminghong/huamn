@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd /root/autodl-tmp/humanslot
+GPU=${GPU:-0}
+export CUDA_VISIBLE_DEVICES="$GPU"
+export PYTHONPATH=/root/autodl-tmp/humanslot
+export HF_HOME=/root/autodl-tmp/hf_cache
+export HUGGINGFACE_HUB_CACHE=/root/autodl-tmp/hf_cache/hub
+export TRANSFORMERS_CACHE=/root/autodl-tmp/hf_cache/transformers
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+PY=/root/miniconda3/envs/human4b/bin/python
+MODEL=/root/autodl-tmp/model/Qwen3.5-4B
+TRAIN_ANN=/root/autodl-tmp/coco/unihuman_label/coco_unihuman_train_v1.json
+VAL_ANN=/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json
+TRAIN_IMG=/root/autodl-tmp/coco/train2017
+VAL_IMG=/root/autodl-tmp/coco/val2017
+ROOT=/root/autodl-tmp/humanslot_outputs/lisa_qwen_v1
+RUN="$ROOT/stage1_v1_qwen35_4b_5task_3epoch_epochval_$(date +%Y%m%d_%H%M%S)_gpu${GPU}"
+mkdir -p "$RUN"
+cat > "$RUN/status.log" <<STATUS
+started_at=$(date -Is)
+gpu=$GPU
+model=$MODEL
+protocol=COCO-UniHuman-v1-five-task-qwen35-4b
+epochs=3
+eval_after_each_epoch=true
+effective_batch=12
+batch_size=12
+grad_accum_steps=1
+max_length=5000
+max_new_tokens=5000
+train_ann=$TRAIN_ANN
+val_ann=$VAL_ANN
+train_image_root=$TRAIN_IMG
+val_image_root=$VAL_IMG
+train_strategy=LoRA language + visual LoRA + box/pose/mask heads
+pose_box_jitter=false
+split_ce_task_backward=true
+language_lr=1e-5
+visual_lr=1e-5
+head_lr=5e-5
+box_lr=5e-5
+pose_lr=5e-5
+mask_lr=2e-5
+STATUS
+finish() {
+  code=$?
+  trap - EXIT
+  echo "finished_at=$(date -Is)" >> "$RUN/status.log"
+  echo "exit_code=$code" >> "$RUN/status.log"
+  if [ "$code" -eq 0 ]; then echo status=completed >> "$RUN/status.log"; else echo status=failed >> "$RUN/status.log"; fi
+  exit "$code"
+}
+trap finish EXIT
+if [ ! -x "$PY" ]; then echo "missing python env: $PY" >&2; exit 3; fi
+for p in "$MODEL" "$TRAIN_ANN" "$VAL_ANN" "$TRAIN_IMG" "$VAL_IMG"; do
+  if [ ! -e "$p" ]; then echo "missing required path: $p" >&2; exit 4; fi
+done
+PREV=""
+for TARGET_EPOCH in 1 2 3; do
+  echo "[epoch-${TARGET_EPOCH}-train-start] $(date -Is)" | tee -a "$RUN/status.log"
+  TRAIN_CMD=("$PY" -u human_lisa_qwen_v1/train_stage1_v1.py
+    --model "$MODEL"
+    --train-ann "$TRAIN_ANN" --train-image-root "$TRAIN_IMG"
+    --val-ann "$VAL_ANN" --val-image-root "$VAL_IMG"
+    --output-dir "$RUN/train"
+    --epochs "$TARGET_EPOCH"
+    --batch-size 12 --grad-accum-steps 1 --max-length 5000
+    --num-workers 2 --horizontal-flip-prob 0.5
+    --base-lr 1e-5 --visual-lr 1e-5 --language-lr 1e-5 --head-lr 5e-5
+    --box-lr 5e-5 --pose-lr 5e-5 --mask-lr 2e-5
+    --scheduler-type cosine --warmup-ratio 0.05 --grad-clip 1
+    --task-backbone-grad-scale 0.02 --lora-dropout 0.05
+    --split-ce-task-backward --no-lora-embed-tokens --lora-lm-head
+    --ce-loss-weight 1
+    --box-l1-loss-weight 5 --box-giou-loss-weight 2 --box-quality-loss-weight 1
+    --pose-l1-loss-weight 5 --pose-oks-loss-weight 1.5 --pose-visibility-loss-weight 1
+    --mask-bce-loss-weight 4 --mask-dice-loss-weight 2
+    --missing-attribute-loss-weight 0
+    --log-every 10 --save-every 2000 --probe-every 1000 --probe-count 2
+    --probe-max-new-tokens 5000 --bf16 --cuda-visible-devices "$GPU")
+  if [ -n "$PREV" ]; then TRAIN_CMD+=(--resume-dir "$PREV"); fi
+  "${TRAIN_CMD[@]}" 2>&1 | tee -a "$RUN/train_epoch${TARGET_EPOCH}.log"
+  CKPT=$(ls -d "$RUN"/train/final-step-* 2>/dev/null | sort -V | tail -1)
+  if [ -z "$CKPT" ]; then echo "no final-step checkpoint after epoch $TARGET_EPOCH" >&2; exit 5; fi
+  echo "epoch_${TARGET_EPOCH}_checkpoint=$CKPT" >> "$RUN/status.log"
+  echo "[epoch-${TARGET_EPOCH}-eval-start] $(date -Is)" | tee -a "$RUN/status.log"
+  EVAL_DIR="$RUN/eval_val_full_epoch${TARGET_EPOCH}_$(basename "$CKPT")"
+  "$PY" -u human_lisa_qwen_v1/eval_stage1_v1.py \
+    --checkpoint "$CKPT" --base-model "$MODEL" \
+    --annotation "$VAL_ANN" --image-root "$VAL_IMG" \
+    --output-dir "$EVAL_DIR" --batch-size 1 --max-new-tokens 5000 \
+    --cuda-visible-devices "$GPU" \
+    2>&1 | tee -a "$RUN/eval_epoch${TARGET_EPOCH}.log"
+  echo "epoch_${TARGET_EPOCH}_eval_dir=$EVAL_DIR" >> "$RUN/status.log"
+  PREV="$CKPT"
+done
+echo "[all-done] $(date -Is)" | tee -a "$RUN/status.log"

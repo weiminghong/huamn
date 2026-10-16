@@ -8,6 +8,8 @@ seed: 42
 max_train_samples: null
 max_val_samples: null
 max_length: 4096
+target_format: compact_tag
+force_rebuild_target_text: true
 
 train_batch_size: 1
 eval_batch_size: 1
@@ -40,7 +42,7 @@ swanlab:
   experiment_name: "qwen4b-coco-unihuman-sft"
   mode: "cloud"
   preview_samples: 4
-  preview_max_new_tokens: 1024
+  preview_max_new_tokens: 4096
   stage_eval:
     enable: true
     samples: 16

@@ -5,6 +5,8 @@ import re
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
+from qwen4b_coco_unihuman_ft.output_protocol import parse_compact_tag_struct
+
 
 COCO_SIGMAS = [
     0.26,
@@ -298,6 +300,10 @@ def parse_tag_struct(text: str, image_size: Optional[Tuple[int, int]] = None) ->
     if image_size is None:
         return None
 
+    compact_obj = parse_compact_tag_struct(text, image_size=image_size)
+    if compact_obj is not None:
+        return compact_obj
+
     text = _truncate_to_answer(text)
     width, height = image_size
     person_blobs = re.split(r"<person>", text, flags=re.IGNORECASE)[1:]
@@ -457,17 +463,25 @@ def normalize_struct(obj: Optional[Dict[str, Any]], image_size: Optional[Tuple[i
 def extract_prediction_struct(record: Dict[str, Any], image_size: Optional[Tuple[int, int]] = None) -> Tuple[Dict[str, Any], bool]:
     if record.get("valid_struct", True) is False:
         return normalize_struct(None, image_size=image_size), False
-    for key in ("prediction_struct_post", "prediction_struct_raw", "prediction", "pred"):
-        obj = record.get(key, None)
-        if isinstance(obj, dict):
-            return normalize_struct(obj, image_size=image_size), True
+    saw_prediction_text = False
     for key in ("prediction_text", "text", "response", "output"):
+        if key not in record:
+            continue
         text = str(record.get(key, ""))
+        if not text.strip():
+            continue
+        saw_prediction_text = True
         tag_obj = parse_tag_struct(text, image_size=image_size)
         if tag_obj is not None:
             return normalize_struct(tag_obj, image_size=image_size), True
         obj = parse_json_object_from_text(text)
         if obj is not None:
+            return normalize_struct(obj, image_size=image_size), True
+    if saw_prediction_text:
+        return normalize_struct(None, image_size=image_size), False
+    for key in ("prediction_struct_post", "prediction_struct_raw", "prediction", "pred"):
+        obj = record.get(key, None)
+        if isinstance(obj, dict):
             return normalize_struct(obj, image_size=image_size), True
     return normalize_struct(None, image_size=image_size), False
 
@@ -649,6 +663,20 @@ def get_aligned_item(items: List[Dict[str, Any]], boxes: List[Dict[str, Any]], b
     return None
 
 
+def get_gt_item_for_box(
+    items_by_pid: Dict[Any, Dict[str, Any]],
+    items: List[Dict[str, Any]],
+    gt_box: Dict[str, Any],
+    box_index: int,
+) -> Optional[Dict[str, Any]]:
+    pid = gt_box.get("person_id", None)
+    if pid is not None:
+        return items_by_pid.get(pid)
+    if box_index < len(items):
+        return items[box_index]
+    return None
+
+
 def has_valid_pose(pose: Dict[str, Any]) -> bool:
     kpts = pose.get("keypoints", [])
     return isinstance(kpts, list) and any(len(kp) >= 3 and float(kp[2]) > 0 for kp in kpts)
@@ -784,16 +812,11 @@ def evaluate_records_scheme2(
         pred_attrs = pred["attribute"]
 
         for gi, gt_box in enumerate(gt_boxes):
-            gt_pid = gt_box.get("person_id", None)
-            gt_pose = gt_pose_by_pid.get(gt_pid) if gt_pid is not None else None
-            if gt_pose is None and gi < len(gt["pose"]):
-                gt_pose = gt["pose"][gi]
+            gt_pose = get_gt_item_for_box(gt_pose_by_pid, gt["pose"], gt_box, gi)
             if gt_pose is not None and has_valid_pose(gt_pose):
                 pose_gt_valid_total += 1
                 pose_visible_kpt_total_all_gt += visible_keypoint_count(gt_pose)
-            gt_attr = gt_attr_by_pid.get(gt_pid) if gt_pid is not None else None
-            if gt_attr is None and gi < len(gt["attribute"]):
-                gt_attr = gt["attribute"][gi]
+            gt_attr = get_gt_item_for_box(gt_attr_by_pid, gt["attribute"], gt_box, gi)
             if isinstance(gt_attr, dict) and "gender" in gt_attr:
                 gender_total_all_gt += 1
             if isinstance(gt_attr, dict) and "age" in gt_attr:
@@ -804,10 +827,7 @@ def evaluate_records_scheme2(
         img_pose_kpt_correct = 0
         for gi, pi, _ in matches:
             gt_box = gt_boxes[gi]
-            gt_pid = gt_box.get("person_id", None)
-            gt_pose = gt_pose_by_pid.get(gt_pid) if gt_pid is not None else None
-            if gt_pose is None and gi < len(gt["pose"]):
-                gt_pose = gt["pose"][gi]
+            gt_pose = get_gt_item_for_box(gt_pose_by_pid, gt["pose"], gt_box, gi)
             if gt_pose is not None and has_valid_pose(gt_pose):
                 pose_gt_valid += 1
                 img_pose_gt_valid += 1
@@ -820,9 +840,7 @@ def evaluate_records_scheme2(
                 if t > 0:
                     pose_oks_values.append(oks)
 
-            gt_attr = gt_attr_by_pid.get(gt_pid) if gt_pid is not None else None
-            if gt_attr is None and gi < len(gt["attribute"]):
-                gt_attr = gt["attribute"][gi]
+            gt_attr = get_gt_item_for_box(gt_attr_by_pid, gt["attribute"], gt_box, gi)
             pred_attr = get_aligned_item(pred_attrs, pred_boxes, pi)
             if isinstance(gt_attr, dict) and "gender" in gt_attr:
                 gender_total += 1

@@ -13,6 +13,21 @@ custom_imports = dict(
     allow_failed_imports=False,
 )
 
+
+def _env_bool(name, default=False):
+    value = os.getenv(name)
+    if value is None:
+        return bool(default)
+    return str(value).strip().lower() in {"1", "true", "yes", "y", "on"}
+
+
+def _env_int(name, default):
+    value = os.getenv(name)
+    if value is None or str(value).strip() == "":
+        return int(default)
+    return int(value)
+
+
 DATA_ROOT = os.getenv("COCO_UNIHUMAN_ROOT", "/path/to/coco_person")
 TRAIN_ANN = os.getenv("COCO_UNIHUMAN_TRAIN_JSON", os.path.join(DATA_ROOT, "labels", "coco_unihuman_train_v1.json"))
 VAL_ANN = os.getenv("COCO_UNIHUMAN_VAL_JSON", os.path.join(DATA_ROOT, "labels", "coco_unihuman_val_v1.json"))
@@ -20,8 +35,17 @@ TRAIN_IMG_ROOT = os.getenv("COCO_UNIHUMAN_TRAIN_IMG_ROOT", os.path.join(DATA_ROO
 VAL_IMG_ROOT = os.getenv("COCO_UNIHUMAN_VAL_IMG_ROOT", os.path.join(DATA_ROOT, "val", "val2017"))
 QWEN_STAGE1_MODEL = os.getenv("STAGE1_QWEN_MODEL_NAME_OR_PATH", "/path/to/Qwen2.5-VL-3B-Instruct")
 QWEN_STAGE1_ADAPTER = os.getenv("STAGE1_QWEN_ADAPTER_PATH", "")
-DINOV3_MODEL = os.getenv("DINOV3_MODEL_NAME", "facebook/dinov3-vits16-pretrain-lvd1689m")
+DINOV3_MODEL = os.getenv(
+    "DINOV3_MODEL_NAME",
+    "/share2/program/DINOV3/DINOV3-safetensor/dinov3-vits16-pretrain-lvd1689m",
+)
 WORK_DIR = os.getenv("STAGE2_WORK_DIR", os.path.join(DATA_ROOT, "outputs", "stage2_qwen_ie_dinov3_hqnet"))
+STAGE2_FUSION_MODE = os.getenv("STAGE2_FUSION_MODE", "feature_add")
+STAGE2_FREEZE_DINO = _env_bool("STAGE2_FREEZE_DINO", False)
+STAGE2_MAX_EPOCHS = _env_int("STAGE2_MAX_EPOCHS", 100)
+
+# COCO-UniHuman supports these 2D metrics in the local HumanQueryNet dataset wrapper.
+STAGE2_EVAL_METRICS = ["bbox", "attribute", "kpt", "segm"]
 
 dataset_type = "CocoUnihumanDataset"
 img_norm_cfg = dict(mean=[123.675, 116.28, 103.53], std=[58.395, 57.12, 57.375], to_rgb=True)
@@ -78,8 +102,8 @@ model = dict(
         out_channels=256,
         num_outs=4,
         patch_size=16,
-        freeze_backbone=False,
-        fusion_mode="add",
+        freeze_backbone=STAGE2_FREEZE_DINO,
+        fusion_mode=STAGE2_FUSION_MODE,
         bridge_hidden_channels=64,
         bridge_scale=1.0,
     ),
@@ -131,7 +155,7 @@ model = dict(
 optimizer = dict(type="AdamW", lr=1e-4, weight_decay=0.0001, paramwise_cfg=dict(custom_keys={"backbone": dict(lr_mult=0.1)}))
 optimizer_config = dict(grad_clip=dict(max_norm=0.1, norm_type=2))
 lr_config = dict(policy="step", step=[80])
-runner = dict(type="EpochBasedRunner", max_epochs=100)
+runner = dict(type="EpochBasedRunner", max_epochs=STAGE2_MAX_EPOCHS)
 log_config = dict(interval=50, hooks=[dict(type="TextLoggerHook")])
 checkpoint_config = dict(interval=2)
 data = dict(
@@ -141,7 +165,7 @@ data = dict(
     val=dict(type=dataset_type, ann_file=VAL_ANN, img_prefix=VAL_IMG_ROOT, pipeline=test_pipeline),
     test=dict(type=dataset_type, ann_file=VAL_ANN, img_prefix=VAL_IMG_ROOT, pipeline=test_pipeline),
 )
-evaluation = dict(interval=1, metric="bbox")
+evaluation = dict(interval=1, metric=["bbox", "attribute", "kpt", "segm"])
 auto_scale_lr = dict(base_batch_size=16)
 find_unused_parameters = True
 work_dir = WORK_DIR

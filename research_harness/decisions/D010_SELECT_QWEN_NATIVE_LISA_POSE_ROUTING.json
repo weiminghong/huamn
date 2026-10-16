@@ -1,0 +1,9 @@
+{
+  "schema": "human-slot-decision-v1",
+  "id": "D010_SELECT_QWEN_NATIVE_LISA_POSE_ROUTING",
+  "date": "2026-08-30",
+  "status": "accepted_user_architecture_choice",
+  "decision": "Use native Qwen text decoding for person slots, boxes, age, gender; route per-person <SEG>/<POSE> hidden states into SAM-style and SimCC decoders consuming Qwen Vision features.",
+  "critical_constraint": "Qwen Vision is the only mainline image encoder. Exact SAM and ViTPose image encoders are controls only.",
+  "consequence": "Close HQNet shared-head D and freeze E interface before implementation."
+}

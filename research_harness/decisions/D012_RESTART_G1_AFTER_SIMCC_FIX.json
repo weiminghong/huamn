@@ -1,0 +1,11 @@
+{
+  "schema": "human-slot-decision-v1",
+  "id": "D012_RESTART_G1_AFTER_SIMCC_FIX",
+  "date": "2026-08-31",
+  "status": "accepted",
+  "decision": "Exclude the BF16-failed run, retain the corrected 200-step run as diagnostic, and launch an exact-64 500-step run with metric logging.",
+  "artifacts": [
+    "research_harness/lisa_pose_g1_joint200_summary_20260831.json",
+    "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_g1_joint200_20260831/failure.json"
+  ]
+}

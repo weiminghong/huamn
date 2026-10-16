@@ -1,0 +1,21 @@
+{
+  "schema": "human-slot-decision-event-v1",
+  "decision_id": "D003_CONSOLIDATE_GOAL_AND_EVIDENCE",
+  "time": "2026-08-30T19:50:00+08:00",
+  "decision": "Adopt paper_goal.json and evidence_ledger.json as the canonical paper objective and evidence boundary for all future Human Slot work.",
+  "rationale": "The project has historical metrics, engineering pilots, and one passed representation gate, but no generative model or transfer claim. A canonical evidence ledger prevents diagnostic activity from being promoted into paper conclusions.",
+  "artifacts": [
+    "research_harness/paper_goal.json",
+    "research_harness/evidence_ledger.json",
+    "research_harness/GOAL_AND_EVIDENCE.md",
+    "research_harness/validation.json"
+  ],
+  "claim_status": {
+    "C1_GENERATIVE_HUMAN_ADAPTATION": "pending",
+    "C2_VISUAL_TRANSFER": "blocked_by_C1",
+    "C3_SEMANTIC_TRANSFER": "blocked_by_C1_C2"
+  },
+  "verified_mainline_result": "G0 codec passed",
+  "next_action": "A002_IMPLEMENT_G1_OVERFIT64",
+  "reopen_condition": "Any change to the paper goal, Stage-1 decoder contract, or evidence eligibility requires a new explicit decision event."
+}

@@ -5,13 +5,52 @@ import os
 import random
 import re
 import sys
+import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
+
+
+def _early_set_cuda_visible_devices_from_argv() -> None:
+    value: Optional[str] = None
+    argv = list(sys.argv[1:])
+    for i, tok in enumerate(argv):
+        if tok == "--cuda-visible-devices" and i + 1 < len(argv):
+            value = argv[i + 1]
+        elif tok.startswith("--cuda-visible-devices="):
+            value = tok.split("=", 1)[1]
+    if value is None:
+        config_path: Optional[str] = None
+        for i, tok in enumerate(argv):
+            if tok == "--config" and i + 1 < len(argv):
+                config_path = argv[i + 1]
+            elif tok.startswith("--config="):
+                config_path = tok.split("=", 1)[1]
+        if config_path:
+            try:
+                import yaml  # type: ignore
+
+                with open(config_path, "r", encoding="utf-8") as f:
+                    cfg = yaml.safe_load(f) or {}
+                if isinstance(cfg, dict) and cfg.get("cuda_visible_devices", None) is not None:
+                    value = str(cfg.get("cuda_visible_devices"))
+            except Exception:
+                value = None
+    if value is not None and str(value).strip():
+        os.environ["CUDA_VISIBLE_DEVICES"] = str(value).strip()
+
+
+_early_set_cuda_visible_devices_from_argv()
 
 import torch
 from PIL import Image, ImageDraw
 from tqdm import tqdm
 from transformers import AutoConfig, AutoModelForCausalLM, AutoProcessor
+
+try:
+    from transformers import StoppingCriteria, StoppingCriteriaList
+except Exception:
+    StoppingCriteria = None
+    StoppingCriteriaList = None
 
 try:
     from transformers import AutoModelForVision2Seq
@@ -40,6 +79,7 @@ from qwen4b_coco_unihuman_ft.prompts import (  # noqa: E402
     build_box_pose_attribute_prompt,
     build_vl_chat_text,
 )
+from qwen4b_coco_unihuman_ft.output_protocol import FORMAT_COMPACT_TAG, audit_tag_format, normalize_target_format  # noqa: E402
 
 
 COCO_SKELETON_1_BASED = [
@@ -103,12 +143,37 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--batch-size", type=int, default=1)
     parser.add_argument("--num-workers", type=int, default=0)
     parser.add_argument("--max-length", type=int, default=4096)
-    parser.add_argument("--max-new-tokens", type=int, default=1024)
+    parser.add_argument("--max-new-tokens", type=int, default=10000)
+    parser.add_argument("--max-persons", type=int, default=0, help="Hard cap for generated person blocks; 0 disables it.")
+    parser.add_argument(
+        "--close-after-max-persons",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="If --max-persons stops generation after a complete person block, append </answer> for parsing.",
+    )
     parser.add_argument("--bf16", action=argparse.BooleanOptionalAction, default=True)
     parser.add_argument("--fp16", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument("--stop-at-answer-end", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument("--truncate-after-answer-end", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument("--strict-parse", action=argparse.BooleanOptionalAction, default=False)
+    parser.add_argument(
+        "--strict-tag-format",
+        action=argparse.BooleanOptionalAction,
+        default=False,
+        help="Require well-formed tag output before parsing: closed person blocks, closed child tags, and valid pose triplets.",
+    )
+    parser.add_argument("--resume", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument("--flush-every", type=int, default=1)
+    parser.add_argument("--runtime-jsonl", type=str, default="")
     parser.add_argument("--assistant-prefix", type=str, default="")
     parser.add_argument("--extra-prompt", type=str, default="")
     parser.add_argument("--prompt-format", type=str, default="tag", choices=["tag", "json"])
+    parser.add_argument(
+        "--output-format",
+        type=str,
+        default=FORMAT_COMPACT_TAG,
+        choices=["tag", "compact_tag", "compact", "short", "short_tag", "xml", "long_tag"],
+    )
     parser.add_argument("--iou-thr", type=float, default=0.5)
     parser.add_argument("--pck-thr", type=float, default=0.2)
     parser.add_argument("--save-vis", action=argparse.BooleanOptionalAction, default=True)
@@ -182,30 +247,63 @@ def _load_model(model_name_or_path: str, dtype):
     return AutoModelForCausalLM.from_pretrained(model_name_or_path, **kwargs)
 
 
+def _iter_signature_sources(model):
+    seen = set()
+    candidates = [model]
+    idx = 0
+    while idx < len(candidates):
+        obj = candidates[idx]
+        idx += 1
+        if obj is None:
+            continue
+        obj_id = id(obj)
+        if obj_id in seen:
+            continue
+        seen.add(obj_id)
+        for attr in ("base_model", "model", "module"):
+            child = getattr(obj, attr, None)
+            if child is not None and id(child) not in seen:
+                candidates.append(child)
+        yield obj
+
+
 def _model_accepts_vision_inputs(model) -> bool:
     keys = set()
-    for fn_name in ("forward", "prepare_inputs_for_generation"):
-        fn = getattr(model, fn_name, None)
-        if fn is None:
-            continue
-        try:
-            keys.update(inspect.signature(fn).parameters.keys())
-        except Exception:
-            continue
+    for obj in _iter_signature_sources(model):
+        for fn_name in ("forward", "prepare_inputs_for_generation"):
+            fn = getattr(obj, fn_name, None)
+            if fn is None:
+                continue
+            try:
+                keys.update(inspect.signature(fn).parameters.keys())
+            except Exception:
+                continue
     return any(k in keys for k in ("pixel_values", "image_grid_thw", "images"))
 
 
 def _filter_generate_inputs(model, inputs: Dict[str, Any]) -> Dict[str, Any]:
     keys = {"input_ids", "attention_mask", "position_ids", "token_type_ids", "past_key_values", "use_cache"}
-    for fn_name in ("forward", "prepare_inputs_for_generation"):
-        fn = getattr(model, fn_name, None)
-        if fn is None:
-            continue
-        try:
-            keys.update(inspect.signature(fn).parameters.keys())
-        except Exception:
-            continue
+    for obj in _iter_signature_sources(model):
+        for fn_name in ("forward", "prepare_inputs_for_generation"):
+            fn = getattr(obj, fn_name, None)
+            if fn is None:
+                continue
+            try:
+                keys.update(inspect.signature(fn).parameters.keys())
+            except Exception:
+                continue
     return {k: v for k, v in inputs.items() if k in keys}
+
+
+def _assert_vision_inputs_preserved(inputs: Dict[str, Any], gen_inputs: Dict[str, Any]) -> None:
+    vision_keys = {"pixel_values", "image_grid_thw", "images"}
+    original = sorted(k for k in inputs.keys() if k in vision_keys)
+    kept = sorted(k for k in gen_inputs.keys() if k in vision_keys)
+    if original and not kept:
+        raise ValueError(
+            "Vision inputs were produced by the processor but filtered out before generate. "
+            f"original_vision_keys={original}, generate_keys={sorted(gen_inputs.keys())}"
+        )
 
 
 def _make_inputs(processor, texts: List[str], images: List[Image.Image], max_length: int):
@@ -227,6 +325,13 @@ def _write_jsonl(path: str, rows: List[Dict[str, Any]]) -> None:
             f.write(json.dumps(row, ensure_ascii=False) + "\n")
 
 
+def _append_jsonl(path: str, row: Dict[str, Any]) -> None:
+    out = Path(path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    with out.open("a", encoding="utf-8") as f:
+        f.write(json.dumps(row, ensure_ascii=False) + "\n")
+
+
 def _raw_box_candidate_count(obj: Any) -> int:
     if not isinstance(obj, dict):
         return 0
@@ -245,7 +350,9 @@ def _raw_box_candidate_count(obj: Any) -> int:
 def _raw_tag_box_candidate_count(text: str) -> int:
     if not isinstance(text, str) or not text:
         return 0
-    return len(re.findall(r"<box>.*?(?:</box>|$)", text, flags=re.DOTALL | re.IGNORECASE))
+    long_boxes = len(re.findall(r"<box>.*?(?:</box>|$)", text, flags=re.DOTALL | re.IGNORECASE))
+    compact_boxes = len(re.findall(r"<p>.*?<b>.*?(?:</b>|$)", text, flags=re.DOTALL | re.IGNORECASE))
+    return max(long_boxes, compact_boxes)
 
 
 def _raw_tag_attr_candidate_count(text: str) -> int:
@@ -253,17 +360,206 @@ def _raw_tag_attr_candidate_count(text: str) -> int:
         return 0
     genders = len(re.findall(r"<gender>.*?(?:</gender>|$)", text, flags=re.DOTALL | re.IGNORECASE))
     ages = len(re.findall(r"<age>.*?(?:</age>|$)", text, flags=re.DOTALL | re.IGNORECASE))
-    return max(genders, ages)
+    compact_genders = len(re.findall(r"<g>.*?(?:</g>|$)", text, flags=re.DOTALL | re.IGNORECASE))
+    compact_ages = len(re.findall(r"<a>.*?(?:</a>|$)", text, flags=re.DOTALL | re.IGNORECASE))
+    return max(genders, ages, compact_genders, compact_ages)
 
 
-def _parse_prediction_text(text: str, image_size: Tuple[int, int]) -> Tuple[Dict[str, Any], str, Optional[Dict[str, Any]]]:
+def _first_answer_end_index(text: str) -> int:
+    if not isinstance(text, str):
+        return -1
+    m = re.search(r"</answer>", text, flags=re.IGNORECASE)
+    return -1 if m is None else int(m.end())
+
+
+def _truncate_after_first_answer(text: str) -> Tuple[str, bool, int]:
+    idx = _first_answer_end_index(text)
+    if idx < 0:
+        return text, False, 0
+    extra = max(0, len(text) - idx)
+    return text[:idx], extra > 0, extra
+
+
+def _has_complete_answer_block(text: str) -> bool:
+    if not isinstance(text, str):
+        return False
+    return bool(re.search(r"<answer>.*?</answer>", text, flags=re.DOTALL | re.IGNORECASE))
+
+
+def _parse_prediction_text(
+    text: str,
+    image_size: Tuple[int, int],
+    strict: bool = False,
+    output_format: str = FORMAT_COMPACT_TAG,
+    strict_tag_format: bool = False,
+) -> Tuple[Dict[str, Any], str, Optional[Dict[str, Any]]]:
+    if strict and not _has_complete_answer_block(text):
+        return normalize_struct(None, image_size=image_size), "incomplete", None
+    strict_audit = audit_tag_format(text, output_format=output_format)
+    if strict_tag_format and not bool(strict_audit.get("ok", False)):
+        return normalize_struct(None, image_size=image_size), "strict_tag_format_fail", {"strict_tag_audit": strict_audit}
     tag_obj = parse_tag_struct(text, image_size=image_size)
     if tag_obj is not None:
-        return normalize_struct(tag_obj, image_size=image_size), "tag", None
+        return normalize_struct(tag_obj, image_size=image_size), "tag", {"strict_tag_audit": strict_audit}
     json_obj = parse_json_object_from_text(text)
     if json_obj is not None:
         return normalize_struct(json_obj, image_size=image_size), "json", json_obj
-    return normalize_struct(None, image_size=image_size), "none", None
+    return normalize_struct(None, image_size=image_size), "none", {"strict_tag_audit": strict_audit}
+
+
+class StopOnSubsequence(StoppingCriteria if StoppingCriteria is not None else object):
+    def __init__(self, stop_ids: List[int]) -> None:
+        self.stop_ids = [int(x) for x in stop_ids]
+
+    def __call__(self, input_ids, scores, **kwargs) -> bool:  # type: ignore[override]
+        if not self.stop_ids:
+            return False
+        width = len(self.stop_ids)
+        if input_ids.shape[-1] < width:
+            return False
+        suffix = input_ids[:, -width:].detach().cpu().tolist()
+        return all(row == self.stop_ids for row in suffix)
+
+
+class StopOnSubsequenceCount(StoppingCriteria if StoppingCriteria is not None else object):
+    def __init__(self, stop_ids: List[int], max_count: int, start_length: int = 0) -> None:
+        self.stop_ids = [int(x) for x in stop_ids]
+        self.max_count = max(0, int(max_count))
+        self.start_length = int(start_length)
+        self._counts: Dict[int, int] = {}
+        self._last_lengths: Dict[int, int] = {}
+
+    def __call__(self, input_ids, scores, **kwargs) -> bool:  # type: ignore[override]
+        if not self.stop_ids or self.max_count <= 0 or input_ids.shape[-1] <= self.start_length:
+            return False
+        width = len(self.stop_ids)
+        generated = input_ids[:, self.start_length :].detach().cpu().tolist()
+        for row_idx, row in enumerate(generated):
+            prev_len = self._last_lengths.get(row_idx, 0)
+            count = self._counts.get(row_idx, 0)
+            scan_start = max(0, prev_len - width + 1)
+            i = scan_start
+            while i <= len(row) - width:
+                if row[i : i + width] == self.stop_ids:
+                    count += 1
+                    i += width
+                else:
+                    i += 1
+            self._counts[row_idx] = count
+            self._last_lengths[row_idx] = len(row)
+            if count < self.max_count:
+                return False
+        return True
+
+
+class StopOnDecodedText(StoppingCriteria if StoppingCriteria is not None else object):
+    def __init__(
+        self,
+        tokenizer,
+        stop_text: str = "</answer>",
+        stop_texts: Optional[List[str]] = None,
+        window_tokens: int = 48,
+        start_length: int = 0,
+        max_persons: int = 0,
+        person_end_text: str = "",
+    ) -> None:
+        self.tokenizer = tokenizer
+        texts = stop_texts if stop_texts is not None else [stop_text]
+        self.stop_texts = [str(text).lower() for text in texts if str(text)]
+        self.window_tokens = int(window_tokens)
+        self.start_length = int(start_length)
+        self.max_persons = max(0, int(max_persons))
+        self.person_end_text = str(person_end_text).lower()
+
+    def __call__(self, input_ids, scores, **kwargs) -> bool:  # type: ignore[override]
+        if self.tokenizer is None or input_ids.shape[-1] <= self.start_length:
+            return False
+        generated = input_ids[:, self.start_length :]
+        if generated.shape[-1] <= 0:
+            return False
+        width = min(self.window_tokens, int(generated.shape[-1]))
+        suffixes = generated.detach().cpu().tolist()
+        for suffix in suffixes:
+            try:
+                if hasattr(self.tokenizer, "decode"):
+                    full_text = self.tokenizer.decode(suffix, skip_special_tokens=False)
+                else:
+                    full_text = self.tokenizer.batch_decode([suffix], skip_special_tokens=False)[0]
+            except Exception:
+                return False
+            full_text = str(full_text).lower()
+            tail_text = full_text[-max(1, self.window_tokens * 12) :]
+            has_stop_text = any(stop_text in tail_text for stop_text in self.stop_texts)
+            has_max_persons = (
+                self.max_persons > 0
+                and bool(self.person_end_text)
+                and full_text.count(self.person_end_text) >= self.max_persons
+            )
+            if not (has_stop_text or has_max_persons):
+                return False
+        return True
+
+
+def _person_end_text_for_format(output_format: str) -> str:
+    return "</p>" if normalize_target_format(output_format) == FORMAT_COMPACT_TAG else "</person>"
+
+
+def _count_completed_person_blocks(text: str, output_format: str) -> int:
+    if not isinstance(text, str) or not text:
+        return 0
+    return str(text).lower().count(_person_end_text_for_format(output_format))
+
+
+def _build_stopping_criteria(
+    tokenizer,
+    enabled: bool,
+    start_length: int = 0,
+    max_persons: int = 0,
+    output_format: str = FORMAT_COMPACT_TAG,
+):
+    max_persons = max(0, int(max_persons))
+    if not enabled and max_persons <= 0:
+        return None
+    if StoppingCriteriaList is None or StoppingCriteria is None:
+        return None
+    if tokenizer is None:
+        return None
+    try:
+        stop_ids = tokenizer("</answer>", add_special_tokens=False).input_ids
+    except Exception:
+        stop_ids = []
+    try:
+        person_end_ids = tokenizer(_person_end_text_for_format(output_format), add_special_tokens=False).input_ids
+    except Exception:
+        person_end_ids = []
+    criteria = [
+        StopOnDecodedText(
+            tokenizer,
+            stop_texts=["</answer>"] if enabled else [],
+            start_length=start_length,
+        )
+    ]
+    if enabled and stop_ids:
+        criteria.append(StopOnSubsequence(stop_ids))
+    if max_persons > 0 and person_end_ids:
+        criteria.append(StopOnSubsequenceCount(person_end_ids, max_count=max_persons, start_length=start_length))
+    if not criteria:
+        return None
+    return StoppingCriteriaList(criteria)
+
+
+def _count_generated_tokens(ids: torch.Tensor, pad_token_id: Optional[int]) -> int:
+    values = ids.detach().cpu().tolist()
+    if pad_token_id is not None:
+        while values and int(values[-1]) == int(pad_token_id):
+            values.pop()
+    return len(values)
+
+
+def _hit_eos(ids: torch.Tensor, eos_token_id: Optional[int]) -> bool:
+    if eos_token_id is None:
+        return False
+    return any(int(x) == int(eos_token_id) for x in ids.detach().cpu().tolist())
 
 
 def _draw_boxes(draw: ImageDraw.ImageDraw, boxes: List[Dict[str, Any]], color: Tuple[int, int, int], prefix: str) -> None:
@@ -361,6 +657,9 @@ def main() -> None:
     pred_only_vis_dir = out_dir / "vis_pred_only"
     pred_jsonl = Path(args.pred_jsonl) if str(args.pred_jsonl).strip() else out_dir / "predictions.jsonl"
     metrics_json = Path(args.metrics_json) if str(args.metrics_json).strip() else out_dir / "metrics.json"
+    runtime_jsonl = (
+        Path(args.runtime_jsonl) if str(args.runtime_jsonl).strip() else out_dir / "runtime.jsonl"
+    )
 
     all_records = load_jsonl(str(args.jsonl))
     records = _select_records(
@@ -401,19 +700,33 @@ def main() -> None:
         model.generation_config.pad_token_id = pad_token_id
         model.generation_config.eos_token_id = eos_token_id
 
-    prompt = build_box_pose_attribute_prompt(str(args.extra_prompt).strip() or None)
+    output_format = normalize_target_format(args.output_format)
+    extra_prompt_parts: List[str] = []
+    if str(args.extra_prompt).strip():
+        extra_prompt_parts.append(str(args.extra_prompt).strip())
+    max_persons = max(0, int(args.max_persons))
+    prompt = build_box_pose_attribute_prompt("\n".join(extra_prompt_parts) or None, output_format=output_format)
     assistant_prefix = str(args.assistant_prefix)
     if str(args.prompt_format) == "tag" and not assistant_prefix.strip():
         assistant_prefix = DEFAULT_ASSISTANT_PREFIX_TAG
-    pred_rows: List[Dict[str, Any]] = []
+    pred_rows_by_id: Dict[str, Dict[str, Any]] = {}
+    if bool(args.resume) and pred_jsonl.exists():
+        for row in load_jsonl(str(pred_jsonl)):
+            sid = str(row.get("id", ""))
+            if sid:
+                pred_rows_by_id[sid] = row
+    records_to_run = [r for r in records if str(r.get("id", "")) not in pred_rows_by_id]
+    if pred_rows_by_id:
+        print(json.dumps({"resume_predictions": len(pred_rows_by_id), "remaining": len(records_to_run)}, ensure_ascii=False))
 
     with torch.no_grad():
-        pbar = tqdm(range(0, len(records), int(args.batch_size)), desc="Infer box/pose/attr", dynamic_ncols=True)
+        pbar = tqdm(range(0, len(records_to_run), int(args.batch_size)), desc="Infer box/pose/attr", dynamic_ncols=True)
         for start in pbar:
-            batch_records = records[start : start + int(args.batch_size)]
+            batch_records = records_to_run[start : start + int(args.batch_size)]
             images: List[Image.Image] = []
             texts: List[str] = []
             image_paths: List[str] = []
+            sample_started = time.time()
             for rec in batch_records:
                 image_path = _resolve_image_path(rec, str(args.image_root).strip())
                 image = Image.open(image_path).convert("RGB")
@@ -426,22 +739,79 @@ def main() -> None:
                 if isinstance(v, torch.Tensor):
                     inputs[k] = v.to(device)
             gen_inputs = _filter_generate_inputs(model, inputs)
-            gen_ids = model.generate(
+            _assert_vision_inputs_preserved(inputs, gen_inputs)
+            input_len = gen_inputs["input_ids"].shape[1]
+            stopping_criteria = _build_stopping_criteria(
+                tokenizer,
+                bool(args.stop_at_answer_end),
+                start_length=int(input_len),
+                max_persons=max_persons,
+                output_format=output_format,
+            )
+            gen_kwargs = dict(
                 **gen_inputs,
                 max_new_tokens=int(args.max_new_tokens),
                 do_sample=False,
                 num_beams=1,
                 pad_token_id=pad_token_id,
+                eos_token_id=eos_token_id,
             )
-            input_len = gen_inputs["input_ids"].shape[1]
+            if stopping_criteria is not None:
+                gen_kwargs["stopping_criteria"] = stopping_criteria
+            gen_ids = model.generate(**gen_kwargs)
+            generation_seconds = time.time() - sample_started
             gen_suffix = gen_ids[:, input_len:]
             suffixes = processor.batch_decode(gen_suffix, skip_special_tokens=True)
 
-            for rec, image, image_path, suffix in zip(batch_records, images, image_paths, suffixes):
-                pred_text = assistant_prefix + suffix
+            for row_idx, (rec, image, image_path, suffix) in enumerate(zip(batch_records, images, image_paths, suffixes)):
+                raw_pred_text = assistant_prefix + suffix
+                generated_answer_end_seen = _first_answer_end_index(raw_pred_text) >= 0
+                completed_person_blocks = _count_completed_person_blocks(raw_pred_text, output_format)
+                max_persons_reached = max_persons > 0 and completed_person_blocks >= max_persons
+                forced_answer_close = (
+                    bool(args.close_after_max_persons)
+                    and max_persons_reached
+                    and not generated_answer_end_seen
+                    and "<answer>" in raw_pred_text.lower()
+                )
+                if forced_answer_close:
+                    raw_pred_text = raw_pred_text.rstrip() + "\n</answer>"
+                if bool(args.truncate_after_answer_end):
+                    pred_text, truncated_after_answer, post_answer_extra_chars = _truncate_after_first_answer(raw_pred_text)
+                else:
+                    pred_text, truncated_after_answer, post_answer_extra_chars = raw_pred_text, False, 0
                 image_size = image.size
-                pred_struct, parsed_from, obj = _parse_prediction_text(pred_text, image_size=image_size)
+                pred_struct, parsed_from, obj = _parse_prediction_text(
+                    pred_text,
+                    image_size=image_size,
+                    strict=bool(args.strict_parse),
+                    output_format=output_format,
+                    strict_tag_format=bool(args.strict_tag_format),
+                )
+                strict_tag_audit = obj.get("strict_tag_audit", {}) if isinstance(obj, dict) else {}
                 gt_struct = get_record_gt(rec, image_size=image_size)
+                sample_generated_tokens = _count_generated_tokens(gen_suffix[row_idx], pad_token_id)
+                complete_answer = _has_complete_answer_block(pred_text)
+                answer_end_seen = _first_answer_end_index(raw_pred_text) >= 0
+                eos_seen = _hit_eos(gen_suffix[row_idx], eos_token_id)
+                generated_tokens_at_limit = sample_generated_tokens >= int(args.max_new_tokens)
+                if forced_answer_close:
+                    stop_reason = "max_persons"
+                elif answer_end_seen and int(post_answer_extra_chars) == 0:
+                    stop_reason = "answer_end"
+                elif answer_end_seen and int(post_answer_extra_chars) > 0 and generated_tokens_at_limit:
+                    stop_reason = "max_new_tokens_after_answer"
+                elif answer_end_seen and int(post_answer_extra_chars) > 0 and eos_seen:
+                    stop_reason = "eos_after_answer"
+                elif answer_end_seen and int(post_answer_extra_chars) > 0:
+                    stop_reason = "extra_after_answer"
+                elif eos_seen:
+                    stop_reason = "eos"
+                elif generated_tokens_at_limit:
+                    stop_reason = "max_new_tokens"
+                else:
+                    stop_reason = "unknown"
+                max_new_tokens_hit = stop_reason == "max_new_tokens"
                 row = {
                     "id": str(rec.get("id", "")),
                     "image": rec.get("image", ""),
@@ -449,12 +819,37 @@ def main() -> None:
                     "image_size": [image_size[0], image_size[1]],
                     "prompt": prompt,
                     "prompt_format": str(args.prompt_format),
+                    "output_format": output_format,
                     "parsed_from": parsed_from,
+                    "prediction_text_raw": raw_pred_text,
                     "prediction_text": pred_text,
-                    "valid_json": obj is not None,
+                    "complete_answer": bool(complete_answer),
+                    "truncated_after_answer_end": bool(truncated_after_answer),
+                    "post_answer_extra_chars": int(post_answer_extra_chars),
+                    "answer_end_seen": bool(answer_end_seen),
+                    "generated_answer_end_seen": bool(generated_answer_end_seen),
+                    "forced_answer_close": bool(forced_answer_close),
+                    "completed_person_blocks": int(completed_person_blocks),
+                    "max_persons_reached": bool(max_persons_reached),
+                    "max_persons": int(max_persons),
+                    "eos_seen": bool(eos_seen),
+                    "max_new_tokens_hit": bool(max_new_tokens_hit),
+                    "generated_tokens_at_limit": bool(generated_tokens_at_limit),
+                    "generated_tokens": int(sample_generated_tokens),
+                    "generation_seconds": float(generation_seconds / max(1, len(batch_records))),
+                    "generation_tokens_per_second": float(
+                        sample_generated_tokens / max(1e-9, generation_seconds / max(1, len(batch_records)))
+                    ),
+                    "stop_reason": stop_reason,
+                    "valid_json": parsed_from == "json",
                     "valid_tag": parsed_from == "tag",
-                    "valid_struct": parsed_from != "none",
-                    "raw_json_box_count": _raw_box_candidate_count(obj),
+                    "valid_struct": parsed_from not in ("none", "incomplete", "strict_tag_format_fail"),
+                    "strict_tag_format_ok": bool(strict_tag_audit.get("ok", False)),
+                    "strict_tag_format_issues": strict_tag_audit.get("issues", []),
+                    "strict_tag_open_person_blocks": int(strict_tag_audit.get("open_person_blocks", 0)),
+                    "strict_tag_closed_person_blocks": int(strict_tag_audit.get("closed_person_blocks", 0)),
+                    "strict_tag_parsed_person_blocks": int(strict_tag_audit.get("parsed_person_blocks", 0)),
+                    "raw_json_box_count": _raw_box_candidate_count(obj if parsed_from == "json" else None),
                     "raw_tag_box_count": _raw_tag_box_candidate_count(pred_text),
                     "post_box_count": len(pred_struct["box"]),
                     "raw_tag_attr_count": _raw_tag_attr_candidate_count(pred_text),
@@ -462,7 +857,24 @@ def main() -> None:
                     "prediction_struct_post": pred_struct,
                     "gt_struct": gt_struct,
                 }
-                pred_rows.append(row)
+                pred_rows_by_id[str(row["id"])] = row
+                if int(args.flush_every) > 0:
+                    _append_jsonl(str(pred_jsonl), row)
+                    _append_jsonl(
+                        str(runtime_jsonl),
+                        {
+                            "id": row["id"],
+                            "generated_tokens": row["generated_tokens"],
+                            "generation_seconds": row["generation_seconds"],
+                            "stop_reason": row["stop_reason"],
+                            "complete_answer": row["complete_answer"],
+                            "answer_end_seen": row["answer_end_seen"],
+                            "eos_seen": row["eos_seen"],
+                            "max_new_tokens_hit": row["max_new_tokens_hit"],
+                            "generated_tokens_at_limit": row["generated_tokens_at_limit"],
+                            "strict_tag_format_ok": row["strict_tag_format_ok"],
+                        },
+                    )
 
                 if bool(args.save_vis):
                     stem = Path(image_path).stem
@@ -485,6 +897,7 @@ def main() -> None:
                         draw_pred=True,
                     )
 
+    pred_rows = [pred_rows_by_id[str(rec.get("id", ""))] for rec in records if str(rec.get("id", "")) in pred_rows_by_id]
     _write_jsonl(str(pred_jsonl), pred_rows)
     metrics = evaluate_records_scheme2(
         gt_records=records,
@@ -500,8 +913,27 @@ def main() -> None:
     metrics["vis_dir"] = str(vis_dir) if bool(args.save_vis) else ""
     metrics["pred_only_vis_dir"] = str(pred_only_vis_dir) if bool(args.save_vis) else ""
     metrics["num_debug_records"] = len(records)
+    metrics["output_format"] = output_format
     metrics["tag_parse_success_rate"] = sum(1 for row in pred_rows if row.get("parsed_from") == "tag") / max(1, len(pred_rows))
     metrics["json_parse_success_rate"] = sum(1 for row in pred_rows if row.get("parsed_from") == "json") / max(1, len(pred_rows))
+    metrics["complete_answer_rate"] = sum(1 for row in pred_rows if row.get("complete_answer")) / max(1, len(pred_rows))
+    metrics["answer_end_seen_rate"] = sum(1 for row in pred_rows if row.get("answer_end_seen")) / max(1, len(pred_rows))
+    metrics["eos_seen_rate"] = sum(1 for row in pred_rows if row.get("eos_seen")) / max(1, len(pred_rows))
+    metrics["max_new_tokens_rate"] = sum(1 for row in pred_rows if row.get("stop_reason") == "max_new_tokens") / max(1, len(pred_rows))
+    metrics["max_persons"] = int(max_persons)
+    metrics["max_persons_stop_rate"] = sum(1 for row in pred_rows if row.get("stop_reason") == "max_persons") / max(1, len(pred_rows))
+    metrics["max_persons_reached_rate"] = sum(1 for row in pred_rows if row.get("max_persons_reached")) / max(1, len(pred_rows))
+    metrics["forced_answer_close_rate"] = sum(1 for row in pred_rows if row.get("forced_answer_close")) / max(1, len(pred_rows))
+    metrics["answer_end_stop_rate"] = sum(1 for row in pred_rows if row.get("stop_reason") == "answer_end") / max(1, len(pred_rows))
+    metrics["post_answer_extra_rate"] = sum(1 for row in pred_rows if int(row.get("post_answer_extra_chars", 0)) > 0) / max(1, len(pred_rows))
+    metrics["avg_post_answer_extra_chars"] = sum(float(row.get("post_answer_extra_chars", 0)) for row in pred_rows) / max(1, len(pred_rows))
+    metrics["avg_generated_tokens"] = sum(float(row.get("generated_tokens", 0)) for row in pred_rows) / max(1, len(pred_rows))
+    metrics["avg_generation_seconds"] = sum(float(row.get("generation_seconds", 0)) for row in pred_rows) / max(1, len(pred_rows))
+    metrics["runtime_jsonl"] = str(runtime_jsonl)
+    metrics["strict_parse"] = bool(args.strict_parse)
+    metrics["strict_tag_format"] = bool(args.strict_tag_format)
+    metrics["strict_tag_format_ok_rate"] = sum(1 for row in pred_rows if row.get("strict_tag_format_ok")) / max(1, len(pred_rows))
+    metrics["stop_at_answer_end"] = bool(args.stop_at_answer_end)
     metrics["non_tag_parse_rate"] = sum(1 for row in pred_rows if row.get("parsed_from") != "tag") / max(1, len(pred_rows))
     match_debug_jsonl = out_dir / "match_debug.jsonl"
     _write_jsonl(str(match_debug_jsonl), metrics.get("per_image", []))
