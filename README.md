@@ -66,3 +66,10 @@ cd human/stage2/scripts/train/box && ./node.sh
 cd human/stage2/scripts/train/pose && ./node.sh
 cd human/stage2/scripts/train/parsing && ./node.sh
 ```
+
+## Validated server source
+
+See [retained implementations and validation scope](docs/VALIDATED_SERVER_SOURCE.md)
+for the source selected from the server snapshot, its evidence limits, and the
+preserved history. Dataset, checkpoint, and experiment-output assets remain on
+the server.
