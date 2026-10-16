@@ -1,0 +1,27 @@
+{
+  "datasets": {
+    "coco_unihuman": 3
+  },
+  "duplicate_uids": [],
+  "persons": 16,
+  "records": 3,
+  "split_leakage": [],
+  "task_persons": {
+    "age": 2,
+    "attribute": 0,
+    "box": 16,
+    "gender": 2,
+    "parsing": 0,
+    "pose": 6,
+    "relation": 0,
+    "segment": 16
+  },
+  "tasks": {
+    "age": 2,
+    "box": 3,
+    "gender": 2,
+    "pose": 3,
+    "segment": 3
+  },
+  "valid": true
+}

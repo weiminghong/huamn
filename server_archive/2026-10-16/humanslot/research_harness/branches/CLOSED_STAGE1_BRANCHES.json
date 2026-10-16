@@ -1,0 +1,65 @@
+{
+  "schema": "human-slot-closed-branches-v1",
+  "updated": "2026-08-30",
+  "branches": [
+    {
+      "id": "B_STAGE1_HQNET_HEADS",
+      "status": "closed_intent_mismatch",
+      "reason": "Replaces the requested normal LLM decoding interface with specialist discriminative heads.",
+      "reopen_condition": "Only an explicit user decision to change the Stage-1 scientific object."
+    },
+    {
+      "id": "B_STAGE1_SAM_OR_MASK2FORMER",
+      "status": "closed_intent_mismatch",
+      "reason": "Makes Stage-1 dense output depend on an external specialist model.",
+      "reopen_condition": "External-model upper-bound experiments only; never the mainline."
+    },
+    {
+      "id": "B_STAGE1_SEG_HIDDEN_STATE_HEAD",
+      "status": "closed_superseded_by_qwen_native_lisa",
+      "reason": "Generic hidden-state mask head replaced by specifically admitted LISA-style decoder over Qwen-native features.",
+      "reopen_condition": "None; use E branch."
+    },
+    {
+      "id": "B_STAGE1_ROI_OR_REGRESSION_POSE_HEAD",
+      "status": "closed_superseded_by_pose_routing",
+      "reason": "Generic pose head replaced by specifically admitted <POSE>-conditioned mature SimCC decoder.",
+      "reopen_condition": "None; use E branch."
+    },
+    {
+      "id": "B_STAGE1_QWEN3VLSEG_DECODER",
+      "status": "closed_intent_mismatch",
+      "reason": "Useful related work, but its box-guided 17M dense decoder and iterative mask refinement are outside the requested generative interface.",
+      "reopen_condition": "Related-work comparison only."
+    },
+    {
+      "id": "B_STAGE1_CUSTOM_DENSE_SMOKE_20260830",
+      "status": "closed_diagnostic_only",
+      "reason": "The Human Query, dynamic mask, and ROI pose pilot verified optimization mechanics but answered the wrong architecture question.",
+      "artifacts": [
+        "/root/autodl-tmp/humanslot/human_vlm_transfer_v1",
+        "/root/autodl-tmp/humanslot_outputs/stage1_transfer_v1_pose_roi_only_pilot100_20260830"
+      ],
+      "scientific_conclusion": "No generated-inference AP conclusion; never use as main Stage-1 evidence.",
+      "reopen_condition": "None."
+    },
+    {
+      "id": "B_STAGE1_GENERATIVE_HUMAN_SERIALIZATION_V1",
+      "status": "closed_methodological_mismatch",
+      "reason": "The design concatenated all people, 17-joint sequences, and contour64 masks into one autoregressive response. Prior work showing coordinate/polygon success uses object-box conditioning or parallel/local decoding; the codec oracle did not validate learnability.",
+      "reopen_condition": "Diagnostic comparison only after the box-conditioned mainline passes G2."
+    },
+    {
+      "id": "C_STAGE1_GROUNDING_FIRST_BOX_CONDITIONED_V1",
+      "status": "closed_user_priority_high_fidelity",
+      "reason": "The decoder-minimal two-turn design has credible moderate AP priors but does not provide enough precision certainty for Stage-1.",
+      "reopen_condition": "Appendix efficiency/unification ablation only after the mature mainline passes G3."
+    },
+    {
+      "id": "D_STAGE1_QWEN_CONDITIONED_HUMAN_QUERY_V1",
+      "status": "closed_user_intent_mismatch",
+      "reason": "The user does not want a shared HQNet five-task head. Mature decoders are allowed only through person-specific LLM routing tokens.",
+      "reopen_condition": "None unless the user abandons LISA-style text routing."
+    }
+  ]
+}

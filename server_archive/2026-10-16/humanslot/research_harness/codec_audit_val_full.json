@@ -1,0 +1,249 @@
+{
+  "schema": "human-generative-codec-audit-v1",
+  "annotation": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json",
+  "seed": 42,
+  "eligible_instances": {
+    "polygon": 10777,
+    "rle": 0
+  },
+  "sampled_instances": {
+    "polygon": 10777,
+    "rle": 0,
+    "all": 10777
+  },
+  "mask_iou": {
+    "polygon": {
+      "count": 10777,
+      "mean": 0.8952543523717471,
+      "min": 0.16666666666666666,
+      "p05": 0.6979166666666666,
+      "median": 0.9281183932346723,
+      "p95": 0.982614590840895,
+      "max": 0.9953675973335909
+    },
+    "rle": {
+      "count": 0,
+      "mean": null,
+      "min": null,
+      "p05": null,
+      "median": null,
+      "p95": null,
+      "max": null
+    },
+    "all": {
+      "count": 10777,
+      "mean": 0.8952543523717471,
+      "min": 0.16666666666666666,
+      "p05": 0.6979166666666666,
+      "median": 0.9281183932346723,
+      "p95": 0.982614590840895,
+      "max": 0.9953675973335909
+    }
+  },
+  "instance_token_count": {
+    "count": 10777,
+    "mean": 194.2685348427206,
+    "min": 194.0,
+    "p05": 194.0,
+    "median": 194.0,
+    "p95": 196.0,
+    "max": 216.0
+  },
+  "full_image_estimated_token_count": {
+    "count": 2693,
+    "mean": 777.434831043446,
+    "min": 194.0,
+    "p05": 194.0,
+    "median": 388.0,
+    "p95": 2522.0,
+    "max": 2588.0
+  },
+  "full_image_person_count": {
+    "count": 2693,
+    "mean": 4.00185666542889,
+    "min": 1.0,
+    "p05": 1.0,
+    "median": 2.0,
+    "p95": 13.0,
+    "max": 13.0
+  },
+  "images_over_5000_estimated_tokens": 0,
+  "max_box_quantization_error_pixels": 0.3203125,
+  "max_pose_quantization_error_pixels": 0.3203125,
+  "deterministic": true,
+  "nonempty": true,
+  "distinct_reconstruction_ratio": 1.0,
+  "low_iou_examples": [
+    {
+      "kind": "polygon",
+      "annotation_id": 2032269,
+      "image_id": 528578,
+      "iou": 0.16666666666666666,
+      "tokens": 194,
+      "source_contours": 1
+    },
+    {
+      "kind": "polygon",
+      "annotation_id": 2008804,
+      "image_id": 532530,
+      "iou": 0.17391304347826086,
+      "tokens": 194,
+      "source_contours": 1
+    },
+    {
+      "kind": "polygon",
+      "annotation_id": 1739666,
+      "image_id": 143068,
+      "iou": 0.25806451612903225,
+      "tokens": 194,
+      "source_contours": 1
+    },
+    {
+      "kind": "polygon",
+      "annotation_id": 1704635,
+      "image_id": 345027,
+      "iou": 0.2777777777777778,
+      "tokens": 194,
+      "source_contours": 1
+    },
+    {
+      "kind": "polygon",
+      "annotation_id": 1740577,
+      "image_id": 290179,
+      "iou": 0.2857142857142857,
+      "tokens": 194,
+      "source_contours": 1
+    },
+    {
+      "kind": "polygon",
+      "annotation_id": 1257733,
+      "image_id": 528578,
+      "iou": 0.29411764705882354,
+      "tokens": 194,
+      "source_contours": 1
+    },
+    {
+      "kind": "polygon",
+      "annotation_id": 1739121,
+      "image_id": 528578,
+      "iou": 0.3333333333333333,
+      "tokens": 194,
+      "source_contours": 1
+    },
+    {
+      "kind": "polygon",
+      "annotation_id": 2008968,
+      "image_id": 108503,
+      "iou": 0.3333333333333333,
+      "tokens": 194,
+      "source_contours": 1
+    },
+    {
+      "kind": "polygon",
+      "annotation_id": 1731171,
+      "image_id": 528578,
+      "iou": 0.35714285714285715,
+      "tokens": 194,
+      "source_contours": 1
+    },
+    {
+      "kind": "polygon",
+      "annotation_id": 1697915,
+      "image_id": 222559,
+      "iou": 0.36363636363636365,
+      "tokens": 194,
+      "source_contours": 1
+    },
+    {
+      "kind": "polygon",
+      "annotation_id": 2207928,
+      "image_id": 562818,
+      "iou": 0.375,
+      "tokens": 194,
+      "source_contours": 1
+    },
+    {
+      "kind": "polygon",
+      "annotation_id": 1742270,
+      "image_id": 290179,
+      "iou": 0.38461538461538464,
+      "tokens": 194,
+      "source_contours": 1
+    },
+    {
+      "kind": "polygon",
+      "annotation_id": 1715878,
+      "image_id": 85682,
+      "iou": 0.391304347826087,
+      "tokens": 194,
+      "source_contours": 1
+    },
+    {
+      "kind": "polygon",
+      "annotation_id": 1761889,
+      "image_id": 143068,
+      "iou": 0.4,
+      "tokens": 194,
+      "source_contours": 1
+    },
+    {
+      "kind": "polygon",
+      "annotation_id": 1678519,
+      "image_id": 528578,
+      "iou": 0.4,
+      "tokens": 194,
+      "source_contours": 1
+    },
+    {
+      "kind": "polygon",
+      "annotation_id": 2006049,
+      "image_id": 308587,
+      "iou": 0.4,
+      "tokens": 194,
+      "source_contours": 1
+    },
+    {
+      "kind": "polygon",
+      "annotation_id": 1213735,
+      "image_id": 502168,
+      "iou": 0.4,
+      "tokens": 194,
+      "source_contours": 1
+    },
+    {
+      "kind": "polygon",
+      "annotation_id": 1761171,
+      "image_id": 290179,
+      "iou": 0.4,
+      "tokens": 194,
+      "source_contours": 1
+    },
+    {
+      "kind": "polygon",
+      "annotation_id": 566438,
+      "image_id": 294695,
+      "iou": 0.4117647058823529,
+      "tokens": 194,
+      "source_contours": 1
+    },
+    {
+      "kind": "polygon",
+      "annotation_id": 1293398,
+      "image_id": 52891,
+      "iou": 0.4166666666666667,
+      "tokens": 194,
+      "source_contours": 1
+    }
+  ],
+  "criteria": {
+    "deterministic": true,
+    "all_reconstructions_nonempty": true,
+    "distinct_reconstruction_ratio_ge_0_99": true,
+    "polygon_mean_iou_ge_0_85": true,
+    "rle_mean_iou_ge_0_70_or_not_applicable": true,
+    "overall_mean_iou_ge_0_80": true,
+    "box_quantization_error_le_1px": true,
+    "pose_quantization_error_le_1px": true
+  },
+  "pass": true
+}

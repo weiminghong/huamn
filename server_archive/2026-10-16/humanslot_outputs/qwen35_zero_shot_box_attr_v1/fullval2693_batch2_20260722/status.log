@@ -1,0 +1,12 @@
+started_at=2026-07-22T17:44:25+08:00
+protocol=native_qwen35_zero_shot_guided_json_box_gender_age
+classification=diagnostic_until_score_protocol_fixed
+batch_size=2
+max_new_tokens=1024
+max_samples=2693
+model=/root/autodl-tmp/model/Qwen3.5-4B
+annotation=/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json
+image_root=/root/autodl-tmp/coco/val2017
+finished_at=2026-07-23T02:42:36+08:00
+exit_code=0
+status=completed

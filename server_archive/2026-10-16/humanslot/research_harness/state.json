@@ -1,0 +1,135 @@
+{
+  "schema": "human-slot-research-state-v1",
+  "updated": "2026-09-01",
+  "research_question": "Can a human-adapted generative VLM provide visual and decoder representations that progressively benefit a DINOv3 human grounder?",
+  "paper_goal_file": "research_harness/paper_goal.json",
+  "evidence_ledger_file": "research_harness/evidence_ledger.json",
+  "stage0_stage1_readiness_file": "research_harness/stage0_stage1_readiness.json",
+  "story": {
+    "stage1": "Teach a normal generative VLM to serialize structured human perception.",
+    "stage2": "Transfer the frozen human-adapted visual representation into DINOv3.",
+    "stage3": "Transfer frozen image-conditioned LLM decoder states into the Stage-2 DINOv3 grounder."
+  },
+  "active_mainline": "E_STAGE1_QWEN_NATIVE_LISA_POSE_ROUTING_V1",
+  "current_stage": "Stage-1 full-dataset joint training",
+  "current_status": "full_joint_running",
+  "active_claims": [
+    {
+      "id": "C1_GENERATIVE_HUMAN_ADAPTATION",
+      "status": "lisa_pose_interface_pending",
+      "text": "LISA-style person routing can teach Qwen Vision and Qwen LLM reliable five-task human perception while preserving native textual slots and attributes."
+    },
+    {
+      "id": "C2_VISUAL_TRANSFER",
+      "status": "blocked_by_lisa_pose_C1",
+      "text": "DINOv3 benefits from the frozen visual representation of the human-adapted generative VLM."
+    },
+    {
+      "id": "C3_SEMANTIC_TRANSFER",
+      "status": "blocked_by_lisa_pose_C1_C2",
+      "text": "DINOv3 gains further from frozen image-conditioned decoder states learned in Stage-1."
+    }
+  ],
+  "closed_branch_file": "research_harness/branches/CLOSED_STAGE1_BRANCHES.json",
+  "next_action": {
+    "id": "A008_RUN_FULL_JOINT",
+    "task": "Run all COCO-UniHuman training images for two epochs with joint Vision/LLM LoRA, full merger, routing rows, and dense modules.",
+    "gpu_required": true,
+    "admission_gate": "USER_AUTHORIZED_FULL_TRAINING",
+    "do_not_do": [
+      "replace full training with another small-sample warmup",
+      "claim training diagnostics are official AP",
+      "start GPU jobs outside recorded concurrency budgets",
+      "start Stage-2 before evaluating Stage-1"
+    ]
+  },
+  "portfolio": {
+    "mainline_critical": [
+      "full-dataset Stage-1 joint training",
+      "generated-box evaluation",
+      "frozen visual probes"
+    ],
+    "supporting": [
+      "native Qwen zero-shot under identical grammar",
+      "format-constrained decoding ablation",
+      "token-length and multi-person scaling analysis"
+    ],
+    "stopped": [
+      "HQNet shared five-task Stage-1",
+      "raw contour/pose sequence mainline",
+      "external image encoders in mainline"
+    ]
+  },
+  "decision_rule": "Every new branch must state the paper claim it could change, its falsifier, fixed promotion gate, paper destination, controls, cost, and reopen condition before code or GPU use.",
+  "stage1_research_synthesis_file": "research_harness/stage1_research_synthesis.json",
+  "training_scope": {
+    "dataset": "all COCO-UniHuman train v1 images",
+    "images": 64115,
+    "epochs": 2,
+    "parameter_mode": "joint_peft_per_last_explicit_user_configuration",
+    "full_original_parameter_unfreeze": false,
+    "all_five_learning_rate_families_positive": true,
+    "output": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_full_joint_2ep_20260831",
+    "screen": "humanslot_stage1_full",
+    "authorization": "User explicitly corrected that a full training run was requested; prior pilot admission veto is superseded."
+  },
+  "active_run": {
+    "output": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_full_joint_2ep_20260831",
+    "screen": "humanslot_stage1_full",
+    "pid": 29370,
+    "progress_file": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_full_joint_2ep_20260831/progress.json",
+    "last_verified_step": 4502,
+    "total_steps": 32058,
+    "verified_at": "2026-08-31T20:45:23.176898+08:00"
+  },
+  "implementation_provenance_audit": "/root/autodl-tmp/humanslot/research_harness/full_joint_decoder_provenance_20260831.json",
+  "current_evaluation": {
+    "status": "stopped_by_user",
+    "checkpoint_step": 2000,
+    "output": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_eval_step2000_nosmall_20260831",
+    "screen": "humanslot_eval_s2000",
+    "scope": "2693 images no-small, own generated text and predicted boxes",
+    "concurrency_manifest": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_eval_step2000_nosmall_20260831/preflight_manifest.json",
+    "started_at": "2026-08-31T15:24:46.729941+08:00",
+    "grammar_cache_parity": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_eval_step2000_nosmall_20260831/grammar_cache_parity.json",
+    "processed_at_last_check": 1309,
+    "last_checked_at": "2026-08-31T20:45:23.176898+08:00",
+    "status_file": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_eval_step2000_nosmall_20260831/status.json",
+    "metrics_file": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_eval_step2000_nosmall_20260831/metrics.json",
+    "auto_resume": false
+  },
+  "evaluation_policy": {
+    "cadence": "once_per_completed_epoch",
+    "step_evaluation_enabled": false,
+    "policy_file": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_full_joint_2ep_20260831/evaluation_policy.json",
+    "controller_screen": "humanslot_epoch_eval_queue",
+    "queue_status_file": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_full_joint_2ep_20260831/epoch_evaluation_queue.json",
+    "boundaries": [
+      {
+        "epoch": 1,
+        "step": 16029,
+        "examples_seen": 64115
+      },
+      {
+        "epoch": 2,
+        "step": 32058,
+        "examples_seen": 128230
+      }
+    ],
+    "preserve_current_step2000_evaluation": false,
+    "controller_pid": 41708,
+    "current_one_off_action": "stopped; preserve partial predictions; do not auto-resume"
+  },
+  "successor_candidate": {
+    "branch": "F_STAGE1_MULTISOURCE_HUMAN_SLOT_MASK2FORMER_V5",
+    "package": "human_multitask_v5",
+    "status": "implemented_preflight_not_admitted_for_training",
+    "legacy_run_policy": "E Stage-1 full run continues unchanged as a historical control",
+    "blockers": [
+      "MHP v2, PSG and VAW assets are absent",
+      "only 7.8 GiB data-disk space is free",
+      "official MHP/PSG/VAW annotation loaders and scorer parity are pending"
+    ],
+    "preflight": "/root/autodl-tmp/humanslot_outputs/v5_manifest_preflight_20260901"
+  }
+}

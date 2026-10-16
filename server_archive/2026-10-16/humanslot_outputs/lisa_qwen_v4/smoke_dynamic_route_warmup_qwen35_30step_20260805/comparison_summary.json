@@ -1,0 +1,93 @@
+{
+  "checkpoint_finite": {
+    "stage1_v4_tasks.pt": true,
+    "training_state.pt": true,
+    "visual_merger.pt": true
+  },
+  "exit_code": 0,
+  "optimizer_steps": 30,
+  "phases": {
+    "final_0.25": {
+      "pose_loss_mean": 0.6057887375354767,
+      "pose_route_ce_mean": 13.127243041992188,
+      "route_weight_first_last": [
+        0.25,
+        0.25
+      ],
+      "seg_loss_mean": 0.5273124078909556,
+      "seg_route_ce_mean": 14.442172209421793,
+      "steps": [
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ],
+      "token_grad_max": 116.61630795583437,
+      "token_grad_mean": 88.64474648340244,
+      "token_grad_median": 84.77078655730551
+    },
+    "hold_0.02": {
+      "pose_loss_mean": 0.7054430603981018,
+      "pose_route_ce_mean": 17.67451400756836,
+      "route_weight_first_last": [
+        0.02,
+        0.02
+      ],
+      "seg_loss_mean": 0.6096311211585999,
+      "seg_route_ce_mean": 16.75767078399658,
+      "steps": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "token_grad_max": 15.541493650944357,
+      "token_grad_mean": 8.527717214443001,
+      "token_grad_median": 7.563806342168997
+    },
+    "ramp": {
+      "pose_loss_mean": 0.6356583614098398,
+      "pose_route_ce_mean": 15.61154445848967,
+      "route_weight_first_last": [
+        0.0315,
+        0.2385
+      ],
+      "seg_loss_mean": 0.5425316220835635,
+      "seg_route_ce_mean": 15.750838831851357,
+      "steps": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ],
+      "token_grad_max": 91.79909172855416,
+      "token_grad_mean": 40.67137312448205,
+      "token_grad_median": 32.52303683244674
+    }
+  },
+  "run": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805",
+  "schedule": {
+    "final": 0.25,
+    "hold_steps": 5,
+    "start": 0.02,
+    "warmup_steps": 20
+  }
+}

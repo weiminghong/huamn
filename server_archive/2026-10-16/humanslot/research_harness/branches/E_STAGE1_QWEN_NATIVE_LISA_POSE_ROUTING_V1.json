@@ -1,0 +1,153 @@
+{
+  "schema": "human-slot-experiment-proposal-v1",
+  "branch_id": "E_STAGE1_QWEN_NATIVE_LISA_POSE_ROUTING_V1",
+  "status": "admitted_mainline",
+  "stage": "Stage-1",
+  "paper_claim": "LISA-style person-specific routing tokens can jointly adapt Qwen Vision and Qwen LLM for reliable human mask and pose perception while preserving native text decoding for grounding and attributes.",
+  "hypothesis": "A short textual Human Slot containing box, age, gender, <POSE>, and <SEG> avoids raw dense-token hallucination. Dense mask and pose losses routed through token hidden states and Qwen-native spatial features will explicitly teach Qwen Vision human structure.",
+  "falsifier": "Close the branch if Qwen-native <SEG>/<POSE> routing cannot overfit 64 images, if the 5K predicted-box pilot remains below mask/pose gates, or if adapted Qwen Vision fails frozen human probes.",
+  "paper_destination": [
+    "Stage-1 architecture panel",
+    "five-task capability table",
+    "Qwen visual learning probe",
+    "Stage-2 visual source",
+    "Stage-3 routing-token semantic source"
+  ],
+  "representation": {
+    "decoder": "native Qwen text decoder for Human Slot, box, gender, and age; LISA-style <SEG> and <POSE> hidden-state routing into mature Qwen-native dense decoders",
+    "text_format": "<person><box>...</box><gender>...</gender><age>...</age><pose><POSE></pose><segment><SEG></segment></person>",
+    "owner_binding": "Each generated <POSE> and <SEG> belongs to the surrounding person slot and generated box; slots match GT by generated-box Hungarian matching.",
+    "box": "loc1000 tokens through the tied Qwen LM head.",
+    "attributes": "native text/special tokens through the tied Qwen LM head.",
+    "segment": "<SEG> hidden state -> projector -> SAM-style prompt; Qwen Vision multi-scale dense map is the sole mainline image embedding.",
+    "pose": "<POSE> hidden state -> projector/FiLM -> mature box-conditioned SimCC decoder over ROI-aligned Qwen Vision dense features.",
+    "human_id": "The textual person slot plus generated box is the identity shared by text, pose, and mask."
+  },
+  "architecture": {
+    "qwen_vision": "Single full-image Qwen Vision encoder. Tap pre-merger blocks 8, 16, 24, project to 256 channels, and build a standard FPN dense map. The normal merger supplies image tokens to Qwen LLM.",
+    "qwen_llm": "Qwen text decoder generates short multi-person slots and per-person <POSE>/<SEG> routing tokens.",
+    "seg_decoder": "Reuse SAM/SAM2 mask-decoder architecture and compatible initialization, but no SAM image encoder in the mainline. Inputs are Qwen dense features, positional encoding, generated box prompt, and projected <SEG> state.",
+    "pose_decoder": "Reuse mature SimCC coordinate classification with a shallow ROI transformer. ROIAlign uses the person box and projected <POSE> state modulates 17 joint queries. LLM generates no joint coordinates.",
+    "exact_lisa_control": "Frozen SAM image encoder plus LISA decoder is segmentation upper-bound/control only.",
+    "pose_teacher_control": "Frozen ViTPose/RTMPose on the same boxes is pose upper-bound/control only."
+  },
+  "training": {
+    "source": "COCO-UniHuman train v1",
+    "trainable": [
+      "Qwen Vision LoRA all 24 blocks",
+      "Qwen merger",
+      "Qwen LLM attention/MLP LoRA",
+      "<POSE>/<SEG> token rows",
+      "dense FPN adapters",
+      "SAM-style mask decoder/projector",
+      "SimCC pose decoder/projector"
+    ],
+    "frozen_mainline": [
+      "all original Qwen weights outside LoRA"
+    ],
+    "losses": {
+      "text": "next-token CE for slot grammar, box, gender, age, routing tokens",
+      "segment": "BCE/focal plus dice",
+      "pose": "SimCC x/y classification plus visibility",
+      "total": "active-task normalized pre-registered weights; no validation tuning"
+    },
+    "phase_1_decoder_warmup": "Freeze Qwen; train dense adapters, routing projectors, mask and pose decoders with GT boxes for 2,000 steps.",
+    "phase_2_joint_tuning": "Train Vision LoRA, merger, LLM LoRA, token rows, projectors and decoders; use 50% GT and 50% bounded-jitter boxes for two epochs.",
+    "phase_3_generated_box_finish": "Use generated boxes for dense branches while freezing original Qwen weights and finishing adapters/decoders for one epoch.",
+    "resolution": "Approximately one-megapixel native-aspect input; ROIAlign only inside pose decoder."
+  },
+  "visual_learning_proof": {
+    "required": true,
+    "checks": [
+      "dense-loss gradients in Qwen Vision LoRA",
+      "base versus Stage-1 frozen mask probe",
+      "base versus Stage-1 frozen keypoint probe",
+      "image-shuffle collapse",
+      "detach-Qwen-dense-feature ablation",
+      "exact-LISA external-encoder control"
+    ],
+    "interpretation": "Dense AP alone is insufficient because a specialist could solve the task; Qwen Vision features themselves must improve."
+  },
+  "gates": {
+    "G0_codec": {
+      "renamed_meaning": "G0_lisa_pose_routing_interface",
+      "requirements": [
+        "distinct person slots yield distinct <SEG>/<POSE> states",
+        "routing owner matches surrounding box",
+        "mask loss reaches Vision LoRA and <SEG> projector",
+        "pose loss reaches Vision LoRA and <POSE> projector",
+        "feature shapes match decoders",
+        "no SAM/ViTPose image encoder in mainline"
+      ],
+      "decision": "No GPU training before interface and shortcut tests pass.",
+      "status": "passed",
+      "evidence": "research_harness/lisa_pose_routing_g0_20260831.json"
+    },
+    "G1_overfit_64": {
+      "requirements": {
+        "text_format_valid_rate": 1.0,
+        "person_count_exact_rate": 0.95,
+        "box_mean_iou": 0.9,
+        "segment_mean_iou": 0.9,
+        "pose_visible_joint_pck_005": 0.95,
+        "owner_binding_exact_rate": 0.98
+      },
+      "required_modes": [
+        "GT-box dense diagnostic",
+        "generated-box end-to-end inference"
+      ],
+      "decision": "Only generated-box mode promotes G2."
+    },
+    "G2_pilot_generated_validation": {
+      "training_images": 5000,
+      "validation_images": 256,
+      "requirements": {
+        "box_AP": 30.0,
+        "segment_AP": 35.0,
+        "pose_AP": 50.0,
+        "gender_AP": 45.0,
+        "age_AP": 38.0,
+        "format_valid_rate": 0.98
+      },
+      "visual_probe_requirement": "Adapted frozen Qwen Vision beats base on mask and keypoint probes.",
+      "decision": "No full run unless all task and visual-learning gates pass."
+    },
+    "G3_full_stage1": {
+      "validation_split": "COCO-UniHuman val no-small",
+      "minimum_requirements": {
+        "box_AP": 52.0,
+        "segment_AP": 50.0,
+        "pose_AP": 60.0,
+        "gender_AP": 50.0,
+        "age_AP": 44.0
+      },
+      "decision": "Stage-2 starts only when all metrics and visual probes pass."
+    }
+  },
+  "controls": [
+    "Qwen Vision frozen",
+    "LLM LoRA disabled",
+    "GT-box vs generated-box",
+    "exact LISA with SAM image encoder",
+    "frozen ViTPose/RTMPose",
+    "detach Qwen dense features",
+    "image shuffle",
+    "person-slot shuffle"
+  ],
+  "non_contributions": [
+    "SAM-style mask decoder",
+    "SimCC pose decoder",
+    "special routing tokens",
+    "a new segmentation or pose architecture"
+  ],
+  "reopen_policy": "If a Qwen-native decoder fails task-only 5K, replace only that decoder with its exact mature external control; never return to raw contour or raw multi-person keypoint generation.",
+  "execution_override": {
+    "date": "2026-08-31",
+    "full_dataset_run_authorized": true,
+    "prior_pilot_accuracy_gates": "diagnostic; not a veto on the user-requested full run",
+    "implemented_schedule": "completed decoder warmup, then two full joint epochs; generated-box finish is not silently included",
+    "implemented_resolution": "native source image size with current processor; not upscaled to one megapixel",
+    "implemented_mask_decoder": "QwenNativeMaskDecoder; custom SAM-style cross-attention, no SAM pretrained decoder weights",
+    "parameter_mode": "Vision and LLM LoRA plus full merger, routing rows, adapters and decoders"
+  }
+}

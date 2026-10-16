@@ -1,0 +1,124 @@
+{
+  "all_training_images": 64115,
+  "missing_images": 0,
+  "sample_audits": [
+    {
+      "image_id": 426052,
+      "sequence_length": 1043,
+      "persons": 13,
+      "pose_labels": 10,
+      "seg_labels": 13,
+      "grid": [
+        [
+          1,
+          30,
+          40
+        ]
+      ],
+      "mask_areas": [
+        905,
+        15283,
+        1195,
+        1133,
+        1993,
+        1222,
+        11737,
+        598,
+        1594,
+        1015,
+        1473,
+        1142,
+        14599
+      ]
+    },
+    {
+      "image_id": 210457,
+      "sequence_length": 570,
+      "persons": 2,
+      "pose_labels": 2,
+      "seg_labels": 2,
+      "grid": [
+        [
+          1,
+          26,
+          40
+        ]
+      ],
+      "mask_areas": [
+        23157,
+        25647
+      ]
+    },
+    {
+      "image_id": 138008,
+      "sequence_length": 529,
+      "persons": 1,
+      "pose_labels": 0,
+      "seg_labels": 1,
+      "grid": [
+        [
+          1,
+          40,
+          26
+        ]
+      ],
+      "mask_areas": [
+        269
+      ]
+    },
+    {
+      "image_id": 382638,
+      "sequence_length": 607,
+      "persons": 3,
+      "pose_labels": 3,
+      "seg_labels": 3,
+      "grid": [
+        [
+          1,
+          26,
+          40
+        ]
+      ],
+      "mask_areas": [
+        4866,
+        36594,
+        80514
+      ]
+    },
+    {
+      "image_id": 497261,
+      "sequence_length": 1280,
+      "persons": 19,
+      "pose_labels": 4,
+      "seg_labels": 19,
+      "grid": [
+        [
+          1,
+          30,
+          40
+        ]
+      ],
+      "mask_areas": [
+        1730,
+        978,
+        2682,
+        627,
+        680,
+        352,
+        292,
+        570,
+        396,
+        2205,
+        306,
+        1839,
+        678,
+        535,
+        453,
+        513,
+        535,
+        514,
+        410
+      ]
+    }
+  ]
+}

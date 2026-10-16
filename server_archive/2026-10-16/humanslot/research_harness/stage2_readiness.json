@@ -1,0 +1,136 @@
+{
+  "schema": "human-slot-stage2-readiness-v1",
+  "updated": "2026-08-30",
+  "status": "blocked_by_stage1_G3",
+  "claim_id": "C2_VISUAL_TRANSFER",
+  "purpose": "Measure whether frozen visual representations learned by the Stage-1 generative VLM improve a DINOv3 human grounder.",
+  "entry_conditions": [
+    "G1 overfit-64 passed",
+    "G2 generated pilot passed",
+    "G3 full Stage-1 five-task generated evaluation passed",
+    "a compact Stage-1 checkpoint with frozen Qwen Vision and merger is reproducibly loadable",
+    "the DINOv3 main checkpoint is fixed before reading Stage-2 outputs",
+    "the DINO task decoder and no-small evaluator are identical across all Stage-2 arms"
+  ],
+  "locked_data_flow": {
+    "rgb": "The same geometrically transformed RGB image is sent directly to DINOv3.",
+    "qwen": "The frozen Stage-1 Qwen Vision receives the same image canvas with Qwen-specific normalization.",
+    "feature": "Pre-merger spatial Qwen features are projected to the DINO decoder width and fused only on the DINO side.",
+    "prohibited": [
+      "feeding Qwen features as extra RGB channels",
+      "updating any Stage-1 parameter",
+      "using Stage-1 generated labels as pseudo ground truth",
+      "changing DINO decoders between comparison arms"
+    ]
+  },
+  "frozen": [
+    "Stage-1 Qwen Vision",
+    "Stage-1 vision merger",
+    "Stage-1 LLM and token rows"
+  ],
+  "trainable": [
+    "DINOv3 selected blocks or adapters under one frozen recipe",
+    "Qwen-to-DINO feature projection and fusion bridge",
+    "one shared set of DINO task decoders for box, segment, pose, age, and gender"
+  ],
+  "matched_arms": [
+    {
+      "id": "S2_A_DINO_ONLY",
+      "input": "RGB to DINOv3",
+      "role": "specialist baseline"
+    },
+    {
+      "id": "S2_B_BASE_QWEN_VISUAL",
+      "input": "RGB to DINOv3 plus frozen native-Qwen visual features",
+      "role": "generic VLM visual-transfer control"
+    },
+    {
+      "id": "S2_C_ADAPTED_QWEN_VISUAL",
+      "input": "RGB to DINOv3 plus frozen Stage-1 human-adapted visual features",
+      "role": "C2 method"
+    }
+  ],
+  "matched_fields": [
+    "COCO-UniHuman records and sampler order",
+    "DINOv3 checkpoint and initialization",
+    "task decoder initialization",
+    "optimizer and schedule",
+    "effective batch size",
+    "training steps",
+    "augmentations",
+    "no-small evaluator",
+    "random seed"
+  ],
+  "controls": [
+    "image-shuffled Qwen features",
+    "zeroed Qwen features with the bridge retained",
+    "base-Qwen versus adapted-Qwen features",
+    "bridge parameter-count matched residual control"
+  ],
+  "gates": {
+    "S2_G0_INTERFACE": {
+      "requirements": [
+        "Qwen and DINO geometry maps to the same pixel canvas",
+        "feature tensor shapes are recorded for every selected layer",
+        "base and adapted Qwen use the same feature space and layer",
+        "zero-initialized bridge reproduces DINO-only logits within tolerance",
+        "image shuffle changes fused outputs but not DINO-only outputs"
+      ]
+    },
+    "S2_G1_DINO_BASELINE": {
+      "requirement": "A separately trained DINO-only checkpoint completes generated no-small five-task validation."
+    },
+    "S2_G2_MATCHED_TRANSFER": {
+      "requirements": [
+        "all three arms train from their stated independent initializations",
+        "adapted-Qwen visual transfer exceeds base-Qwen visual transfer on the frozen primary aggregate",
+        "adapted-Qwen visual transfer improves at least two of Box, Segment, and Pose",
+        "image-shuffle control removes the transfer gain",
+        "no spatial task degrades by more than the pre-registered tolerance"
+      ]
+    }
+  },
+  "current_assets": {
+    "environment": "/root/miniconda3/envs/human_stage2",
+    "scaffold": "/root/autodl-tmp/humanslot/qwen_dinov3_hqnet_pipeline",
+    "static_and_export_tests": "9 passed on 2026-08-30",
+    "available_dino_checkpoint": "/root/autodl-tmp/model/dinov3-vits16-pretrain-lvd1689m-timm",
+    "available_dino_scale": "ViT-S only",
+    "paper_intended_large_checkpoint": "not present and not yet frozen",
+    "dataset_and_evaluator": "present"
+  },
+  "historical_run": {
+    "artifact": "/root/autodl-tmp/humanslot_outputs/stage2_epoch1_full_pipeline_20260729",
+    "status": "incomplete_diagnostic_only",
+    "backbone_mode": "qwen_fusion",
+    "qwen_source": "historical v3_repr adapter, not the active generative Stage-1",
+    "dino": "DINOv3 ViT-S",
+    "fusion": "feature_add",
+    "trainable_parameters": 52175531,
+    "optimizer_steps": 3117,
+    "samples_seen": 12469,
+    "planned_samples": 64115,
+    "epoch_completed": false,
+    "validation_metrics": false,
+    "paired_dino_only_checkpoint": false,
+    "scientific_conclusion": "none"
+  },
+  "gaps": [
+    "qualified Stage-1 generative checkpoint",
+    "frozen choice of the main DINOv3 checkpoint",
+    "current Qwen3.5 generative checkpoint loader and pre-merger feature API",
+    "shared pixel-geometry contract",
+    "separately trained DINO-only baseline",
+    "separately trained native-Qwen visual control",
+    "matched initialization manifest",
+    "completed no-small five-task evaluation"
+  ],
+  "next_steps_after_stage1": [
+    "Run S2_G0 using existing DINOv3-S without downloading another model.",
+    "Freeze the paper DINOv3 scale only after the interface gate passes and storage is audited.",
+    "Train S2_A, S2_B, and S2_C as separate matched checkpoints.",
+    "Evaluate all arms with the same five-task no-small scorer.",
+    "Promote C2 only if S2_G2 and image-shuffle specificity pass."
+  ],
+  "current_decision": "Do not launch or tune Stage-2 while Stage-1 remains below G3."
+}

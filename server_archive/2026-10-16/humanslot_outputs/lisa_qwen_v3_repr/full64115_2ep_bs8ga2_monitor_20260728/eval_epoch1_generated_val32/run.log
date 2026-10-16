@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/root/autodl-tmp/humanslot/human_lisa_qwen_v3_repr/eval_stage1_v3.py", line 166, in <module>
+    main()
+  File "/root/autodl-tmp/humanslot/human_lisa_qwen_v3_repr/eval_stage1_v3.py", line 63, in main
+    raise ValueError("V3 evaluation requires batch_size>0 and max_new_tokens=5000")
+ValueError: V3 evaluation requires batch_size>0 and max_new_tokens=5000

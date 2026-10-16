@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/root/autodl-tmp/humanslot/human_lisa_qwen_v3_boxpose/train_stage1_v3.py", line 750, in <module>
+    main()
+  File "/root/autodl-tmp/humanslot/human_lisa_qwen_v3_boxpose/train_stage1_v3.py", line 398, in main
+    raise FileExistsError(f"refusing to overwrite non-empty run: {output_dir}")
+FileExistsError: refusing to overwrite non-empty run: /root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_boxpose/overfit8_boxref_100_gpu0_20260724

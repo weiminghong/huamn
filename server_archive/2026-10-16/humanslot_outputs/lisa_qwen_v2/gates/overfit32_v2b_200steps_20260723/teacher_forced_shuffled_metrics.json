@@ -1,0 +1,183 @@
+{
+  "protocol": "teacher_forced_gt_person_records_shuffled_image_diagnostic",
+  "images": 32,
+  "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v2/gates/overfit32_v2b_200steps_20260723/final-step-200",
+  "pose_visible_keypoints": 648,
+  "pose_pck@0.2_gt_box": 0.12345679012345678,
+  "pose_mean_normalized_error_gt_box": 0.8366701006889343,
+  "pose_visibility_accuracy": 0.4565826330532213,
+  "seg_people": 111,
+  "seg_binary_miou": 0.030332765317530378,
+  "seg_binary_dice": 0.05050240401052744,
+  "manifest": {
+    "version": "stage1_v2",
+    "run_kind": "overfit",
+    "model": "/root/autodl-tmp/model/Qwen3.5-4B",
+    "train_ann": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_train_v1.json",
+    "train_image_root": "/root/autodl-tmp/coco/train2017",
+    "val_ann": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json",
+    "val_image_root": "/root/autodl-tmp/coco/val2017",
+    "dataset_size": 32,
+    "architecture": {
+      "person_binding": "one ordered <person> anchor per record",
+      "box": "native autoregressive integer coordinates in 0..1000",
+      "pose": "box-free 17 joint queries with within-person and same-joint cross-person attention",
+      "seg": "<seg> state plus person state and stride-4 dynamic mask decoder",
+      "vision_features": {
+        "raw_qwen_layers": [
+          8,
+          16,
+          24
+        ],
+        "spatial_pyramid": 3
+      },
+      "decoder_dim": 256,
+      "decoder_heads": 8,
+      "pose_decoder_layers": 2,
+      "single_forward_backward": true,
+      "references": {
+        "GroupPose": "127fe0e",
+        "LISA": "3cb2d43",
+        "PixelLM": "ebf0792",
+        "HumanQueryNet": "7b5f57b",
+        "PaDT": "912a8ae"
+      }
+    },
+    "prompt": "You are a human-centric structured perception model.\nFind every visible non-crowd real person exactly once and return one JSON object.\n\nReturn schema:\n{\"persons\":[{\"person_id\":1,\"person\":\"<person>\",\"pose\":\"<pose>\",\"seg\":\"<seg>\",\"bbox\":[120,80,640,980],\"gender\":0,\"age\":31}]}\n\nRules:\n- Output JSON only. Do not output markdown, prose, comments, or chain-of-thought.\n- Include every visible person exactly once, including small and partially occluded people.\n- Order people left-to-right by full-body bounding-box center, then top-to-bottom.\n- person_id values must be contiguous integers starting at 1.\n- person, pose, and seg must be exactly \"<person>\", \"<pose>\", and \"<seg>\" in every person record.\n- bbox is [x1,y1,x2,y2] in integer coordinates normalized to 0..1000; require x1 < x2 and y1 < y2.\n- The pose decoder uses COCO-17 order: nose,left_eye,right_eye,left_ear,right_ear,left_shoulder,right_shoulder,left_elbow,right_elbow,left_wrist,right_wrist,left_hip,right_hip,left_knee,right_knee,left_ankle,right_ankle.\n- gender is 0 for male, 1 for female, and -1 when genuinely unknown.\n- age is apparent age in years from 0 to 120, and -1 when genuinely unknown.\n- After the final unique person, immediately close the JSON object and emit EOS.\n- If no person is visible, return exactly {\"persons\":[]}.\n",
+    "token_ids": {
+      "person": 248077,
+      "pose": 248078,
+      "seg": 248079
+    },
+    "max_length": 5000,
+    "truncation": false,
+    "batch_size": 4,
+    "grad_accum_steps": 1,
+    "effective_batch_size": 4,
+    "epochs": 25,
+    "micro_steps_per_epoch": 8,
+    "target_micro_steps": 200,
+    "total_optimizer_steps": 200,
+    "optimizer": {
+      "counts": {
+        "visual_lora": 2359296,
+        "language_lora": 3145728,
+        "token_rows": 7680,
+        "visual_neck": 3680512,
+        "pose": 4229129,
+        "mask": 1717248
+      },
+      "examples": {
+        "visual_lora": [
+          "base_model.base_model.model.model.visual.blocks.0.attn.qkv.lora_A.default.weight",
+          "base_model.base_model.model.model.visual.blocks.0.attn.qkv.lora_B.default.weight",
+          "base_model.base_model.model.model.visual.blocks.0.attn.proj.lora_A.default.weight",
+          "base_model.base_model.model.model.visual.blocks.0.attn.proj.lora_B.default.weight",
+          "base_model.base_model.model.model.visual.blocks.1.attn.qkv.lora_A.default.weight",
+          "base_model.base_model.model.model.visual.blocks.1.attn.qkv.lora_B.default.weight"
+        ],
+        "language_lora": [
+          "base_model.base_model.model.model.language_model.layers.3.self_attn.q_proj.lora_A.default.weight",
+          "base_model.base_model.model.model.language_model.layers.3.self_attn.q_proj.lora_B.default.weight",
+          "base_model.base_model.model.model.language_model.layers.3.self_attn.k_proj.lora_A.default.weight",
+          "base_model.base_model.model.model.language_model.layers.3.self_attn.k_proj.lora_B.default.weight",
+          "base_model.base_model.model.model.language_model.layers.3.self_attn.v_proj.lora_A.default.weight",
+          "base_model.base_model.model.model.language_model.layers.3.self_attn.v_proj.lora_B.default.weight"
+        ],
+        "token_rows": [
+          "base_model.base_model.model.model.language_model.embed_tokens.token_adapter.trainable_tokens_delta.default"
+        ],
+        "visual_neck": [
+          "visual_neck.input_norm.weight",
+          "visual_neck.input_norm.bias",
+          "visual_neck.input_projection.weight",
+          "visual_neck.input_projection.bias",
+          "visual_neck.level0.0.weight",
+          "visual_neck.level0.0.bias"
+        ],
+        "pose": [
+          "pose_decoder.joint_embedding",
+          "pose_decoder.level_embedding",
+          "pose_decoder.person_projection.0.weight",
+          "pose_decoder.person_projection.0.bias",
+          "pose_decoder.person_projection.1.weight",
+          "pose_decoder.person_projection.1.bias"
+        ],
+        "mask": [
+          "mask_decoder.person_projection.0.weight",
+          "mask_decoder.person_projection.0.bias",
+          "mask_decoder.person_projection.1.weight",
+          "mask_decoder.person_projection.1.bias",
+          "mask_decoder.seg_projection.0.weight",
+          "mask_decoder.seg_projection.0.bias"
+        ]
+      },
+      "rates": {
+        "visual_lora": 1e-05,
+        "language_lora": 1e-05,
+        "token_rows": 2e-05,
+        "visual_neck": 0.0002,
+        "pose": 0.0002,
+        "mask": 0.0002
+      },
+      "groups": 9
+    },
+    "loss_weights": {
+      "ce": 1.0,
+      "pose_l1": 10.0,
+      "pose_oks": 4.0,
+      "pose_visibility": 1.0,
+      "pose_aux": 0.5,
+      "mask_bce": 2.0,
+      "mask_dice": 5.0
+    },
+    "global_grad_clip": 5.0,
+    "warmup_ratio": 0.02,
+    "scheduler_type": "constant",
+    "bf16": true,
+    "gradient_checkpointing": true,
+    "horizontal_flip_prob": 0.0,
+    "lora": {
+      "rank": 16,
+      "alpha": 32,
+      "dropout": 0.05,
+      "all_visual_blocks": true
+    },
+    "trainable_total": 15139593,
+    "seed": 42,
+    "train_state": {
+      "micro_step": 200,
+      "optimizer_step": 200,
+      "samples_seen": 800,
+      "elapsed_seconds": 665.1066860686988,
+      "completed_full_plan": true
+    }
+  },
+  "ce_loss": 0.7697711400687695,
+  "ce_structure": 0.11752925743348897,
+  "acc_structure": 0.9763004556298256,
+  "ce_bbox": 1.7006572857499123,
+  "acc_bbox": 0.4267968740314245,
+  "ce_gender": 1.009082589764148,
+  "acc_gender": 0.3125,
+  "ce_age": 2.3411791995167732,
+  "acc_age": 0.21875,
+  "ce_anchor": 0.07384056458249688,
+  "acc_anchor": 1.0,
+  "pose_l1": 0.20408510323613882,
+  "pose_oks": 0.9759023897349834,
+  "pose_visibility": 1.0271673575043678,
+  "pose_aux": 0.20296395709738135,
+  "mask_bce": 1.427779734134674,
+  "mask_dice": 0.9490372687578201,
+  "weighted_pose_l1": 2.040851052850485,
+  "weighted_pose_oks": 3.9036095589399338,
+  "weighted_pose_visibility": 1.0271673575043678,
+  "weighted_pose_aux": 0.10148197854869068,
+  "weighted_mask_bce": 2.855559468269348,
+  "weighted_mask_dice": 4.745186373591423,
+  "loss": 15.443626940250397,
+  "valid_pose_count": 3.9375,
+  "valid_seg_count": 6.9375,
+  "person_count": 6.9375
+}

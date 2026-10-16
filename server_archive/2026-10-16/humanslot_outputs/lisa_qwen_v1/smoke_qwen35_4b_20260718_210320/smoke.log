@@ -1,0 +1,25 @@
+/root/miniconda3/envs/human4b/lib/python3.10/site-packages/transformers/utils/hub.py:110: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Traceback (most recent call last):
+  File "/root/miniconda3/envs/human4b/lib/python3.10/site-packages/transformers/models/auto/configuration_auto.py", line 1360, in from_pretrained
+    config_class = CONFIG_MAPPING[config_dict["model_type"]]
+  File "/root/miniconda3/envs/human4b/lib/python3.10/site-packages/transformers/models/auto/configuration_auto.py", line 1048, in __getitem__
+    raise KeyError(key)
+KeyError: 'qwen3_5'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/autodl-tmp/humanslot/human_lisa_qwen_v1/train_stage1_v1.py", line 1060, in <module>
+    main()
+  File "/root/autodl-tmp/humanslot/human_lisa_qwen_v1/train_stage1_v1.py", line 616, in main
+    model = make_base_and_wrapper(args, processor, dtype)
+  File "/root/autodl-tmp/humanslot/human_lisa_qwen_v1/train_stage1_v1.py", line 332, in make_base_and_wrapper
+    base = load_qwen_vl_backbone(args.model, dtype)
+  File "/root/autodl-tmp/humanslot/human_lisa_qwen_v1/modeling.py", line 26, in load_qwen_vl_backbone
+    cfg = AutoConfig.from_pretrained(model_name_or_path, trust_remote_code=True)
+  File "/root/miniconda3/envs/human4b/lib/python3.10/site-packages/transformers/models/auto/configuration_auto.py", line 1362, in from_pretrained
+    raise ValueError(
+ValueError: The checkpoint you are trying to load has model type `qwen3_5` but Transformers does not recognize this architecture. This could be because of an issue with the checkpoint, or because your version of Transformers is out of date.
+
+You can update Transformers with the command `pip install --upgrade transformers`. If this does not work, and the checkpoint is very new, then there may not be a release version that supports this model yet. In this case, you can get the most up-to-date code by installing Transformers from source with the command `pip install git+https://github.com/huggingface/transformers.git`

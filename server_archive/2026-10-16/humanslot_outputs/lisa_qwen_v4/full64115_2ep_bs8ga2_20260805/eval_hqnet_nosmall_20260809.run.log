@@ -1,0 +1,144 @@
+loading annotations into memory...
+Done (t=0.24s)
+creating index...
+index created!
+Loading and preparing results...
+DONE (t=0.01s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=1.59s).
+Accumulating evaluation results...
+DONE (t=0.18s).
+Loading and preparing results...
+DONE (t=0.18s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *keypoints*
+DONE (t=3.58s).
+Accumulating evaluation results...
+DONE (t=0.08s).
+Loading and preparing results...
+DONE (t=0.07s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *segm*
+DONE (t=1.98s).
+Accumulating evaluation results...
+DONE (t=0.20s).
+Loading and preparing results...
+DONE (t=0.08s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=0.79s).
+Accumulating evaluation results...
+DONE (t=0.09s).
+Loading and preparing results...
+DONE (t=0.01s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=0.89s).
+Accumulating evaluation results...
+DONE (t=0.10s).
+{
+  "metrics": {
+    "bbox_AP": 0.5228302791135083,
+    "bbox_AP50": 0.7755572525114959,
+    "bbox_AP75": 0.5636275777229026,
+    "bbox_APm": 0.40326100502852896,
+    "bbox_APl": 0.7111021670756311,
+    "keypoints_AP": 0.00023738680273224257,
+    "keypoints_AP50": 0.0017972493220017973,
+    "keypoints_AP75": 6.800130562506801e-06,
+    "keypoints_APm": 3.079303965230783e-05,
+    "keypoints_APl": 0.0008465571001397672,
+    "segm_AP": 0.17194809887942725,
+    "segm_AP50": 0.4744647080236525,
+    "segm_AP75": 0.09027237543380441,
+    "segm_APm": 0.06657502332045899,
+    "segm_APl": 0.3951298855947946,
+    "gender_AP": 0.5191038860690476,
+    "gender_AP50": 0.7429555158803959,
+    "gender_AP75": 0.5636378402757173,
+    "gender_APm": 0.3217561235780468,
+    "gender_APl": 0.6799564066204694,
+    "age_AP": 0.44492460254690436,
+    "age_AP50": 0.6326162779685294,
+    "age_AP75": 0.4805980832269876,
+    "age_APm": 0.2706196934132293,
+    "age_APl": 0.5894225245655174,
+    "gt_persons_medium_large": 1998,
+    "gt_persons_medium": 710,
+    "gt_persons_large": 1288,
+    "gender_gt_labeled_medium_large": 1959,
+    "age_gt_labeled_medium_large": 1998,
+    "images": 2693,
+    "predicted_persons": 9253,
+    "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/epoch-1-step-4008",
+    "source_prediction_dir": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/eval_epoch1_generated_full_val2693_bs1_tok5000_20260807",
+    "annotation": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json",
+    "split": "full_val",
+    "area_policy": {
+      "all": [
+        1024.0,
+        10000000000.0
+      ],
+      "medium": [
+        1024.0,
+        9216.0
+      ],
+      "large": [
+        9216.0,
+        10000000000.0
+      ],
+      "boundary_semantics": "COCO area-range ignore rules"
+    },
+    "protocol": "stage1_v4_generated_existing_predictions_hqnet_paper_no_small_area_aligned_cocoeval",
+    "result_classification": "paper-aligned-rescore; no new inference; official-protocol candidate pending official checkpoint parity"
+  },
+  "validation_checks": {
+    "bbox_APm_matches_standard_slice": {
+      "original": 0.40326100502852896,
+      "aligned": 0.40326100502852896,
+      "absolute_difference": 0.0,
+      "pass": true
+    },
+    "bbox_APl_matches_standard_slice": {
+      "original": 0.7111021670756311,
+      "aligned": 0.7111021670756311,
+      "absolute_difference": 0.0,
+      "pass": true
+    },
+    "keypoints_APm_matches_standard_slice": {
+      "original": 3.079303965230783e-05,
+      "aligned": 3.079303965230783e-05,
+      "absolute_difference": 0.0,
+      "pass": true
+    },
+    "keypoints_APl_matches_standard_slice": {
+      "original": 0.0008465571001397672,
+      "aligned": 0.0008465571001397672,
+      "absolute_difference": 0.0,
+      "pass": true
+    },
+    "segm_APm_matches_standard_slice": {
+      "original": 0.06657502332045899,
+      "aligned": 0.06657502332045899,
+      "absolute_difference": 0.0,
+      "pass": true
+    },
+    "segm_APl_matches_standard_slice": {
+      "original": 0.3951298855947946,
+      "aligned": 0.3951298855947946,
+      "absolute_difference": 0.0,
+      "pass": true
+    }
+  }
+}

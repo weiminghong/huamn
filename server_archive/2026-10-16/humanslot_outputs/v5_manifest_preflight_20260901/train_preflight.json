@@ -1,0 +1,61 @@
+{
+  "config": "/root/autodl-tmp/humanslot/human_multitask_v5/config_coco_v5.json",
+  "manifest_audit": {
+    "datasets": {
+      "coco_unihuman": 3
+    },
+    "duplicate_uids": [],
+    "persons": 16,
+    "records": 3,
+    "split_leakage": [],
+    "task_persons": {
+      "age": 2,
+      "attribute": 0,
+      "box": 16,
+      "gender": 2,
+      "parsing": 0,
+      "pose": 6,
+      "relation": 0,
+      "segment": 16
+    },
+    "tasks": {
+      "age": 2,
+      "box": 3,
+      "gender": 2,
+      "pose": 3,
+      "segment": 3
+    },
+    "valid": true
+  },
+  "manifests": [
+    "/root/autodl-tmp/humanslot_outputs/v5_manifest_preflight_20260901/coco3.jsonl"
+  ],
+  "requested_epoch_size": 30,
+  "requested_epochs": 2,
+  "requested_parameter_scope": {
+    "dense": "Qwen bridge plus Mask2Former modules full",
+    "original_qwen_weights": "frozen outside PEFT/merger",
+    "qwen_llm": "attention/MLP LoRA",
+    "qwen_merger": "full",
+    "qwen_vision": "LoRA all blocks"
+  },
+  "sampling_audit": {
+    "dataset_task_counts": {
+      "coco_unihuman:age": 4,
+      "coco_unihuman:box": 9,
+      "coco_unihuman:gender": 2,
+      "coco_unihuman:pose": 8,
+      "coco_unihuman:segment": 7
+    },
+    "epoch_size": 30,
+    "seed": 20260901,
+    "task_counts": {
+      "age": 4,
+      "box": 9,
+      "gender": 2,
+      "pose": 8,
+      "segment": 7
+    }
+  },
+  "schema": "human-multitask-v5-preflight"
+}

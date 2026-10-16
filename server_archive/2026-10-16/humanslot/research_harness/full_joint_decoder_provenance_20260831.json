@@ -1,0 +1,29 @@
+{
+  "audit_type": "implementation_provenance",
+  "date": "2026-08-31T09:43:26.903917+08:00",
+  "run": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_full_joint_2ep_20260831",
+  "executed_source": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_full_joint_2ep_20260831/source/modeling.py",
+  "executed_source_sha256": "5bbad89d34b0ed7a35961cc03da57c9132f0a9dec1eca8c76866055599a5fa68",
+  "conclusion": "Custom combination, not a faithful reproduction of LISA, SAM, SimCC, or ViTPose.",
+  "components": [
+    {
+      "component": "segmentation",
+      "borrowed": "LISA special-token hidden-state routing",
+      "custom": "Qwen feature fusion, box conditioning, two cross-attention layers and query-feature dot-product mask decoding",
+      "official_decoder_reused": false,
+      "official_pretrained_decoder_weights_used": false,
+      "source": "https://github.com/JIA-Lab-research/LISA/blob/main/model/LISA.py"
+    },
+    {
+      "component": "pose",
+      "borrowed": "SimCC x/y coordinate classification with soft targets",
+      "custom": "LLM pose-state and box conditioning, 17 joint queries, ROI cross-attention",
+      "official_decoder_reused": false,
+      "official_pretrained_decoder_weights_used": false,
+      "source": "https://github.com/leeyegy/SimCC"
+    }
+  ],
+  "user_requirement_gap": "The user requested mature decoder reuse rather than custom pose/seg architecture. The current implementation borrows concepts but does not meet faithful reuse.",
+  "interpretation": "Published LISA/SimCC accuracy does not establish learnability or accuracy of this custom combination. Existing training outputs remain valid for this exact implementation, not as a paper reproduction.",
+  "operational_action": "Record provenance correction only. Do not stop, restart, or alter training without a user instruction."
+}

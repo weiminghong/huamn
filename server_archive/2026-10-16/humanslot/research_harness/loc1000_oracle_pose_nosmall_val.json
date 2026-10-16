@@ -1,0 +1,32 @@
+{
+  "schema": "loc1000-oracle-pose-nosmall-v1",
+  "annotation": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json",
+  "records": 6352,
+  "skipped": {
+    "crowd_or_ignore": 227,
+    "invalid_box": 0,
+    "no_keypoints": 4425
+  },
+  "area_policy": {
+    "all": [
+      1024.0,
+      10000000000.0
+    ],
+    "medium": [
+      1024.0,
+      9216.0
+    ],
+    "large": [
+      9216.0,
+      10000000000.0
+    ]
+  },
+  "metrics": {
+    "AP": 1.0,
+    "AP50": 1.0,
+    "AP75": 1.0,
+    "APm": 1.0,
+    "APl": 0.9996006024482257
+  },
+  "interpretation": "Upper-bound diagnostic using ground-truth identity/order and loc1000 reconstructed COCO-17 keypoints; no model generation."
+}

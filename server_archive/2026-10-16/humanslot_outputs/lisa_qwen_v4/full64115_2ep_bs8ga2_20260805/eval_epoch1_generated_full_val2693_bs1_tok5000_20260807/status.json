@@ -1,0 +1,7 @@
+{
+  "processed": 2693,
+  "total": 2693,
+  "schema_ok": 0.9992573338284441,
+  "health_ok": 0.9951726698848867,
+  "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/epoch-1-step-4008"
+}

@@ -1,0 +1,59 @@
+{
+  "script": "/root/autodl-tmp/humanslot/human_lisa_qwen_v4/eval_hqnet_nosmall_v4.py",
+  "python": "/root/miniconda3/envs/human4b/bin/python",
+  "python_version": "3.10.20 (main, Jun 11 2026, 15:17:37) [GCC 14.3.0]",
+  "platform": "Linux-4.19.90-2107.6.0.0192.8.oe1.bclinux.x86_64-x86_64-with-glibc2.31",
+  "pycocotools": "unknown",
+  "annotation": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json",
+  "annotation_sha256": "70fa2e72f42d96c829807a5aa92239e2e60be0469d5a2d5bc5cdb15f358dc27e",
+  "predictions": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/eval_epoch1_generated_full_val2693_bs1_tok5000_20260807/predictions.coco_multitask.json",
+  "predictions_sha256": "9352157a95cd7a716c34da7772be49b1e8c71b42996280a4271c5a43c813a53e",
+  "source_metrics": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/eval_epoch1_generated_full_val2693_bs1_tok5000_20260807/metrics.json",
+  "source_metrics_sha256": "94b4fd16dd5bd347a96ace3fd91a7a4f38b6240ee0b7250832845acdf49bce89",
+  "images": 2693,
+  "predictions_count": 9253,
+  "seed": null,
+  "deterministic": true,
+  "new_inference": false,
+  "metric_definition": "COCO AP with overall area range [32^2, 1e5^2], plus standard medium and large ranges",
+  "aggregation": "mean valid precision over IoU, recall, and category",
+  "classification": "paper-aligned-rescore; no new inference; official-protocol candidate pending official checkpoint parity",
+  "validation_checks": {
+    "bbox_APm_matches_standard_slice": {
+      "original": 0.40326100502852896,
+      "aligned": 0.40326100502852896,
+      "absolute_difference": 0.0,
+      "pass": true
+    },
+    "bbox_APl_matches_standard_slice": {
+      "original": 0.7111021670756311,
+      "aligned": 0.7111021670756311,
+      "absolute_difference": 0.0,
+      "pass": true
+    },
+    "keypoints_APm_matches_standard_slice": {
+      "original": 3.079303965230783e-05,
+      "aligned": 3.079303965230783e-05,
+      "absolute_difference": 0.0,
+      "pass": true
+    },
+    "keypoints_APl_matches_standard_slice": {
+      "original": 0.0008465571001397672,
+      "aligned": 0.0008465571001397672,
+      "absolute_difference": 0.0,
+      "pass": true
+    },
+    "segm_APm_matches_standard_slice": {
+      "original": 0.06657502332045899,
+      "aligned": 0.06657502332045899,
+      "absolute_difference": 0.0,
+      "pass": true
+    },
+    "segm_APl_matches_standard_slice": {
+      "original": 0.3951298855947946,
+      "aligned": 0.3951298855947946,
+      "absolute_difference": 0.0,
+      "pass": true
+    }
+  }
+}

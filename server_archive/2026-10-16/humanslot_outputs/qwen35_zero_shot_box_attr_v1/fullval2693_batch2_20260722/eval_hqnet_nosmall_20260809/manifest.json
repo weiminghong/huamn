@@ -1,0 +1,90 @@
+{
+  "script": "/root/autodl-tmp/humanslot/human_lisa_qwen_v4/eval_hqnet_nosmall_zero_shot.py",
+  "python": "/root/miniconda3/envs/human4b/bin/python",
+  "python_version": "3.10.20 (main, Jun 11 2026, 15:17:37) [GCC 14.3.0]",
+  "platform": "Linux-4.19.90-2107.6.0.0192.8.oe1.bclinux.x86_64-x86_64-with-glibc2.31",
+  "pycocotools": "unknown",
+  "annotation": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json",
+  "annotation_sha256": "70fa2e72f42d96c829807a5aa92239e2e60be0469d5a2d5bc5cdb15f358dc27e",
+  "inference": "/root/autodl-tmp/humanslot_outputs/qwen35_zero_shot_box_attr_v1/fullval2693_batch2_20260722/inference.jsonl",
+  "inference_sha256": "d086a6bd871d46855e8ea1399aa4e4ba1b9ea7e45955a014ea8a2232f7fbe907",
+  "source_metrics": "/root/autodl-tmp/humanslot_outputs/qwen35_zero_shot_box_attr_v1/fullval2693_batch2_20260722/metrics.json",
+  "source_metrics_sha256": "e8871447bb97af1872232798055addb05337a087a2d1a5f042b1d8dcd6dc7d6c",
+  "images": 2693,
+  "inference_rows": 2693,
+  "predictions_count": 8306,
+  "seed": null,
+  "deterministic": true,
+  "new_inference": false,
+  "metric_definition": "COCO AP with overall area range [32^2, 1e5^2], plus standard medium and large ranges",
+  "aggregation": "mean valid precision over IoU, recall, and category",
+  "classification": "diagnostic; no new inference; area-aligned but confidence protocol differs from v4 generated evaluation",
+  "validation_checks": {
+    "standard_bbox_AP_reproduced": {
+      "source": 0.3328063587419069,
+      "recomputed": 0.3328063587419069,
+      "absolute_difference": 0.0,
+      "pass": true
+    },
+    "standard_bbox_AP50_reproduced": {
+      "source": 0.5368558845562654,
+      "recomputed": 0.5368558845562654,
+      "absolute_difference": 0.0,
+      "pass": true
+    },
+    "standard_bbox_AP75_reproduced": {
+      "source": 0.32875791706189866,
+      "recomputed": 0.32875791706189866,
+      "absolute_difference": 0.0,
+      "pass": true
+    },
+    "standard_gender_AP_reproduced": {
+      "source": 0.4639822630894066,
+      "recomputed": 0.4639822630894066,
+      "absolute_difference": 0.0,
+      "pass": true
+    },
+    "standard_gender_AP50_reproduced": {
+      "source": 0.6584314113796348,
+      "recomputed": 0.6584314113796348,
+      "absolute_difference": 0.0,
+      "pass": true
+    },
+    "standard_gender_AP75_reproduced": {
+      "source": 0.4943396803176049,
+      "recomputed": 0.4943396803176049,
+      "absolute_difference": 0.0,
+      "pass": true
+    },
+    "standard_age_AP_reproduced": {
+      "source": 0.4023333574433138,
+      "recomputed": 0.4023333574433138,
+      "absolute_difference": 0.0,
+      "pass": true
+    },
+    "standard_age_AP50_reproduced": {
+      "source": 0.5689262765468938,
+      "recomputed": 0.5689262765468938,
+      "absolute_difference": 0.0,
+      "pass": true
+    },
+    "standard_age_AP75_reproduced": {
+      "source": 0.4220369534917397,
+      "recomputed": 0.4220369534917397,
+      "absolute_difference": 0.0,
+      "pass": true
+    },
+    "aligned_bbox_APm_matches_standard_slice": {
+      "source": 0.3653466754083456,
+      "recomputed": 0.3653466754083456,
+      "absolute_difference": 0.0,
+      "pass": true
+    },
+    "aligned_bbox_APl_matches_standard_slice": {
+      "source": 0.6734423568920129,
+      "recomputed": 0.6734423568920129,
+      "absolute_difference": 0.0,
+      "pass": true
+    }
+  }
+}

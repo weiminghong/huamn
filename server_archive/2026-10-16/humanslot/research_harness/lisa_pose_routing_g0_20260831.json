@@ -1,0 +1,105 @@
+{
+  "schema": "lisa-pose-routing-g0-v1",
+  "date": "2026-08-31",
+  "branch": "E_STAGE1_QWEN_NATIVE_LISA_POSE_ROUTING_V1",
+  "status": "pass",
+  "unit_tests": {
+    "passed": 7,
+    "failed": 0,
+    "artifact": "human_lisa_pose_stage1/tests/test_components.py"
+  },
+  "real_collator_audit": {
+    "sample_ids": [
+      391895,
+      522418
+    ],
+    "person_counts": [
+      2,
+      1
+    ],
+    "pose_token_counts": [
+      2,
+      1
+    ],
+    "seg_token_counts": [
+      2,
+      1
+    ],
+    "pose_valid": [
+      1,
+      1
+    ],
+    "seg_valid": [
+      2,
+      1
+    ],
+    "sequence_lengths": [
+      527,
+      568
+    ],
+    "image_grids": [
+      [
+        1,
+        22,
+        40
+      ],
+      [
+        1,
+        30,
+        40
+      ]
+    ]
+  },
+  "gpu_smoke": {
+    "artifact": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_g0_smoke1_20260831",
+    "steps": 1,
+    "peak_cuda_gib": 20.5771,
+    "loss": 16.1883,
+    "text_loss": 1.39236,
+    "dense_loss": 14.7959,
+    "mask_bce": 0.72586,
+    "mask_dice": 0.94365,
+    "pose_x": 6.07813,
+    "pose_y": 6.44887,
+    "pose_visibility": 1.19922,
+    "owner_state_min_distance": 87.3104,
+    "gradient_norms": {
+      "visual_lora": 5.68328,
+      "language_lora": 14.52044,
+      "merger": 7.27076,
+      "token_rows": 41.06896,
+      "heads": 23.30751
+    }
+  },
+  "trainable_audit": {
+    "vision_start_block": 0,
+    "vision_lora_targets": 96,
+    "language_lora_targets": 248,
+    "vision_feature_layers": [
+      7,
+      15,
+      23
+    ],
+    "trainable_total": 75369091,
+    "trainable_by_family": {
+      "visual_lora": 6291456,
+      "language_lora": 32464896,
+      "merger": 27271680,
+      "token_rows": 20480,
+      "heads": 9320579
+    }
+  },
+  "shortcut_audit": {
+    "sam_image_encoder_in_mainline": false,
+    "vitpose_image_encoder_in_mainline": false,
+    "qwen_vision_only_dense_features": true
+  },
+  "criteria": {
+    "owner_tokens_match_person_count": true,
+    "mask_gradient_reaches_qwen_features": true,
+    "pose_gradient_reaches_qwen_features": true,
+    "all_trainable_families_receive_gradients": true,
+    "all_24_vision_blocks_have_lora": true,
+    "no_external_image_encoder": true
+  }
+}

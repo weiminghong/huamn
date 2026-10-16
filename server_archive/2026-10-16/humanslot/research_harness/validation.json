@@ -1,0 +1,170 @@
+{
+  "schema": "human-slot-harness-validation-v1",
+  "pass": true,
+  "checks": [
+    {
+      "name": "stage0_outputs_complete",
+      "pass": true,
+      "detail": "outputs=['box', 'segment', 'pose', 'age', 'gender']"
+    },
+    {
+      "name": "stage0_arms_locked",
+      "pass": true,
+      "detail": "arms=['S0_NATIVE_QWEN_NUMERIC_JSON']"
+    },
+    {
+      "name": "stage1_outputs_complete",
+      "pass": true,
+      "detail": "outputs=['box', 'segment', 'pose', 'age', 'gender']"
+    },
+    {
+      "name": "stage1_lisa_pose_routing_contract",
+      "pass": true,
+      "detail": "Box, gender, age, person ordering, and routing tokens use the native Qwen text decoder. <SEG> and <POSE> hidden states condition mature mask and pose decoders that consume Qwen Vision features."
+    },
+    {
+      "name": "stage1_loss_contract",
+      "pass": true,
+      "detail": "Text cross-entropy plus mature mask BCE/focal/dice and SimCC pose/visibility losses."
+    },
+    {
+      "name": "stage1_forbidden_complete",
+      "pass": true,
+      "detail": "all prohibited specialist Stage-1 paths must remain explicit"
+    },
+    {
+      "name": "stage1_joint_tuning",
+      "pass": true,
+      "detail": "joint_tuning=['Qwen Vision', 'vision merger', 'Qwen LLM']"
+    },
+    {
+      "name": "active_branch_matches_state",
+      "pass": true,
+      "detail": "state=E_STAGE1_QWEN_NATIVE_LISA_POSE_ROUTING_V1 branch=E_STAGE1_QWEN_NATIVE_LISA_POSE_ROUTING_V1"
+    },
+    {
+      "name": "active_branch_lisa_pose_routing_decoder",
+      "pass": true,
+      "detail": "native Qwen text decoder for Human Slot, box, gender, and age; LISA-style <SEG> and <POSE> hidden-state routing into mature Qwen-native dense decoders"
+    },
+    {
+      "name": "active_branch_has_falsifier",
+      "pass": true,
+      "detail": "mainline branch requires an explicit falsifier"
+    },
+    {
+      "name": "active_branch_has_all_gates",
+      "pass": true,
+      "detail": "gates=['G0_codec', 'G1_overfit_64', 'G2_pilot_generated_validation', 'G3_full_stage1']"
+    },
+    {
+      "name": "stage2_visual_freeze",
+      "pass": true,
+      "detail": "frozen=['Stage-1 Qwen Vision', 'Stage-1 vision merger']"
+    },
+    {
+      "name": "stage2_rgb_input",
+      "pass": true,
+      "detail": "inputs=['the same raw RGB image to DINOv3', 'frozen Stage-1 visual features through an explicit bridge']"
+    },
+    {
+      "name": "stage3_full_vlm_freeze",
+      "pass": true,
+      "detail": "frozen=['entire Stage-1 VLM', 'all Stage-1 adapters and token rows']"
+    },
+    {
+      "name": "paper_story_locked",
+      "pass": true,
+      "detail": "Progressive transfer across Stage-1, Stage-2, and Stage-3."
+    },
+    {
+      "name": "closed_branches_closed",
+      "pass": true,
+      "detail": "every rejected architecture must remain closed"
+    },
+    {
+      "name": "next_action_is_admitted",
+      "pass": true,
+      "detail": "{\"admission_gate\": \"USER_AUTHORIZED_FULL_TRAINING\", \"do_not_do\": [\"replace full training with another small-sample warmup\", \"claim training diagnostics are official AP\", \"start GPU jobs outside recorded concurrency budgets\", \"start Stage-2 before evaluating Stage-1\"], \"gpu_required\": true, \"id\": \"A008_RUN_FULL_JOINT\", \"task\": \"Run all COCO-UniHuman training images for two epochs with joint Vision/LLM LoRA, full merger, routing rows, and dense modules.\"}"
+    },
+    {
+      "name": "project_agents_present",
+      "pass": true,
+      "detail": "project-level instructions must persist"
+    },
+    {
+      "name": "goal_claims_match_state",
+      "pass": true,
+      "detail": "goal=['C1_GENERATIVE_HUMAN_ADAPTATION', 'C2_VISUAL_TRANSFER', 'C3_SEMANTIC_TRANSFER'] state=['C1_GENERATIVE_HUMAN_ADAPTATION', 'C2_VISUAL_TRANSFER', 'C3_SEMANTIC_TRANSFER']"
+    },
+    {
+      "name": "ledger_pending_claims_match_goal",
+      "pass": true,
+      "detail": "{\"current_evidence_boundary\": \"The legacy COCO-only Stage-1 run remains active. The v5 multi-source successor has passed schema, real-COCO manifest, sampling and CPU Mask2Former gradient preflight, but has not trained and supports no claim.\", \"paper_claims_established\": [], \"paper_claims_pending\": [\"C1_GENERATIVE_HUMAN_ADAPTATION\", \"C2_VISUAL_TRANSFER\", \"C3_SEMANTIC_TRANSFER\"], \"verified_mainline_gate\": \"G0 engineering checks passed; G1 precision did not pass; full training explicitly authorized by the user.\"}"
+    },
+    {
+      "name": "ledger_has_no_premature_claim",
+      "pass": true,
+      "detail": "[]"
+    },
+    {
+      "name": "ledger_records_g0_pass",
+      "pass": true,
+      "detail": "verified_gate_pass"
+    },
+    {
+      "name": "ledger_records_lisa_pose_g0_pass",
+      "pass": true,
+      "detail": "verified_gate_pass"
+    },
+    {
+      "name": "ledger_records_g1_diagnostic_completion",
+      "pass": true,
+      "detail": "completed_diagnostic_not_g1_pass"
+    },
+    {
+      "name": "goal_preserves_lisa_pose_routing_stage1",
+      "pass": true,
+      "detail": "A jointly tuned Qwen VLM whose normal text decoder emits person slots, boxes, age, gender, <POSE>, and <SEG>; routing-token hidden states condition mature pose and mask decoders using Qwen Vision as the sole mainline image encoder."
+    },
+    {
+      "name": "goal_summary_present",
+      "pass": true,
+      "detail": "human-readable goal and evidence summary must persist"
+    },
+    {
+      "name": "stage0_stage1_not_prematurely_qualified",
+      "pass": true,
+      "detail": "{\"stage0_qualified\": false, \"stage1_passed_gate\": \"G0 passed; exact-64 joint500 failed G1 accuracy gate\", \"stage1_qualified\": false, \"stage2_admitted\": false}"
+    },
+    {
+      "name": "stage0_has_only_native_arm",
+      "pass": true,
+      "detail": "[{\"comparison_status\": \"Stage-0 baseline; no new vocabulary\", \"grammar\": \"Compact numeric JSON using native vocabulary for box, 17 keypoints, contours, gender, and age\", \"id\": \"S0_NATIVE_QWEN_NUMERIC_JSON\", \"model\": \"Unmodified Qwen3.5-4B weights and native tokenizer\", \"role\": \"true native zero-shot capability\"}]"
+    },
+    {
+      "name": "stage1_has_zero_step_initialization_control",
+      "pass": true,
+      "detail": "S1_INIT_LISA_POSE_ROUTING_0STEP verifies routing ownership, Qwen-native dense features, and mature decoder interfaces at zero optimizer steps."
+    },
+    {
+      "name": "ledger_records_stage0_closed_as_motivation",
+      "pass": true,
+      "detail": "closed_as_motivation_context"
+    },
+    {
+      "name": "ledger_records_stage1_init_verified_in_g0",
+      "pass": true,
+      "detail": "verified_in_g0_preoptimizer_manifest"
+    },
+    {
+      "name": "requested_full_training_is_next",
+      "pass": true,
+      "detail": "A008_RUN_FULL_JOINT"
+    }
+  ],
+  "errors": [],
+  "active_mainline": "E_STAGE1_QWEN_NATIVE_LISA_POSE_ROUTING_V1",
+  "current_stage": "Stage-1 full-dataset joint training",
+  "next_action": "A008_RUN_FULL_JOINT"
+}

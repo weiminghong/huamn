@@ -1,0 +1,148 @@
+{
+  "images": 2693,
+  "preds": 11001,
+  "gt": 10777,
+  "bbox_match_iou50": 7527,
+  "bbox_match_all": 9502,
+  "bbox_pck_ok": 51577,
+  "bbox_pck_total": 63039,
+  "bbox_match_iou75": 5484,
+  "bbox75_pck_ok": 45379,
+  "bbox75_pck_total": 54058,
+  "kp_inside_pred_ok": 80882,
+  "kp_inside_pred_total": 111979,
+  "kp_inside_gt_ok": 74668,
+  "kp_inside_gt_total": 100386,
+  "seg_bbox_iou_low": 3028,
+  "bbox_matched_pck@0.2": 0.818176049746982,
+  "bbox75_matched_pck@0.2": 0.8394502201339302,
+  "kp_visible_inside_pred_bbox_rate": 0.7222961448128667,
+  "kp_visible_inside_bbox_matched_gt_bbox_rate": 0.7438088976550515,
+  "seg_bbox_vs_pred_bbox_iou_mean": 0.5575841472406713,
+  "seg_bbox_vs_pred_bbox_iou_median": 0.6243600977299499,
+  "seg_bbox_vs_pred_bbox_iou_lt_0.3_rate": 0.27524770475411325,
+  "pred_box_area_mean": 20389.895226705394,
+  "seg_box_area_mean": 21651.46386692119,
+  "worst_pose_images_by_bboxmatch_pck": [
+    {
+      "image_id": 2431,
+      "pck": 0.0,
+      "preds": 2,
+      "gts": 2
+    },
+    {
+      "image_id": 29397,
+      "pck": 0.0,
+      "preds": 1,
+      "gts": 1
+    },
+    {
+      "image_id": 32038,
+      "pck": 0.0,
+      "preds": 1,
+      "gts": 1
+    },
+    {
+      "image_id": 37689,
+      "pck": 0.0,
+      "preds": 25,
+      "gts": 13
+    },
+    {
+      "image_id": 42528,
+      "pck": 0.0,
+      "preds": 2,
+      "gts": 1
+    },
+    {
+      "image_id": 48153,
+      "pck": 0.0,
+      "preds": 1,
+      "gts": 1
+    },
+    {
+      "image_id": 48504,
+      "pck": 0.0,
+      "preds": 3,
+      "gts": 2
+    },
+    {
+      "image_id": 81738,
+      "pck": 0.0,
+      "preds": 1,
+      "gts": 1
+    },
+    {
+      "image_id": 83531,
+      "pck": 0.0,
+      "preds": 2,
+      "gts": 3
+    },
+    {
+      "image_id": 85089,
+      "pck": 0.0,
+      "preds": 2,
+      "gts": 3
+    },
+    {
+      "image_id": 99039,
+      "pck": 0.0,
+      "preds": 1,
+      "gts": 1
+    },
+    {
+      "image_id": 112997,
+      "pck": 0.0,
+      "preds": 1,
+      "gts": 1
+    },
+    {
+      "image_id": 118367,
+      "pck": 0.0,
+      "preds": 1,
+      "gts": 1
+    },
+    {
+      "image_id": 137106,
+      "pck": 0.0,
+      "preds": 1,
+      "gts": 1
+    },
+    {
+      "image_id": 145665,
+      "pck": 0.0,
+      "preds": 1,
+      "gts": 1
+    },
+    {
+      "image_id": 172571,
+      "pck": 0.0,
+      "preds": 1,
+      "gts": 1
+    },
+    {
+      "image_id": 193926,
+      "pck": 0.0,
+      "preds": 2,
+      "gts": 2
+    },
+    {
+      "image_id": 214869,
+      "pck": 0.0,
+      "preds": 1,
+      "gts": 1
+    },
+    {
+      "image_id": 242411,
+      "pck": 0.0,
+      "preds": 2,
+      "gts": 1
+    },
+    {
+      "image_id": 243867,
+      "pck": 0.0,
+      "preds": 3,
+      "gts": 1
+    }
+  ]
+}

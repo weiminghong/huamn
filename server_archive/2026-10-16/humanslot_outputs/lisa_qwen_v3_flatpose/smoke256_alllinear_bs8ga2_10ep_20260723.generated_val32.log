@@ -1,0 +1,610 @@
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+Loading weights:   0%|          | 0/723 [00:00<?, ?it/s]Loading weights: 100%|██████████| 723/723 [00:00<00:00, 8346.38it/s]
+/root/miniconda3/envs/human4b/lib/python3.10/site-packages/peft/tuners/tuners_utils.py:1332: UserWarning: You have requested `ensure_weight_tying`, but no tied modules are added in either `modules_to_save` or `target_modules`
+  warnings.warn(
+{"processed": 2, "total": 32, "schema_ok": 2, "health_ok": 2, "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/final-step-160"}
+{"processed": 4, "total": 32, "schema_ok": 4, "health_ok": 4, "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/final-step-160"}
+{"processed": 6, "total": 32, "schema_ok": 6, "health_ok": 6, "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/final-step-160"}
+{"processed": 8, "total": 32, "schema_ok": 8, "health_ok": 8, "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/final-step-160"}
+{"processed": 10, "total": 32, "schema_ok": 10, "health_ok": 10, "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/final-step-160"}
+{"processed": 12, "total": 32, "schema_ok": 12, "health_ok": 12, "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/final-step-160"}
+{"processed": 14, "total": 32, "schema_ok": 14, "health_ok": 14, "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/final-step-160"}
+{"processed": 16, "total": 32, "schema_ok": 16, "health_ok": 16, "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/final-step-160"}
+{"processed": 18, "total": 32, "schema_ok": 18, "health_ok": 18, "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/final-step-160"}
+{"processed": 20, "total": 32, "schema_ok": 20, "health_ok": 20, "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/final-step-160"}
+{"processed": 22, "total": 32, "schema_ok": 22, "health_ok": 22, "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/final-step-160"}
+{"processed": 24, "total": 32, "schema_ok": 24, "health_ok": 24, "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/final-step-160"}
+{"processed": 26, "total": 32, "schema_ok": 26, "health_ok": 26, "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/final-step-160"}
+{"processed": 28, "total": 32, "schema_ok": 28, "health_ok": 28, "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/final-step-160"}
+{"processed": 30, "total": 32, "schema_ok": 30, "health_ok": 30, "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/final-step-160"}
+{"processed": 32, "total": 32, "schema_ok": 32, "health_ok": 32, "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/final-step-160"}
+loading annotations into memory...
+Done (t=0.23s)
+creating index...
+index created!
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=0.05s).
+Accumulating evaluation results...
+DONE (t=0.01s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.230
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.438
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.220
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.102
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.370
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.671
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.134
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.340
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.369
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.203
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.485
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.765
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *keypoints*
+DONE (t=0.09s).
+Accumulating evaluation results...
+DONE (t=0.00s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets= 20 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets= 20 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50      | area=   all | maxDets= 20 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.75      | area=   all | maxDets= 20 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] = 0.000
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *segm*
+DONE (t=0.06s).
+Accumulating evaluation results...
+DONE (t=0.01s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.005
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.013
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.003
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.096
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.036
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.037
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.037
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.003
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.215
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=0.01s).
+Accumulating evaluation results...
+DONE (t=0.00s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.493
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.750
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.540
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = -1.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.342
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.579
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.347
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.613
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.627
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = -1.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.450
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.691
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=0.01s).
+Accumulating evaluation results...
+DONE (t=0.00s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.433
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.728
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.436
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = -1.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.342
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.484
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.247
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.573
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.587
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = -1.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.450
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.636
+loading annotations into memory...
+Done (t=1.57s)
+creating index...
+index created!
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=0.05s).
+Accumulating evaluation results...
+DONE (t=0.01s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.245
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.483
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.230
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.133
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.347
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.657
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.131
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.330
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.369
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.203
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.485
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.765
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *keypoints*
+DONE (t=0.09s).
+Accumulating evaluation results...
+DONE (t=0.00s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets= 20 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets= 20 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50      | area=   all | maxDets= 20 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.75      | area=   all | maxDets= 20 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] = 0.000
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *segm*
+DONE (t=0.06s).
+Accumulating evaluation results...
+DONE (t=0.01s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.002
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.007
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.001
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.100
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.036
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.037
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.037
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.003
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.215
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=0.01s).
+Accumulating evaluation results...
+DONE (t=0.00s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.433
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.678
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.493
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = -1.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.416
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.455
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.347
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.627
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.627
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = -1.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.450
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.691
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=0.01s).
+Accumulating evaluation results...
+DONE (t=0.00s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.427
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.755
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.452
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = -1.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.416
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.443
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.227
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.587
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.587
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = -1.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.450
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.636
+{
+  "bbox_AP": 0.23025655433904998,
+  "bbox_AP50": 0.4377241738845788,
+  "bbox_AP75": 0.21958030060183797,
+  "bbox_APs": 0.10237358483687936,
+  "bbox_APm": 0.369761186248107,
+  "bbox_APl": 0.6714500577283871,
+  "keypoints_AP": 0.0,
+  "keypoints_AP50": 0.0,
+  "keypoints_AP75": 0.0,
+  "keypoints_APm": 0.0,
+  "keypoints_APl": 0.0,
+  "segm_AP": 0.004669728505388083,
+  "segm_AP50": 0.012908268108289458,
+  "segm_AP75": 0.002550632421732739,
+  "segm_APs": 0.0,
+  "segm_APm": 0.0004950495049504951,
+  "segm_APl": 0.0955917020273456,
+  "gender_AP": 0.4933597815951498,
+  "gender_AP50": 0.7503696137135571,
+  "gender_AP75": 0.5398951674451923,
+  "age_AP": 0.43323557283913733,
+  "age_AP50": 0.7276065113520859,
+  "age_AP75": 0.43642011373349937,
+  "gt_persons": 156,
+  "gender_gt_labeled": 15,
+  "gender_gt_coverage": 0.09615384615384616,
+  "gender_eval_images": 9,
+  "age_gt_labeled": 15,
+  "age_gt_coverage": 0.09615384615384616,
+  "age_eval_images": 9,
+  "constant_score_bbox_AP": 0.24512808002126626,
+  "constant_score_bbox_AP50": 0.4833707665362424,
+  "constant_score_bbox_AP75": 0.22989509277366005,
+  "constant_score_bbox_APs": 0.13316361179942168,
+  "constant_score_bbox_APm": 0.34687772246301807,
+  "constant_score_bbox_APl": 0.6571271888229355,
+  "constant_score_keypoints_AP": 0.0,
+  "constant_score_keypoints_AP50": 0.0,
+  "constant_score_keypoints_AP75": 0.0,
+  "constant_score_keypoints_APm": 0.0,
+  "constant_score_keypoints_APl": 0.0,
+  "constant_score_segm_AP": 0.00249740164797074,
+  "constant_score_segm_AP50": 0.006585892287312774,
+  "constant_score_segm_AP75": 0.0013751375137513752,
+  "constant_score_segm_APs": 0.0,
+  "constant_score_segm_APm": 6.0618306728632044e-05,
+  "constant_score_segm_APl": 0.10034175419453079,
+  "constant_score_gender_AP": 0.4331731685575577,
+  "constant_score_gender_AP50": 0.6777026228385397,
+  "constant_score_gender_AP75": 0.4933993450485834,
+  "constant_score_age_AP": 0.4269454285022941,
+  "constant_score_age_AP50": 0.755387309754249,
+  "constant_score_age_AP75": 0.4524752485870135,
+  "constant_score_gt_persons": 156,
+  "constant_score_gender_gt_labeled": 15,
+  "constant_score_gender_gt_coverage": 0.09615384615384616,
+  "constant_score_gender_eval_images": 9,
+  "constant_score_age_gt_labeled": 15,
+  "constant_score_age_gt_coverage": 0.09615384615384616,
+  "constant_score_age_eval_images": 9,
+  "images": 32,
+  "schema_ok_rate": 1.0,
+  "raw_schema_ok_rate": 1.0,
+  "person_id_repair_image_rate": 0.0,
+  "person_id_repairs": 0,
+  "health_ok_rate": 1.0,
+  "eos_rate": 1.0,
+  "person_count_mae": 2.21875,
+  "predicted_persons": 209,
+  "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/final-step-160",
+  "annotation": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json",
+  "split": "diagnostic_val_subset",
+  "score_strategy": "matched_query_objectness_native_text_box; constant-score metrics are retained as a diagnostic",
+  "protocol": "stage1_v3_official_cocoeval_partial_label_attr_native_text_box_query_confidence_query_bound_dense_tasks",
+  "manifest": {
+    "version": "stage1_v3_flatpose",
+    "run_kind": "smoke",
+    "model": "/root/autodl-tmp/model/Qwen3.5-4B",
+    "train_ann": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_train_v1.json",
+    "train_image_root": "/root/autodl-tmp/coco/train2017",
+    "val_ann": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json",
+    "val_image_root": "/root/autodl-tmp/coco/val2017",
+    "dataset_size": 256,
+    "architecture": {
+      "person_binding": "K=25 image-conditioned person queries with Hungarian assignment",
+      "text_binding": "generated/teacher-forced person records align to matched queries by person box",
+      "box": "native autoregressive integer coordinates plus auxiliary query box/objectness",
+      "confidence": "Hungarian-matched query objectness ranks native text boxes for standard COCO AP; constant-score AP is also reported",
+      "pose": "matched person query plus <person>/<pose> hidden states; direct COCO-17 coordinate MLP with no box, ROI, heatmap, or jitter input",
+      "seg": "matched person query plus <seg> hidden state and LISA/PixelLM-style dynamic mask decoder",
+      "missing_labels": "task-specific masking; missing pose/seg labels are never negatives",
+      "vision_features": {
+        "raw_qwen_layers": [
+          8,
+          16,
+          24
+        ],
+        "spatial_pyramid": 3
+      },
+      "decoder_dim": 256,
+      "decoder_heads": 8,
+      "person_query_layers": 3,
+      "pose_decoder_layers": 2,
+      "max_people": 25,
+      "single_forward_backward": true,
+      "references": {
+        "HumanQueryNet": "COCO-UniHuman official 7b5f57b",
+        "GroupPose": "127fe0e (query and loss protocol reference; pose head intentionally simplified)",
+        "LISA": "3cb2d43",
+        "PixelLM": "ebf0792",
+        "PaDT": "912a8ae"
+      }
+    },
+    "prompt": "You are a human-centric structured perception model.\nFind every visible non-crowd real person exactly once and return one JSON object.\n\nReturn schema:\n{\"persons\":[{\"person_id\":1,\"person\":\"<person>\",\"pose\":\"<pose>\",\"seg\":\"<seg>\",\"bbox\":[120,80,640,980],\"gender\":0,\"age\":31}]}\n\nRules:\n- Output JSON only. Do not output markdown, prose, comments, or chain-of-thought.\n- Include every visible person exactly once, including small and partially occluded people.\n- Order people left-to-right by full-body bounding-box center, then top-to-bottom.\n- person_id values must be contiguous integers starting at 1.\n- person, pose, and seg must be exactly \"<person>\", \"<pose>\", and \"<seg>\" in every person record.\n- bbox is [x1,y1,x2,y2] in integer coordinates normalized to 0..1000; require x1 < x2 and y1 < y2.\n- The pose decoder uses COCO-17 order: nose,left_eye,right_eye,left_ear,right_ear,left_shoulder,right_shoulder,left_elbow,right_elbow,left_wrist,right_wrist,left_hip,right_hip,left_knee,right_knee,left_ankle,right_ankle.\n- gender is 0 for male, 1 for female, and -1 when genuinely unknown.\n- age is apparent age in years from 0 to 120, and -1 when genuinely unknown.\n- After the final unique person, immediately close the JSON object and emit EOS.\n- If no person is visible, return exactly {\"persons\":[]}.\n",
+    "token_ids": {
+      "person": 248077,
+      "pose": 248078,
+      "seg": 248079
+    },
+    "max_length": 5000,
+    "truncation": false,
+    "batch_size": 8,
+    "grad_accum_steps": 2,
+    "effective_batch_size": 16,
+    "epochs": 10,
+    "micro_steps_per_epoch": 32,
+    "target_micro_steps": 320,
+    "total_optimizer_steps": 160,
+    "optimizer": {
+      "counts": {
+        "visual_lora": 6529024,
+        "language_lora": 32464896,
+        "token_rows": 7680,
+        "visual_neck": 3680512,
+        "person_query": 3376655,
+        "pose": 2107767,
+        "mask": 1783552
+      },
+      "examples": {
+        "visual_lora": [
+          "base_model.base_model.model.model.visual.blocks.0.attn.qkv.lora_A.default.weight",
+          "base_model.base_model.model.model.visual.blocks.0.attn.qkv.lora_B.default.weight",
+          "base_model.base_model.model.model.visual.blocks.0.attn.proj.lora_A.default.weight",
+          "base_model.base_model.model.model.visual.blocks.0.attn.proj.lora_B.default.weight",
+          "base_model.base_model.model.model.visual.blocks.0.mlp.linear_fc1.lora_A.default.weight",
+          "base_model.base_model.model.model.visual.blocks.0.mlp.linear_fc1.lora_B.default.weight"
+        ],
+        "language_lora": [
+          "base_model.base_model.model.model.language_model.layers.0.linear_attn.out_proj.lora_A.default.weight",
+          "base_model.base_model.model.model.language_model.layers.0.linear_attn.out_proj.lora_B.default.weight",
+          "base_model.base_model.model.model.language_model.layers.0.linear_attn.in_proj_qkv.lora_A.default.weight",
+          "base_model.base_model.model.model.language_model.layers.0.linear_attn.in_proj_qkv.lora_B.default.weight",
+          "base_model.base_model.model.model.language_model.layers.0.linear_attn.in_proj_z.lora_A.default.weight",
+          "base_model.base_model.model.model.language_model.layers.0.linear_attn.in_proj_z.lora_B.default.weight"
+        ],
+        "token_rows": [
+          "base_model.base_model.model.model.language_model.embed_tokens.token_adapter.trainable_tokens_delta.default"
+        ],
+        "visual_neck": [
+          "visual_neck.input_norm.weight",
+          "visual_neck.input_norm.bias",
+          "visual_neck.input_projection.weight",
+          "visual_neck.input_projection.bias",
+          "visual_neck.level0.0.weight",
+          "visual_neck.level0.0.bias"
+        ],
+        "person_query": [
+          "person_query_decoder.level_embedding",
+          "person_query_decoder.query_content.weight",
+          "person_query_decoder.query_position.weight",
+          "person_query_decoder.layers.0.self_attention.in_proj_weight",
+          "person_query_decoder.layers.0.self_attention.in_proj_bias",
+          "person_query_decoder.layers.0.self_attention.out_proj.weight"
+        ],
+        "pose": [
+          "pose_decoder.person_projection.0.weight",
+          "pose_decoder.person_projection.0.bias",
+          "pose_decoder.person_projection.1.weight",
+          "pose_decoder.person_projection.1.bias",
+          "pose_decoder.pose_projection.0.weight",
+          "pose_decoder.pose_projection.0.bias"
+        ],
+        "mask": [
+          "mask_decoder.query_projection.0.weight",
+          "mask_decoder.query_projection.0.bias",
+          "mask_decoder.query_projection.1.weight",
+          "mask_decoder.query_projection.1.bias",
+          "mask_decoder.person_projection.0.weight",
+          "mask_decoder.person_projection.0.bias"
+        ]
+      },
+      "rates": {
+        "visual_lora": 1e-05,
+        "language_lora": 1e-05,
+        "token_rows": 2e-05,
+        "visual_neck": 0.0002,
+        "person_query": 0.0002,
+        "pose": 0.0002,
+        "mask": 0.0002
+      },
+      "groups": 11
+    },
+    "loss_weights": {
+      "ce": 1.0,
+      "query_objectness": 1.0,
+      "query_bbox_l1": 5.0,
+      "query_giou": 2.0,
+      "query_aux": 0.5,
+      "pose_l1": 10.0,
+      "pose_oks": 4.0,
+      "pose_visibility": 1.0,
+      "pose_aux": 0.5,
+      "mask_bce": 2.0,
+      "mask_dice": 5.0
+    },
+    "global_grad_clip": 1.0,
+    "warmup_ratio": 0.05,
+    "scheduler_type": "cosine",
+    "bf16": true,
+    "gradient_checkpointing": true,
+    "horizontal_flip_prob": 0.5,
+    "lora": {
+      "rank": 16,
+      "alpha": 32,
+      "dropout": 0.05,
+      "target_mode": "all-linear",
+      "all_visual_blocks": true,
+      "coverage": {
+        "mode": "all-linear",
+        "lora_parameters": 38993920,
+        "lora_tensors": 692,
+        "counts": {
+          "visual_attention_blocks": 24,
+          "visual_mlp_blocks": 24,
+          "language_self_attention_layers": 8,
+          "language_linear_attention_layers": 24,
+          "language_mlp_layers": 32
+        },
+        "layers": {
+          "visual_attention_blocks": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "visual_mlp_blocks": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23
+          ],
+          "language_self_attention_layers": [
+            3,
+            7,
+            11,
+            15,
+            19,
+            23,
+            27,
+            31
+          ],
+          "language_linear_attention_layers": [
+            0,
+            1,
+            2,
+            4,
+            5,
+            6,
+            8,
+            9,
+            10,
+            12,
+            13,
+            14,
+            16,
+            17,
+            18,
+            20,
+            21,
+            22,
+            24,
+            25,
+            26,
+            28,
+            29,
+            30
+          ],
+          "language_mlp_layers": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31
+          ]
+        }
+      }
+    },
+    "trainable_total": 49950086,
+    "seed": 42,
+    "train_state": {
+      "micro_step": 320,
+      "optimizer_step": 160,
+      "samples_seen": 2560,
+      "elapsed_seconds": 2408.5862528569996,
+      "completed_full_plan": true
+    }
+  }
+}

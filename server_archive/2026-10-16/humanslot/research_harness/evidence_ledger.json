@@ -1,0 +1,633 @@
+{
+  "schema": "human-slot-evidence-ledger-v1",
+  "updated": "2026-09-01",
+  "summary": {
+    "verified_mainline_gate": "G0 engineering checks passed; G1 precision did not pass; full training explicitly authorized by the user.",
+    "paper_claims_established": [],
+    "paper_claims_pending": [
+      "C1_GENERATIVE_HUMAN_ADAPTATION",
+      "C2_VISUAL_TRANSFER",
+      "C3_SEMANTIC_TRANSFER"
+    ],
+    "current_evidence_boundary": "The legacy COCO-only Stage-1 run remains active. The v5 multi-source successor has passed schema, real-COCO manifest, sampling and CPU Mask2Former gradient preflight, but has not trained and supports no claim."
+  },
+  "entries": [
+    {
+      "id": "E001_SERVER_AND_ASSET_READINESS",
+      "status": "verified",
+      "evidence_class": "engineering",
+      "finding": "The A800 environment contains Qwen3.5-4B, COCO-UniHuman train/val data, the historical codebase, and a DINOv3 ViT-S checkpoint.",
+      "artifacts": [
+        "/root/autodl-tmp/model/Qwen3.5-4B",
+        "/root/autodl-tmp/model/dinov3-vits16-pretrain-lvd1689m-timm",
+        "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_train_v1.json",
+        "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json"
+      ],
+      "supports": [
+        "implementation feasibility"
+      ],
+      "does_not_support": [
+        "any paper claim",
+        "availability of the intended large DINOv3 main checkpoint"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E002_NATIVE_QWEN_ZERO_SHOT_HISTORY",
+      "status": "verified_diagnostic",
+      "evidence_class": "diagnostic",
+      "finding": "Under the historical area-aligned no-small rescore, native Qwen produced nontrivial box and attribute predictions but no segment or keypoint output.",
+      "metrics_AP_percent": {
+        "box": 49.7912,
+        "segment": null,
+        "pose": null,
+        "gender": 48.0674,
+        "age": 41.6348
+      },
+      "artifact": "/root/autodl-tmp/humanslot_outputs/qwen35_zero_shot_box_attr_v1/fullval2693_batch2_20260722/eval_hqnet_nosmall_20260809/metrics.json",
+      "supports": [
+        "historical native baseline context",
+        "need for generative segment and pose adaptation"
+      ],
+      "limitations": [
+        "self-reported confidence differs from the v4 generated confidence protocol",
+        "no segment or pose grammar",
+        "not a matched training ablation"
+      ],
+      "does_not_support": [
+        "strict zero-shot versus fine-tuned gain",
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E003_V4_HISTORICAL_GENERATED_RESULT",
+      "status": "verified_diagnostic_closed",
+      "evidence_class": "diagnostic",
+      "finding": "Historical v4 improved box and attributes modestly but failed dense pose and remained weak on segment.",
+      "metrics_AP_percent": {
+        "box": 52.283,
+        "segment": 17.1948,
+        "pose": 0.0237,
+        "gender": 51.9104,
+        "age": 44.4925
+      },
+      "artifact": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/eval_epoch1_generated_full_val2693_hqnet_nosmall_20260809/metrics.json",
+      "supports": [
+        "diagnosis that the prior Stage-1 design did not solve segment and pose"
+      ],
+      "limitations": [
+        "LLM body frozen",
+        "pose and segment decoded by specialist heads",
+        "architecture violates the current generative Stage-1 contract",
+        "historical confidence protocol differs from native zero-shot"
+      ],
+      "does_not_support": [
+        "current C1",
+        "strict improvement over native zero-shot",
+        "visual transfer",
+        "semantic transfer"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E004_DENSE_HEAD_OPTIMIZATION_PILOT",
+      "status": "closed_diagnostic_only",
+      "evidence_class": "engineering_diagnostic",
+      "finding": "A Qwen plus Human Query dense-head prototype completed 100-step runs with nonzero gradients through visual LoRA, language LoRA, merger, token rows, and task heads.",
+      "metrics": {
+        "steps": 100,
+        "peak_cuda_GiB": 32.16,
+        "codec_or_free_generation": false
+      },
+      "artifact": "/root/autodl-tmp/humanslot_outputs/stage1_transfer_v1_pose_roi_only_pilot100_20260830",
+      "supports": [
+        "basic joint optimization and memory feasibility"
+      ],
+      "limitations": [
+        "wrong Stage-1 decoder contract",
+        "training-loss evidence only",
+        "GT-conditioned pose diagnostics",
+        "no generated validation AP"
+      ],
+      "does_not_support": [
+        "C1",
+        "C2",
+        "C3",
+        "promotion of any dense head"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E005_RESEARCH_HARNESS_LOCK",
+      "status": "verified",
+      "evidence_class": "research_governance",
+      "finding": "Project requirements, active and closed branches, claims, falsifiers, gates, reopen rules, and next action are machine readable and validator-enforced.",
+      "metrics": {
+        "validator_pass": true,
+        "checks_passed": 30
+      },
+      "artifacts": [
+        "AGENTS.md",
+        "research_harness/requirements.json",
+        "research_harness/state.json",
+        "research_harness/branches/B_STAGE1_GENERATIVE_HUMAN_SERIALIZATION_V1.json",
+        "research_harness/branches/CLOSED_STAGE1_BRANCHES.json",
+        "research_harness/validation.json"
+      ],
+      "supports": [
+        "research convergence",
+        "prevention of architecture drift"
+      ],
+      "does_not_support": [
+        "model capability",
+        "any paper claim"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E006_GENERATIVE_CODEC_UNIT_TESTS",
+      "status": "verified",
+      "evidence_class": "engineering",
+      "finding": "The autoregressive box, COCO-17 pose, multi-contour segment, age, and gender codec passes strict round-trip, determinism, multi-person, RLE fallback, and fail-closed parser tests.",
+      "metrics": {
+        "tests_passed": 6,
+        "tests_failed": 0,
+        "location_bins": 1000,
+        "contour_point_budget_per_person": 64
+      },
+      "artifacts": [
+        "human_generative_stage1/codec.py",
+        "human_generative_stage1/tests/test_codec.py"
+      ],
+      "supports": [
+        "G0 codec mechanics"
+      ],
+      "does_not_support": [
+        "model generation ability",
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E007_G0_REAL_CODEC_AUDIT",
+      "status": "verified_gate_pass",
+      "evidence_class": "same-dataset_representation_audit",
+      "finding": "The fixed 64-point contour representation is deterministic, non-collapsed, fits the context budget, and reconstructs sampled owner polygons with high average fidelity.",
+      "metrics": {
+        "sampled_polygon_instances": 256,
+        "mask_IoU_mean": 0.8806,
+        "mask_IoU_median": 0.9146,
+        "mask_IoU_p05": 0.674,
+        "mask_IoU_min": 0.25,
+        "distinct_reconstruction_ratio": 1.0,
+        "max_box_quantization_error_pixels": 0.3196,
+        "max_pose_quantization_error_pixels": 0.3204,
+        "train_images_scanned": 64115,
+        "mean_estimated_tokens_per_image": 779.46,
+        "max_estimated_tokens_per_image": 3690,
+        "images_over_5000_tokens": 0
+      },
+      "artifact": "research_harness/codec_audit_g0.json",
+      "supports": [
+        "G0 passed",
+        "admission to G1 overfit-64"
+      ],
+      "limitations": [
+        "small-mask low-IoU tail",
+        "representation audit only",
+        "no model involved",
+        "codec reconstruction does not establish autoregressive learnability or owner binding"
+      ],
+      "does_not_support": [
+        "C1 model capability",
+        "segment AP",
+        "pose AP",
+        "C2",
+        "C3"
+      ],
+      "main_table_eligible": false,
+      "appendix_eligible": true
+    },
+    {
+      "id": "E008_G1_OVERFIT64",
+      "status": "completed_diagnostic_not_g1_pass",
+      "evidence_class": "diagnostic_capability_gate",
+      "required_result": "The Qwen-native LISA/pose-routing system overfits text slots, generated boxes, masks, poses, attributes, and owner identity on 64 images.",
+      "supports_if_passed": [
+        "admission to G2"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E009_G2_GENERATED_PILOT",
+      "status": "blocked_by_E008",
+      "evidence_class": "diagnostic_capability_gate",
+      "required_result": "The 5K training pilot passes generated-format, box, segment, and pose gates on the frozen 256-record validation set.",
+      "supports_if_passed": [
+        "admission to full Stage-1"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E010_C1_FULL_STAGE1",
+      "status": "blocked_by_E008_E009",
+      "evidence_class": "official_protocol_candidate",
+      "required_result": "Free-generation five-task AP passes G3 on all 2,693 validation images under the no-small-person policy.",
+      "supports_if_passed": [
+        "C1_GENERATIVE_HUMAN_ADAPTATION"
+      ],
+      "main_table_eligible": true
+    },
+    {
+      "id": "E011_C2_VISUAL_TRANSFER",
+      "status": "blocked_by_E010",
+      "evidence_class": "matched_separately_trained_ablation",
+      "required_result": "Human-adapted frozen visual transfer beats DINO-only and base-Qwen transfer with matched checkpoints and controls.",
+      "supports_if_passed": [
+        "C2_VISUAL_TRANSFER"
+      ],
+      "main_table_eligible": true
+    },
+    {
+      "id": "E012_C3_SEMANTIC_TRANSFER",
+      "status": "blocked_by_E010_E011",
+      "evidence_class": "matched_separately_trained_ablation",
+      "required_result": "Adapted decoder states improve Stage-2 and pass random, task-shuffle, and person-shuffle specificity controls.",
+      "supports_if_passed": [
+        "C3_SEMANTIC_TRANSFER"
+      ],
+      "main_table_eligible": true
+    },
+    {
+      "id": "E013_NATIVE_NUMERIC_TOKENIZER_AUDIT",
+      "status": "verified",
+      "evidence_class": "engineering_protocol_audit",
+      "finding": "Every three-digit native coordinate is split into three Qwen tokens; compact numeric JSON costs 693 tokens for one person and 13,095 for a 19-person image.",
+      "metrics": {
+        "three_digit_token_count": 3,
+        "one_person_compact_tokens": 693,
+        "nineteen_person_compact_tokens": 13095
+      },
+      "supports": [
+        "keep Stage-0 native and move the codec-initialized zero-step control into Stage-1"
+      ],
+      "does_not_support": [
+        "Stage-0 capability",
+        "Stage-1 capability",
+        "changing the frozen 64-point contour budget"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E014_CURRENT_STAGE0_BASELINE",
+      "status": "closed_as_motivation_context",
+      "evidence_class": "official_protocol_candidate",
+      "required_result": "No additional full run required; preserve native Qwen as an unmodified historical capability reference.",
+      "supports_if_passed": [
+        "current Stage-0 qualification"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E015_STAGE1_CODEC_INITIALIZATION_CONTROL",
+      "status": "verified_in_g0_preoptimizer_manifest",
+      "evidence_class": "matched_pre_tuning_control",
+      "required_result": "Completed: semantic routing-token initialization was recorded before the first optimizer step in the G0 manifest.",
+      "supports_if_passed": [
+        "matched pre-tuning baseline for Stage-1"
+      ],
+      "main_table_eligible": true
+    },
+    {
+      "id": "E016_CODEC_ORACLE_CEILINGS",
+      "status": "verified_gate_pass",
+      "evidence_class": "official_protocol_representation_oracle",
+      "finding": "With ground-truth owner identity and no model generation, contour64 and loc1000 retain high official no-small COCO-UniHuman ceilings.",
+      "metrics_AP_percent": {
+        "segment": 92.2669,
+        "pose": 100.0
+      },
+      "artifacts": [
+        "research_harness/contour64_oracle_segm_nosmall_val.json",
+        "research_harness/loc1000_oracle_pose_nosmall_val.json"
+      ],
+      "supports": [
+        "the current output codec is not the active Stage-1 bottleneck",
+        "preserve the codec through G1"
+      ],
+      "does_not_support": [
+        "model generation ability",
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "main_table_eligible": false,
+      "appendix_eligible": true
+    },
+    {
+      "id": "E017_STAGE1_LITERATURE_SYNTHESIS",
+      "status": "verified_research_design",
+      "evidence_class": "literature_synthesis",
+      "finding": "Recent VLM pose and segmentation work supports native autoregressive coordinate or mask generation, joint vision-language adaptation, high-resolution visual inputs, and task-balanced or compact visual supervision; direct comparison is limited by top-down crops, larger datasets, or learned mask codecs.",
+      "artifact": "research_harness/stage1_research_synthesis.json",
+      "supports": [
+        "D006 Stage-1 training design"
+      ],
+      "does_not_support": [
+        "expected AP on the present full-image multi-person task",
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E018_STRUCTURED_OUTPUT_LEARNABILITY_AUDIT",
+      "status": "verified_design_correction",
+      "evidence_class": "literature_and_protocol_audit",
+      "finding": "Direct coordinate/polygon sequences are viable only under important conditions omitted by the former mainline. Pix2Seq v2 conditions pose and masks on one object instance and reaches 64.8/38.2 AP; UFO replaces polygons with mask embedding retrieval; high-precision human/VLM systems use shared queries or dense decoders.",
+      "supports": [
+        "close monolithic contour64 mainline",
+        "admit box-conditioned Human Slot mainline",
+        "use mask embedding retrieval instead of polygon generation"
+      ],
+      "does_not_support": [
+        "paper claims C1-C3",
+        "expected AP of the revised Qwen implementation"
+      ],
+      "artifact": "research_harness/stage1_structured_output_research_20260830.json",
+      "main_table_eligible": false
+    },
+    {
+      "id": "E019_MATURE_STAGE1_SELECTION",
+      "status": "verified_design_decision",
+      "evidence_class": "user-priority_and_literature_synthesis",
+      "finding": "The mainline now prioritizes benchmark-reliable dense AP using HQNet shared Human Queries and mature heads. Qwen semantic conditioning and slot feedback preserve the VLM and transfer research object.",
+      "supports": [
+        "admit D_STAGE1_QWEN_CONDITIONED_HUMAN_QUERY_V1"
+      ],
+      "does_not_support": [
+        "C1-C3",
+        "expected Qwen-conditioned AP"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E020_LISA_POSE_ROUTING_SELECTION",
+      "status": "verified_design_decision",
+      "evidence_class": "user_intent_and_literature_synthesis",
+      "finding": "Selected Stage-1 preserves Qwen text decoding and uses LISA-style person-specific <SEG>/<POSE> routing to mature decoders over Qwen-native visual features.",
+      "supports": [
+        "admit E_STAGE1_QWEN_NATIVE_LISA_POSE_ROUTING_V1"
+      ],
+      "does_not_support": [
+        "C1-C3",
+        "expected AP",
+        "actual Qwen visual learning"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E021_LISA_POSE_G0",
+      "status": "verified_gate_pass",
+      "evidence_class": "engineering_and_gradient_gate",
+      "finding": "Qwen-native LISA/SimCC routing passes component, real-collator, owner, shape, finite-loss, all-24-block Vision LoRA, and five-family gradient checks without external image encoders.",
+      "artifact": "research_harness/lisa_pose_routing_g0_20260831.json",
+      "supports": [
+        "admission to G1 overfit-64"
+      ],
+      "does_not_support": [
+        "Stage-1 AP",
+        "Qwen visual representation improvement",
+        "C1-C3"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E022_SIMCC_BF16_FAILURE",
+      "status": "protocol_invalid_implementation_failure",
+      "evidence_class": "engineering_audit",
+      "finding": "The first G1 launch stopped after 3 steps because BF16 quantization rounded the last SimCC bin out of range. No scientific conclusion is allowed.",
+      "artifact": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_g1_joint200_20260831/failure.json",
+      "correction": "FP32 quantization plus post-round clamp and boundary unit test.",
+      "main_table_eligible": false
+    },
+    {
+      "id": "E023_LISA_POSE_JOINT200",
+      "status": "verified_learning_signal_diagnostic",
+      "evidence_class": "training_diagnostic",
+      "finding": "A corrected 200-step run on 57 task-rich images completed with decreasing text, mask, and pose losses and all five gradient families active.",
+      "artifact": "research_harness/lisa_pose_g1_joint200_summary_20260831.json",
+      "supports": [
+        "launch exact-64 metric-bearing overfit run"
+      ],
+      "does_not_support": [
+        "G1 pass",
+        "Stage-1 AP",
+        "C1-C3"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E024_LISA_POSE_EXACT64_JOINT500",
+      "status": "verified_diagnostic_failed_g1_gate",
+      "evidence_class": "training_accuracy_diagnostic",
+      "finding": "The exact-64 500-step joint run completed and learned text/mask/pose losses, but the last full-cycle teacher-forced GT-box Mask IoU 0.417 and Pose PCK@0.05 0.021 did not satisfy G1.",
+      "artifact": "research_harness/lisa_pose_g1_exact64_joint500_summary_20260831.json",
+      "supports": [
+        "decoder warmup before joint tuning",
+        "continue only within G1"
+      ],
+      "does_not_support": [
+        "G1 pass",
+        "5K admission",
+        "C1-C3"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E025_LISA_POSE_EXACT64_JOINT500",
+      "status": "verified_diagnostic_failed_g1_gate",
+      "evidence_class": "teacher_forced_gtbox_training_diagnostic",
+      "finding": "Exact-64 joint500 completed: losses decreased and Mask IoU improved, but last-cycle Mask IoU 0.417 and Pose PCK@0.05 0.021 failed G1.",
+      "artifact": "research_harness/lisa_pose_g1_exact64_joint500_summary_20260831.json",
+      "supports": [
+        "execute decoder-only warmup before joint tuning"
+      ],
+      "does_not_support": [
+        "G1 pass",
+        "free-generation accuracy",
+        "generated-box accuracy",
+        "C1-C3"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E026_WARMUP_BCE_BACKGROUND_SHORTCUT",
+      "status": "verified_training_diagnostic",
+      "evidence_class": "loss_shortcut_audit",
+      "finding": "Decoder-only BCE warmup was stopped after 138 steps because decreasing BCE with high Dice loss and near-zero IoU revealed an all-background mask shortcut.",
+      "artifact": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_g1_warmup1000_softsimcc_20260831/stopped_diagnostic.json",
+      "supports": [
+        "use the pre-registered focal plus dice mask objective"
+      ],
+      "does_not_support": [
+        "method failure",
+        "G1 pass",
+        "C1-C3"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E027_FULL_TRAINING_SCOPE_CORRECTION",
+      "status": "verified_execution_correction",
+      "evidence_class": "user_authorization_and_execution_audit",
+      "finding": "The requested full run was incorrectly replaced by decoder warmup and agent-imposed pilot gates. Warmup completed at 2026-08-31 01:08 CST; full training was not running. Full-dataset joint training is now explicitly authorized.",
+      "supports": [
+        "start full joint training after correctness checks"
+      ],
+      "does_not_support": [
+        "G1 pass",
+        "official AP",
+        "C1-C3"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E028_FULL_JOINT_LAUNCH",
+      "status": "verified_running",
+      "evidence_class": "execution_and_gradient_audit",
+      "dataset_images": 64115,
+      "epochs": 2,
+      "total_optimizer_steps": 32058,
+      "effective_batch_size": 4,
+      "parameter_scope": "Vision/LLM LoRA plus full merger, routing rows and dense modules",
+      "output": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_full_joint_2ep_20260831",
+      "verified_checks": [
+        "14 unit tests",
+        "all training images exist",
+        "crowded-scene and missing-pose collator checks",
+        "separate mask and pose gradients to Vision LoRA",
+        "all five parameter families changed after optimizer step",
+        "first resumable checkpoint saved and read back"
+      ],
+      "supports": [
+        "full training actually started"
+      ],
+      "does_not_support": [
+        "Stage-1 AP",
+        "C1-C3",
+        "full original-parameter fine-tuning"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E029_DECODER_PROVENANCE_CORRECTION",
+      "status": "verified_implementation_provenance_gap",
+      "evidence_class": "code_and_official_method_comparison",
+      "artifact": "/root/autodl-tmp/humanslot/research_harness/full_joint_decoder_provenance_20260831.json",
+      "finding": "Custom combination, not a faithful reproduction of LISA, SAM, SimCC, or ViTPose.",
+      "user_requirement_gap": "The user requested mature decoder reuse rather than custom pose/seg architecture. The current implementation borrows concepts but does not meet faithful reuse.",
+      "main_table_eligible": false
+    },
+    {
+      "id": "E030_STEP2000_GENERATED_EVALUATION",
+      "status": "stopped_by_user",
+      "evidence_class": "generated_validation",
+      "output": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_eval_step2000_nosmall_20260831",
+      "checkpoint_step": 2000,
+      "images": 2693,
+      "GT_in_model_inputs": false,
+      "decoding": "guided JSON free generation; only generated text replayed for hidden states and record scores; dense decoders use predicted boxes",
+      "scorer_parity": "25 metrics exactly match historical no-small scorer on frozen 32-image historical predictions",
+      "grammar_cache_parity": "206 prefixes identical to previous enforcer; only immutable tokenizer data cached",
+      "main_table_eligible": false,
+      "note": "Stopped at user request. Partial predictions and prior diagnostics retained; no full-val result. Epoch-end evaluation cadence remains enabled.",
+      "processed_images": 1309
+    },
+    {
+      "id": "E031_EPOCH_EVALUATION_CADENCE",
+      "status": "configured_verified",
+      "evidence_class": "execution_policy",
+      "policy": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_full_joint_2ep_20260831/evaluation_policy.json",
+      "finding": "Future evaluations run once at the exact end of each epoch. Existing step2000 evaluation continues unchanged. Checkpoint saving remains every500 updates and does not imply evaluation.",
+      "boundaries": [
+        {
+          "epoch": 1,
+          "step": 16029,
+          "examples_seen": 64115
+        },
+        {
+          "epoch": 2,
+          "step": 32058,
+          "examples_seen": 128230
+        }
+      ],
+      "validation": [
+        "34 tests passed",
+        "epoch boundary cursor checks",
+        "no-GPU queue integration completed",
+        "controller restart does not re-evaluate a completed epoch",
+        "shared evaluation lock prevents concurrent evaluators"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E032_STEP2000_DENSE_REVIEW",
+      "status": "verified_diagnostic",
+      "evidence_class": "same_image_rescoring_and_geometry_audit",
+      "artifact": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_eval_step2000_nosmall_20260831/review_summary.json",
+      "finding": {
+        "segment": "AP decreased from19.94 to3.79; empty masks and cross-person mask confusion are observed.",
+        "pose": "AP0.594 is not meaningful skeleton improvement: most joints coincide; only2 nonignored OKS50 true positives, each with1 labeled GT joint.",
+        "format": "All256 outputs passed schema/health checks.",
+        "box": "Current Box AP59.97; dense failures also occur on accurately matched boxes."
+      },
+      "supports": [
+        "step2000 dense outputs remain unreliable",
+        "pose AP increase alone is misleading under degeneration and ignore rules"
+      ],
+      "does_not_support": [
+        "final epoch1/2 results",
+        "architecture-only causal explanation",
+        "Vision representation failure"
+      ],
+      "main_table_eligible": false
+    },
+    {
+      "id": "E033_MULTISOURCE_V5_PREFLIGHT",
+      "status": "verified_engineering_preflight_not_trained",
+      "evidence_class": "dataset_schema_sampling_and_decoder_interface",
+      "finding": "The isolated v5 package validates task-specific missing-label masks, COCO17/MHP16 named pose topology, deterministic person ownership, task-first multi-source sampling, scorer separation, and gradients from segment/parsing losses through official Transformers Mask2Former modules to Qwen feature inputs.",
+      "artifacts": [
+        "human_multitask_v5",
+        "research_harness/branches/F_STAGE1_MULTISOURCE_HUMAN_SLOT_MASK2FORMER_V5.json",
+        "/root/autodl-tmp/humanslot_outputs/v5_manifest_preflight_20260901/audit.json",
+        "/root/autodl-tmp/humanslot_outputs/v5_manifest_preflight_20260901/train_preflight.json"
+      ],
+      "metrics": {
+        "unit_tests_passed": 6,
+        "real_coco_images": 3,
+        "real_coco_persons": 16,
+        "gpu_jobs_started": 0
+      },
+      "supports": [
+        "v5 engineering feasibility",
+        "preservation of partial-label semantics"
+      ],
+      "does_not_support": [
+        "Stage-1 accuracy",
+        "multi-source feasibility before assets",
+        "C1",
+        "C2",
+        "C3"
+      ],
+      "main_table_eligible": false
+    }
+  ]
+}

@@ -1,0 +1,285 @@
+{
+  "summary": {
+    "batches": 4,
+    "samples": 16,
+    "max_persons": 13,
+    "max_total_tokens": 1002,
+    "max_target_tokens": 517,
+    "pose_labels": 43,
+    "seg_labels": 70
+  },
+  "samples": [
+    {
+      "image_id": 372938,
+      "persons": 7,
+      "target_start": 528,
+      "target_tokens": 280,
+      "total_tokens": 808,
+      "pose_labels": 7,
+      "seg_labels": 7,
+      "task_token_counts": {
+        "structure": 145,
+        "box": 105,
+        "pose_route": 7,
+        "seg_route": 7,
+        "gender": 7,
+        "age": 9
+      }
+    },
+    {
+      "image_id": 574769,
+      "persons": 1,
+      "target_start": 568,
+      "target_tokens": 44,
+      "total_tokens": 612,
+      "pose_labels": 1,
+      "seg_labels": 1,
+      "task_token_counts": {
+        "structure": 25,
+        "box": 15,
+        "pose_route": 1,
+        "seg_route": 1,
+        "gender": 1,
+        "age": 1
+      }
+    },
+    {
+      "image_id": 60623,
+      "persons": 3,
+      "target_start": 528,
+      "target_tokens": 114,
+      "total_tokens": 642,
+      "pose_labels": 3,
+      "seg_labels": 3,
+      "task_token_counts": {
+        "structure": 65,
+        "box": 37,
+        "pose_route": 3,
+        "seg_route": 3,
+        "gender": 3,
+        "age": 3
+      }
+    },
+    {
+      "image_id": 113588,
+      "persons": 4,
+      "target_start": 528,
+      "target_tokens": 162,
+      "total_tokens": 690,
+      "pose_labels": 4,
+      "seg_labels": 4,
+      "task_token_counts": {
+        "structure": 85,
+        "box": 60,
+        "pose_route": 4,
+        "seg_route": 4,
+        "gender": 4,
+        "age": 5
+      }
+    },
+    {
+      "image_id": 222564,
+      "persons": 2,
+      "target_start": 568,
+      "target_tokens": 82,
+      "total_tokens": 650,
+      "pose_labels": 2,
+      "seg_labels": 2,
+      "task_token_counts": {
+        "structure": 45,
+        "box": 28,
+        "pose_route": 2,
+        "seg_route": 2,
+        "gender": 2,
+        "age": 3
+      }
+    },
+    {
+      "image_id": 522418,
+      "persons": 1,
+      "target_start": 568,
+      "target_tokens": 43,
+      "total_tokens": 611,
+      "pose_labels": 1,
+      "seg_labels": 1,
+      "task_token_counts": {
+        "structure": 25,
+        "box": 13,
+        "pose_route": 1,
+        "seg_route": 1,
+        "gender": 1,
+        "age": 2
+      }
+    },
+    {
+      "image_id": 184613,
+      "persons": 13,
+      "target_start": 428,
+      "target_tokens": 509,
+      "total_tokens": 937,
+      "pose_labels": 4,
+      "seg_labels": 13,
+      "task_token_counts": {
+        "structure": 269,
+        "box": 187,
+        "pose_route": 13,
+        "seg_route": 13,
+        "gender": 13,
+        "age": 14
+      }
+    },
+    {
+      "image_id": 483108,
+      "persons": 1,
+      "target_start": 528,
+      "target_tokens": 45,
+      "total_tokens": 573,
+      "pose_labels": 1,
+      "seg_labels": 1,
+      "task_token_counts": {
+        "structure": 25,
+        "box": 15,
+        "pose_route": 1,
+        "seg_route": 1,
+        "gender": 1,
+        "age": 2
+      }
+    },
+    {
+      "image_id": 328757,
+      "persons": 1,
+      "target_start": 428,
+      "target_tokens": 45,
+      "total_tokens": 473,
+      "pose_labels": 1,
+      "seg_labels": 1,
+      "task_token_counts": {
+        "structure": 25,
+        "box": 15,
+        "pose_route": 1,
+        "seg_route": 1,
+        "gender": 1,
+        "age": 2
+      }
+    },
+    {
+      "image_id": 318219,
+      "persons": 2,
+      "target_start": 608,
+      "target_tokens": 79,
+      "total_tokens": 687,
+      "pose_labels": 2,
+      "seg_labels": 2,
+      "task_token_counts": {
+        "structure": 45,
+        "box": 25,
+        "pose_route": 2,
+        "seg_route": 2,
+        "gender": 2,
+        "age": 3
+      }
+    },
+    {
+      "image_id": 391895,
+      "persons": 2,
+      "target_start": 488,
+      "target_tokens": 82,
+      "total_tokens": 570,
+      "pose_labels": 1,
+      "seg_labels": 2,
+      "task_token_counts": {
+        "structure": 45,
+        "box": 29,
+        "pose_route": 2,
+        "seg_route": 2,
+        "gender": 2,
+        "age": 2
+      }
+    },
+    {
+      "image_id": 384553,
+      "persons": 1,
+      "target_start": 528,
+      "target_tokens": 44,
+      "total_tokens": 572,
+      "pose_labels": 1,
+      "seg_labels": 1,
+      "task_token_counts": {
+        "structure": 25,
+        "box": 15,
+        "pose_route": 1,
+        "seg_route": 1,
+        "gender": 1,
+        "age": 1
+      }
+    },
+    {
+      "image_id": 293802,
+      "persons": 12,
+      "target_start": 528,
+      "target_tokens": 474,
+      "total_tokens": 1002,
+      "pose_labels": 7,
+      "seg_labels": 12,
+      "task_token_counts": {
+        "structure": 248,
+        "box": 177,
+        "pose_route": 12,
+        "seg_route": 12,
+        "gender": 12,
+        "age": 13
+      }
+    },
+    {
+      "image_id": 5802,
+      "persons": 2,
+      "target_start": 568,
+      "target_tokens": 84,
+      "total_tokens": 652,
+      "pose_labels": 2,
+      "seg_labels": 2,
+      "task_token_counts": {
+        "structure": 45,
+        "box": 29,
+        "pose_route": 2,
+        "seg_route": 2,
+        "gender": 2,
+        "age": 4
+      }
+    },
+    {
+      "image_id": 554625,
+      "persons": 5,
+      "target_start": 528,
+      "target_tokens": 194,
+      "total_tokens": 722,
+      "pose_labels": 5,
+      "seg_labels": 5,
+      "task_token_counts": {
+        "structure": 105,
+        "box": 69,
+        "pose_route": 5,
+        "seg_route": 5,
+        "gender": 5,
+        "age": 5
+      }
+    },
+    {
+      "image_id": 204805,
+      "persons": 13,
+      "target_start": 444,
+      "target_tokens": 517,
+      "total_tokens": 961,
+      "pose_labels": 1,
+      "seg_labels": 13,
+      "task_token_counts": {
+        "structure": 269,
+        "box": 195,
+        "pose_route": 13,
+        "seg_route": 13,
+        "gender": 13,
+        "age": 14
+      }
+    }
+  ]
+}

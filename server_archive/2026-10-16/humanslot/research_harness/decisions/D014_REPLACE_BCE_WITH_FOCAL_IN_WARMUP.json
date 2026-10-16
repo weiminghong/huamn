@@ -1,0 +1,8 @@
+{
+  "schema": "human-slot-decision-v1",
+  "id": "D014_REPLACE_BCE_WITH_FOCAL_IN_WARMUP",
+  "date": "2026-08-31",
+  "status": "accepted",
+  "decision": "Stop BCE warmup after detecting an all-background shortcut and restart with the pre-registered focal plus dice mask objective.",
+  "artifact": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_g1_warmup1000_softsimcc_20260831/stopped_diagnostic.json"
+}

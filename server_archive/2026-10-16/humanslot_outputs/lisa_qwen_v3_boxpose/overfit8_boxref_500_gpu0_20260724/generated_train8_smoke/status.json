@@ -1,0 +1,7 @@
+{
+  "processed": 8,
+  "total": 8,
+  "schema_ok": 8,
+  "health_ok": 8,
+  "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_boxpose/overfit8_boxref_500_gpu0_20260724/final-step-500"
+}

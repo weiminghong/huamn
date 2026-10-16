@@ -1,0 +1,7 @@
+[2026-07-28 20:54:38 CST] quick generated val32 start; bs=1 max_new_tokens=5000 free_gpu_mib=35471
+[2026-07-28 21:09:21 CST] quick generated val32 complete
+[2026-07-28 21:09:21 CST] teacher-forced full val2693 start; bs=1
+[2026-07-28 21:39:31 CST] teacher-forced full val2693 complete
+[2026-07-28 21:39:31 CST] generated full val2693 start; bs=1 max_new_tokens=5000
+[2026-07-29 15:19:47 CST] generated full val2693 complete
+[2026-07-29 15:19:47 CST] epoch1 parallel evaluation pipeline exit rc=0

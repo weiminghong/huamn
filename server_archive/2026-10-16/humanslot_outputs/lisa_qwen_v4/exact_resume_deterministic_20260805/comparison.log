@@ -1,0 +1,8 @@
+{
+  "first": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/epoch-1-step-5",
+  "second": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/resumed/epoch-1-step-5",
+  "exact": true,
+  "tensor_count": 555,
+  "max_abs_difference": 0.0,
+  "differences": []
+}

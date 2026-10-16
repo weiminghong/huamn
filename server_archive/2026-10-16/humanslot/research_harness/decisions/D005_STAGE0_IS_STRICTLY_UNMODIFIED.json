@@ -1,0 +1,20 @@
+{
+  "schema": "human-slot-decision-event-v1",
+  "decision_id": "D005_STAGE0_IS_STRICTLY_UNMODIFIED",
+  "time": "2026-08-30T20:25:00+08:00",
+  "decision": "Define Stage-0 exclusively as unmodified native Qwen. Move the tokenizer-extended zero-step control to Stage-1 and name it S1_INIT_CODEC_0STEP.",
+  "rationale": "Adding location tokens or semantically initializing new embedding rows changes the model interface. Such a model is useful as the exact pre-tuning control for Stage-1, but it is not Stage-0 and must not be called native zero-shot.",
+  "supersedes": "D004_SPLIT_STAGE0_NATIVE_AND_MATCHED_CONTROLS naming only; the two-control comparison remains, but the second control belongs to Stage-1.",
+  "updates": {
+    "stage0": "S0_NATIVE_QWEN_NUMERIC_JSON only",
+    "stage1_pre_tuning_control": "S1_INIT_CODEC_0STEP",
+    "stage0_new_vocabulary": false,
+    "stage0_weight_or_embedding_change": false
+  },
+  "evidence": [
+    "research_harness/stage0_stage1_readiness.json",
+    "research_harness/evidence_ledger.json",
+    "research_harness/requirements.json"
+  ],
+  "reopen_condition": "Any tokenizer or embedding modification in Stage-0 requires an explicit change to the definition of zero-shot and a new decision event."
+}

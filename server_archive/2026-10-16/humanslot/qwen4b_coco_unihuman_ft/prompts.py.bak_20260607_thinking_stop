@@ -1,0 +1,123 @@
+from typing import Optional
+
+from .output_protocol import FORMAT_COMPACT_TAG, FORMAT_TAG, normalize_target_format
+
+DEFAULT_ASSISTANT_PREFIX_TAG = "<answer>\n"
+
+
+COCO_KEYPOINT_ORDER = (
+    "nose,left_eye,right_eye,left_ear,right_ear,"
+    "left_shoulder,right_shoulder,left_elbow,right_elbow,left_wrist,right_wrist,"
+    "left_hip,right_hip,left_knee,right_knee,left_ankle,right_ankle"
+)
+
+
+PROMPT_BOX_POSE_ATTR_TAG = (
+    "<image>\n"
+    "Detect every visible person in the image.\n"
+    "Output exactly one XML block wrapped inside <answer>...</answer>.\n"
+    "Stop immediately after </answer>. Do not output analysis, markdown, examples, or extra text.\n\n"
+    "Allowed tags are only: <answer>, </answer>, <person>, </person>, <box>, </box>, <pose>, </pose>, <gender>, </gender>, <age>, </age>, <score>, </score>.\n"
+    "Do not output XML attributes, JSON keys, bullets, comments, explanations, or schema text.\n"
+    "Each <person> block must contain <box>, <pose>, <gender>, <age>, and <score> tags.\n"
+    "If no visible person exists, output exactly <answer></answer>.\n\n"
+    "Rules:\n"
+    "- Coordinates are normalized integer values in [0,1000].\n"
+    "- Box uses [x1, y1, x2, y2].\n"
+    "- Output only clear person instances. Skip ambiguous tiny regions, body parts, reflections, posters, and low-confidence guesses.\n"
+    "- Do not invent adjacent tiny boxes for a crowd region. When uncertain, prefer fewer high-confidence persons and close the answer.\n"
+    "- Pose contains exactly 17 keypoints in COCO order:\n"
+    "  "
+    f"{COCO_KEYPOINT_ORDER}.\n"
+    "- Each keypoint is [x, y, v], where v is 2 visible, 1 occluded/inferred, 0 missing/out-of-frame.\n"
+    "- In <pose>, output exactly 17 comma-separated triplets, no more and no fewer.\n"
+    "- If uncertain, still output 17 triplets and use [0,0,0] for unknown keypoints.\n"
+    "- If a keypoint is missing (v=0), you MUST output exactly [0,0,0].\n"
+    "- Gender: 0 male, 1 female, -1 unknown.\n"
+    "- Age is estimated age in years; use -1 when unknown.\n"
+    "- Score is confidence in [0,1]; use 1.0 only for very clear persons and lower scores for uncertain visible persons.\n"
+    "- Output nested tags only; do NOT use attributes such as <person box=\"...\"/>.\n\n"
+    "Required per-person tag form:\n"
+    "<person>\n"
+    "<box>[120, 250, 480, 820]</box>\n"
+    "<pose>[250, 300, 2], [260, 280, 2], [240, 280, 2], [280, 290, 2], [220, 290, 2], [300, 350, 2], [200, 350, 2], [350, 450, 2], [150, 450, 2], [380, 500, 1], [120, 500, 2], [280, 600, 2], [220, 600, 2], [290, 750, 1], [210, 750, 1], [0, 0, 0], [0, 0, 0]</pose>\n"
+    "<gender>0</gender>\n"
+    "<age>25</age>\n"
+    "<score>1.0</score>\n"
+    "</person>\n\n"
+    "Never start a new <person> unless you can finish all five child tags and </person>.\n"
+    "Do not repeat persons. Do not output tiny adjacent boxes to fill space.\n"
+    "After the last clear person, immediately write </answer> and stop.\n"
+    "Output tags only.\n"
+    "Answer:"
+)
+
+
+PROMPT_BOX_POSE_ATTR_COMPACT_TAG = (
+    "<image>\n"
+    "[human]\n"
+    "Detect clear visible persons in the image.\n"
+    "Output exactly one compact XML block and stop after </answer>.\n"
+    "Use only these tags: <answer>, </answer>, <p>, </p>, <b>, </b>, <k>, </k>, <g>, </g>, <a>, </a>, <s>, </s>.\n"
+    "No explanations, markdown, JSON, bullets, schema text, repeated persons, or XML attributes.\n\n"
+    "Format:\n"
+    "<answer><p><b>x1,y1,x2,y2</b><k>x0,y0,v0;x1,y1,v1;x2,y2,v2;x3,y3,v3;x4,y4,v4;x5,y5,v5;x6,y6,v6;x7,y7,v7;x8,y8,v8;x9,y9,v9;x10,y10,v10;x11,y11,v11;x12,y12,v12;x13,y13,v13;x14,y14,v14;x15,y15,v15;x16,y16,v16</k><g>gender</g><a>age</a><s>score</s></p></answer>\n\n"
+    "Rules:\n"
+    "- Coordinates are normalized integer values in [0,1000].\n"
+    "- <b> is x1,y1,x2,y2.\n"
+    "- <k> has exactly 17 keypoint triplets in COCO order separated by semicolons.\n"
+    "- <k> must contain exactly 51 numbers and exactly 16 semicolons; close </k> immediately after the 17th triplet.\n"
+    "- Never output an 18th keypoint triplet.\n"
+    "- <k> is pose keypoints, not a copy of <b>; never reuse box corners as keypoints.\n"
+    "  "
+    f"{COCO_KEYPOINT_ORDER}.\n"
+    "- Each keypoint triplet is x,y,v; v is 2 visible, 1 occluded/inferred, 0 missing/out-of-frame.\n"
+    "- Missing or uncertain keypoints must be exactly 0,0,0.\n"
+    "- <g> is 0 male, 1 female, -1 unknown.\n"
+    "- <a> is estimated age in years, or -1 unknown.\n"
+    "- <s> is confidence in [0,1]. Use 1 for clear persons.\n"
+    "- If no visible person exists, output exactly <answer></answer>.\n"
+    "- Start a <p> only when you can finish all six tags and </p>.\n"
+    "- After the last clear person, immediately write </answer> and stop.\n"
+    "Answer:"
+)
+
+
+def build_box_pose_attribute_prompt(
+    extra_instruction: Optional[str] = None,
+    output_format: str = FORMAT_COMPACT_TAG,
+) -> str:
+    fmt = normalize_target_format(output_format)
+    base = PROMPT_BOX_POSE_ATTR_TAG if fmt == FORMAT_TAG else PROMPT_BOX_POSE_ATTR_COMPACT_TAG
+    if extra_instruction:
+        return f"{base}\n{extra_instruction}"
+    return base
+
+
+def build_vl_chat_text(processor, prompt: str, assistant_prefix: str = "") -> str:
+    if hasattr(processor, "apply_chat_template"):
+        messages = [
+            {
+                "role": "user",
+                "content": [
+                    {"type": "image"},
+                    {"type": "text", "text": prompt},
+                ],
+            }
+        ]
+        text = processor.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+    else:
+        text = f"<image>\n{prompt}\nAnswer:"
+    if assistant_prefix:
+        text += assistant_prefix
+    return text
+
+
+def strip_answer_prefix(text: str) -> str:
+    if not isinstance(text, str):
+        return ""
+    stripped = text.lstrip()
+    if stripped.startswith("<answer>"):
+        stripped = stripped[len("<answer>") :]
+        stripped = stripped.lstrip("\r\n")
+    return stripped

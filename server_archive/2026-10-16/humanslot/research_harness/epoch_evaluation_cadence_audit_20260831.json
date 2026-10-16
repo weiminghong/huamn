@@ -1,0 +1,100 @@
+{
+  "configured_at": "2026-08-31T17:35:06.448795+08:00",
+  "policy": {
+    "cadence": "epoch",
+    "step_evaluation_enabled": false,
+    "checkpoint_save_steps": 500,
+    "boundaries": [
+      {
+        "epoch": 1,
+        "step": 16029,
+        "examples_seen": 64115
+      },
+      {
+        "epoch": 2,
+        "step": 32058,
+        "examples_seen": 128230
+      }
+    ],
+    "project_root": "/root/autodl-tmp/humanslot",
+    "python": "/root/miniconda3/envs/human4b/bin/python",
+    "max_new_tokens": 5000,
+    "evaluation_code_sha256": {
+      "human_lisa_pose_stage1/evaluate_generated.py": "3c36dae51e17f668b81dd552698cb8df686cbda6933b93387d0ed455c0c42977",
+      "human_lisa_pose_stage1/guided_cache.py": "0e479d75105101cd5cfd67448f0b72f5a142c4bf78ed50010da4a4f084fccb83",
+      "human_lisa_qwen_v4/inference_v4.py": "33385dcdda6e2bc92f6978229b603c4b530f8d26a199ab68be051ddde3fe925e",
+      "human_lisa_qwen_v4/eval_hqnet_nosmall_v4.py": "1801c305a93d17179d61c3703b0f3db1ed1705f875bfea6c829004fb5b8e242b",
+      "human_lisa_qwen_v4/guided_decode_v4.py": "958d963a3136a1f5e7e826b27d4c9da78d610fd2c9b32daa19bc7add34e41013",
+      "human_lisa_qwen_v1/official_eval_v1.py": "3d41122428332b18b26de66994a56f638fe95e775716aab3379f00bb1a5d9817"
+    },
+    "epoch_output_directories": {
+      "1": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_eval_epoch01_nosmall_20260831",
+      "2": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_eval_epoch02_nosmall_20260831"
+    },
+    "preserve_one_off": {
+      "checkpoint_step": 2000,
+      "output": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_eval_step2000_nosmall_20260831",
+      "pid_at_configuration": 38401,
+      "action": "finish existing evaluation; do not restart or repeat"
+    },
+    "concurrency": {
+      "evaluation_lock": "/root/autodl-tmp/humanslot/.gpu0_evaluation.lock",
+      "controller_lock": "/root/autodl-tmp/humanslot/.epoch_evaluation_watch.lock",
+      "training_reserved_gib": 24,
+      "evaluation_memory_fraction": 0.35,
+      "evaluation_allocator_cap_gib_approx": 28,
+      "cuda_overhead_margin_gib": 8,
+      "combined_budget_gib": 60,
+      "minimum_free_mib": 36000,
+      "maximum_simultaneous_evaluators": 1,
+      "policy": "Single controller; share existing evaluation lock; only overlap this known training job; acquire global GPU lock after training ends."
+    },
+    "environment": {
+      "CUDA_VISIBLE_DEVICES": "0",
+      "PYTHONPATH": "/root/autodl-tmp/humanslot",
+      "OMP_NUM_THREADS": "2",
+      "MKL_NUM_THREADS": "2",
+      "PYTHONUNBUFFERED": "1",
+      "TOKENIZERS_PARALLELISM": "false",
+      "PYTORCH_CUDA_ALLOC_CONF": "expandable_segments:True",
+      "HF_HOME": "/root/autodl-tmp/hf_cache",
+      "HUGGINGFACE_HUB_CACHE": "/root/autodl-tmp/hf_cache/hub",
+      "HF_HUB_OFFLINE": "1",
+      "TRANSFORMERS_OFFLINE": "1"
+    },
+    "authorized_at": "2026-08-31T17:30:31.929413+08:00",
+    "authorization": "User requests once per completed epoch; finish the current one-off evaluation."
+  },
+  "tests_passed": 34,
+  "existing_training_pid": 29370,
+  "existing_step2000_evaluator_pid": 38401,
+  "no_existing_processes_stopped": true,
+  "live_verification": {
+    "checked_at": "2026-08-31T17:38:48.884310+08:00",
+    "locks_held": {
+      ".gpu0_exclusive.lock": true,
+      ".gpu0_evaluation.lock": true,
+      ".epoch_evaluation_watch.lock": true
+    },
+    "controller_pid": 41708,
+    "epoch_jobs": {
+      "1": {
+        "epoch": 1,
+        "examples_seen": 64115,
+        "output": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_eval_epoch01_nosmall_20260831",
+        "status": "waiting_for_epoch",
+        "step": 16029
+      },
+      "2": {
+        "epoch": 2,
+        "examples_seen": 128230,
+        "output": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_eval_epoch02_nosmall_20260831",
+        "status": "waiting_for_epoch",
+        "step": 32058
+      }
+    },
+    "training_pid_preserved": 29370,
+    "one_off_evaluation_pid_preserved": 38401,
+    "current_evaluation_processed": 508
+  }
+}

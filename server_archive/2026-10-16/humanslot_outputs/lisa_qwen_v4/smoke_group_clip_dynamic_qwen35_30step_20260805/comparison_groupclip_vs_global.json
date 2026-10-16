@@ -1,0 +1,87 @@
+{
+  "status": "STARTED 2026-08-05T11:48:19+08:00\nFINISHED 2026-08-05T11:54:16+08:00 exit_code=0",
+  "counts": {
+    "old": 30,
+    "new": 30
+  },
+  "phases": {
+    "hold": {
+      "old": {
+        "loss": 0.8411991119384765,
+        "pose_route_ce": 17.67451400756836,
+        "seg_route_ce": 16.75767078399658,
+        "pose_loss": 0.7054430603981018,
+        "seg_loss": 0.6096311211585999,
+        "token_grad": 8.527717214443001,
+        "non_token_pre": null,
+        "non_token_scale": null,
+        "old_global_scale": 0.14059483689732385
+      },
+      "new": {
+        "loss": 0.8436925888061524,
+        "pose_route_ce": 17.376049423217772,
+        "seg_route_ce": 16.56792869567871,
+        "pose_loss": 0.7123274683952332,
+        "seg_loss": 0.6077468752861023,
+        "token_grad": 13.618276845275796,
+        "non_token_pre": 1.2988712668418885,
+        "non_token_scale": 0.7857405285504313,
+        "old_global_scale": null
+      }
+    },
+    "ramp": {
+      "old": {
+        "loss": 1.1358111798763275,
+        "pose_route_ce": 15.526395702362061,
+        "seg_route_ce": 15.711663579940796,
+        "pose_loss": 0.6362780719995499,
+        "seg_loss": 0.5402407795190811,
+        "token_grad": 43.0678372480111,
+        "non_token_pre": null,
+        "non_token_scale": null,
+        "old_global_scale": 0.03328777375420078
+      },
+      "new": {
+        "loss": 1.099152958393097,
+        "pose_route_ce": 13.993991994857788,
+        "seg_route_ce": 15.085517835617065,
+        "pose_loss": 0.648797407746315,
+        "seg_loss": 0.5089637786149979,
+        "token_grad": 29.09333196383027,
+        "non_token_pre": 1.2086687684059143,
+        "non_token_scale": 0.8331230730517472,
+        "old_global_scale": null
+      }
+    },
+    "final": {
+      "old": {
+        "loss": 1.5539142847061158,
+        "pose_route_ce": 12.970977783203125,
+        "seg_route_ce": 14.337139892578126,
+        "pose_loss": 0.5973359704017639,
+        "seg_loss": 0.5334319353103638,
+        "token_grad": 88.6535646610703,
+        "non_token_pre": null,
+        "non_token_scale": null,
+        "old_global_scale": 0.011601200507597345
+      },
+      "new": {
+        "loss": 1.472473406791687,
+        "pose_route_ce": 11.518132591247559,
+        "seg_route_ce": 13.613287544250488,
+        "pose_loss": 0.6063836216926575,
+        "seg_loss": 0.5096499621868134,
+        "token_grad": 30.7476860133643,
+        "non_token_pre": 1.1801824688911438,
+        "non_token_scale": 0.8563252019960054,
+        "old_global_scale": null
+      }
+    }
+  },
+  "finite": {
+    "stage1_v4_tasks.pt": true,
+    "visual_merger.pt": true,
+    "training_state.pt": true,
+    "adapter_model.safetensors": true
+  }
+}

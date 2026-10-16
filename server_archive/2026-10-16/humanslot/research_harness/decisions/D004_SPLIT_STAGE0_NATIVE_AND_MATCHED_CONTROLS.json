@@ -1,0 +1,21 @@
+{
+  "schema": "human-slot-decision-event-v1",
+  "decision_id": "D004_SPLIT_STAGE0_NATIVE_AND_MATCHED_CONTROLS",
+  "time": "2026-08-30T20:05:00+08:00",
+  "decision": "Define Stage-0 with a true native numeric-JSON zero-shot arm and a separate zero-step codec-initialized arm that exactly matches the Stage-1 grammar.",
+  "rationale": "New loc tokens cannot be emitted meaningfully by an unmodified native Qwen model. Calling that identical-grammar result native zero-shot would be false. Replacing Stage-1 loc tokens with native numeric JSON would increase one-person output to 693 tokens and a 19-person output to 13,095 tokens. Two Stage-0 arms preserve both truthful native capability and a strict pre-tuning control.",
+  "evidence": {
+    "native_three_digit_coordinate_tokens": 3,
+    "one_person_compact_numeric_JSON_tokens": 693,
+    "nineteen_person_compact_numeric_JSON_tokens": 13095,
+    "historical_native_result": "partial box/gender/age only"
+  },
+  "updates": {
+    "readiness": "research_harness/stage0_stage1_readiness.json",
+    "next_action": "A002_FREEZE_STAGE0_STAGE1_INTERFACE",
+    "stage0_qualified": false,
+    "stage1_qualified": false,
+    "stage2_admitted": false
+  },
+  "reopen_condition": "Changing the Stage-1 loc-token grammar or merging the two Stage-0 arms requires a new protocol decision before predictions are generated."
+}

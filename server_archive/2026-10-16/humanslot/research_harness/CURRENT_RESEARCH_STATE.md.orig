@@ -1,0 +1,55 @@
+# Current Human Slot Research State
+
+Updated: 2026-08-30
+
+## Research Question
+
+Can a human-adapted generative VLM provide visual and decoder representations that progressively benefit a DINOv3 human grounder?
+
+## Locked Story
+
+1. Stage-1 teaches a normal generative VLM to serialize structured human perception.
+2. Stage-2 transfers its frozen human-adapted visual representation into DINOv3.
+3. Stage-3 transfers frozen image-conditioned LLM decoder states into the Stage-2 DINOv3 grounder.
+
+## Locked Stage-1 Contract
+
+- Qwen3.5-4B emits box, segment, pose, age, and gender with its standard causal LM head.
+- Pose is COCO-17 autoregressive location and visibility tokens.
+- Segment is autoregressive multi-contour serialization with 64 boundary points per person.
+- Training uses task-balanced next-token cross-entropy.
+- Paper-facing validation uses free generation only.
+- Specialist Stage-1 heads and external segmentation models are prohibited.
+
+## Active Mainline
+
+B_STAGE1_GENERATIVE_HUMAN_SERIALIZATION_V1
+
+Status: codec_passed_interface_unmatched
+
+Current stage: Stage-0 and Stage-1 interface freeze
+
+## Frozen Gates
+
+- G0_codec: deterministic serialization and round-trip unit tests.
+- G1_overfit_64: free-generation overfit capability.
+- G2_pilot_generated_validation: 5,000-record pilot and 256-record generated validation.
+- G3_full_stage1: full no-small-person five-task capability gate.
+
+## Next Action
+
+A002_FREEZE_STAGE0_STAGE1_INTERFACE
+
+Freeze the unmodified Stage-0 native grammar, the separate Stage-1 loc-token grammar, common semantic prompt, canonical parser, confidence rule, generation settings, and the 32-image smoke manifest before any model run.
+
+## Closed Routes
+
+- HQNet or other discriminative Stage-1 heads.
+- SAM, Mask2Former, MaskDINO, or Qwen3-VL-Seg decoder.
+- SEG hidden-state mask heads and dynamic mask heads.
+- ROI heatmap and regression pose heads.
+- The 2026-08-30 dense-head pilot is diagnostic history only.
+
+## Decision Rule
+
+Every new branch must state its paper claim, hypothesis, falsifier, frozen promotion gate, paper destination, controls, cost, decisions for possible outcomes, and reopen condition before code or GPU use.

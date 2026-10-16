@@ -1,0 +1,9 @@
+{
+  "status": "protocol_invalid_implementation_failure",
+  "valid_optimizer_steps_before_failure": 3,
+  "exit_code": 134,
+  "failure": "SimCC BF16 target quantization rounded the upper valid bin to n_classes, triggering CUDA NLL assertion.",
+  "scientific_conclusion": null,
+  "fix": "Quantize targets in FP32 and clamp after rounding; added boundary test.",
+  "superseded_by": "lisa_pose_stage1_g1_joint200_v2_20260831"
+}

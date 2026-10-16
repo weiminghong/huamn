@@ -1,0 +1,50 @@
+{
+  "schema": "lisa-pose-g1-exact64-joint500-v1",
+  "status": "completed_diagnostic_not_qualified",
+  "steps": 500,
+  "selected_records": 64,
+  "unique_images": 64,
+  "elapsed_seconds": 758.2401368618011,
+  "peak_cuda_gib": 31.580360889434814,
+  "first20": {
+    "loss": 15.130185,
+    "text_loss": 0.849454,
+    "dense_loss": 14.280731,
+    "loss_mask_bce": 0.421949,
+    "loss_mask_dice": 0.885564,
+    "loss_pose_x": 6.122092,
+    "loss_pose_y": 6.332385,
+    "loss_pose_visibility": 1.037483,
+    "metric_mask_iou": 0.011754,
+    "metric_pose_pck_005": 0.004005
+  },
+  "last20": {
+    "loss": 11.215434,
+    "text_loss": 0.212441,
+    "dense_loss": 11.002992,
+    "loss_mask_bce": 0.040942,
+    "loss_mask_dice": 0.645419,
+    "loss_pose_x": 4.890638,
+    "loss_pose_y": 5.047799,
+    "loss_pose_visibility": 0.756388,
+    "metric_mask_iou": 0.303438,
+    "metric_pose_pck_005": 0.04194
+  },
+  "best": {
+    "mask_iou": 0.973777,
+    "pose_pck_005": 0.333333
+  },
+  "last_cycle_mean": {
+    "loss": 11.468866,
+    "text_loss": 0.192327,
+    "dense_loss": 11.276539,
+    "loss_mask_bce": 0.066046,
+    "loss_mask_dice": 0.537627,
+    "loss_pose_x": 5.044322,
+    "loss_pose_y": 5.226594,
+    "loss_pose_visibility": 0.803902,
+    "metric_mask_iou": 0.416883,
+    "metric_pose_pck_005": 0.021153
+  },
+  "interpretation": "Joint training clearly learns text and masks and lowers pose CE, but teacher-forced GT-box Pose PCK and average Mask IoU do not satisfy the frozen G1 overfit gate at 500 steps. Free-generation and generated-box gates remain untested."
+}

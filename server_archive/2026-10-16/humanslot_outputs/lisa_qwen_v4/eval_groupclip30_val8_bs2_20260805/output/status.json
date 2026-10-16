@@ -1,0 +1,7 @@
+{
+  "processed": 8,
+  "total": 8,
+  "schema_ok": 1.0,
+  "health_ok": 1.0,
+  "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/run/epoch-1-step-30"
+}

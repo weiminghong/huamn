@@ -1,0 +1,104 @@
+{
+  "protocol": "diagnostic_native_qwen35_zero_shot_guided_json_box_gender_age",
+  "paper_eligibility": "diagnostic_until_score_protocol_is_fixed",
+  "images": 2693,
+  "gt_persons": 10777,
+  "pred_persons": 8306,
+  "schema_ok_rate": 0.9569253620497586,
+  "eos_rate": 0.9587820274786484,
+  "person_count_mae": 1.3364277757148162,
+  "duplicate_pairs_iou90": 3,
+  "invalid_boxes": 0,
+  "avg_generated_tokens": 209.37430375046418,
+  "elapsed_seconds_this_invocation": 32286.323152963072,
+  "generation_seconds_sum": 32231.792051969096,
+  "resumed_rows": 0,
+  "batch_size": 2,
+  "max_new_tokens": 1024,
+  "score_protocol": "self_reported_integer_0_1000_for_primary; constant_1_for_sensitivity",
+  "bbox_AP": 0.3328063587419069,
+  "bbox_AP50": 0.5368558845562654,
+  "bbox_AP75": 0.32875791706189866,
+  "bbox_APs": 0.08239640737908555,
+  "bbox_APm": 0.3653466754083456,
+  "bbox_APl": 0.6734423568920129,
+  "gender_AP": 0.4639822630894066,
+  "gender_AP50": 0.6584314113796348,
+  "gender_AP75": 0.4943396803176049,
+  "age_AP": 0.4023333574433138,
+  "age_AP50": 0.5689262765468938,
+  "age_AP75": 0.4220369534917397,
+  "gender_gt_labeled": 1970,
+  "gender_gt_coverage": 0.18279669666883178,
+  "gender_eval_images": 1149,
+  "age_gt_labeled": 1998,
+  "age_gt_coverage": 0.1853948223067644,
+  "age_eval_images": 1162,
+  "bbox_constant_score_AP": 0.29491262240188193,
+  "bbox_constant_score_AP50": 0.5102621344241413,
+  "bbox_constant_score_AP75": 0.28123641724808535,
+  "bbox_constant_score_APs": 0.07972081263945677,
+  "bbox_constant_score_APm": 0.34729392577643753,
+  "bbox_constant_score_APl": 0.6405620213895613,
+  "model": "/root/autodl-tmp/model/Qwen3.5-4B",
+  "annotation": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json",
+  "prompt": "Detect every clear visible real person in the image exactly once.\nInclude clear partially visible people. Skip reflections, posters, statues, mannequins, isolated body parts, and ambiguous tiny regions.\nOrder persons left-to-right by bounding-box center, breaking ties top-to-bottom.\nReturn JSON only. Do not explain or think aloud.\nFor each person:\n- person_id: consecutive integers starting at 1.\n- bbox: [x1,y1,x2,y2] as tight integer coordinates normalized to [0,1000]. Require x1<x2 and y1<y2.\n- gender: 0 male, 1 female, -1 unknown.\n- age: estimated age in years, or -1 unknown.\n- score: estimated detection confidence as an integer from 0 to 1000.\nStop immediately after the final JSON object. Do not invent extra persons to fill the response.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "persons": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "person_id": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "bbox": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000
+              },
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "gender": {
+              "type": "integer",
+              "enum": [
+                -1,
+                0,
+                1
+              ]
+            },
+            "age": {
+              "type": "integer",
+              "minimum": -1,
+              "maximum": 120
+            },
+            "score": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            }
+          },
+          "required": [
+            "person_id",
+            "bbox",
+            "gender",
+            "age",
+            "score"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required": [
+      "persons"
+    ],
+    "additionalProperties": false
+  }
+}

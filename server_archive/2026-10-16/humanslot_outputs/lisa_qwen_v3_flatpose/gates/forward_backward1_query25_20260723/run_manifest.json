@@ -1,0 +1,155 @@
+{
+  "version": "stage1_v3_flatpose",
+  "run_kind": "overfit",
+  "model": "/root/autodl-tmp/model/Qwen3.5-4B",
+  "train_ann": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_train_v1.json",
+  "train_image_root": "/root/autodl-tmp/coco/train2017",
+  "val_ann": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json",
+  "val_image_root": "/root/autodl-tmp/coco/val2017",
+  "dataset_size": 4,
+  "architecture": {
+    "person_binding": "K=25 image-conditioned person queries with Hungarian assignment",
+    "text_binding": "generated/teacher-forced person records align to matched queries by person box",
+    "box": "native autoregressive integer coordinates plus auxiliary query box/objectness",
+    "pose": "matched person query plus <person>/<pose> hidden states; direct COCO-17 coordinate MLP with no box, ROI, heatmap, or jitter input",
+    "seg": "matched person query plus <seg> hidden state and LISA/PixelLM-style dynamic mask decoder",
+    "missing_labels": "task-specific masking; missing pose/seg labels are never negatives",
+    "vision_features": {
+      "raw_qwen_layers": [
+        8,
+        16,
+        24
+      ],
+      "spatial_pyramid": 3
+    },
+    "decoder_dim": 256,
+    "decoder_heads": 8,
+    "person_query_layers": 3,
+    "pose_decoder_layers": 2,
+    "max_people": 25,
+    "single_forward_backward": true,
+    "references": {
+      "HumanQueryNet": "COCO-UniHuman official 7b5f57b",
+      "GroupPose": "127fe0e (query and loss protocol reference; pose head intentionally simplified)",
+      "LISA": "3cb2d43",
+      "PixelLM": "ebf0792",
+      "PaDT": "912a8ae"
+    }
+  },
+  "prompt": "You are a human-centric structured perception model.\nFind every visible non-crowd real person exactly once and return one JSON object.\n\nReturn schema:\n{\"persons\":[{\"person_id\":1,\"person\":\"<person>\",\"pose\":\"<pose>\",\"seg\":\"<seg>\",\"bbox\":[120,80,640,980],\"gender\":0,\"age\":31}]}\n\nRules:\n- Output JSON only. Do not output markdown, prose, comments, or chain-of-thought.\n- Include every visible person exactly once, including small and partially occluded people.\n- Order people left-to-right by full-body bounding-box center, then top-to-bottom.\n- person_id values must be contiguous integers starting at 1.\n- person, pose, and seg must be exactly \"<person>\", \"<pose>\", and \"<seg>\" in every person record.\n- bbox is [x1,y1,x2,y2] in integer coordinates normalized to 0..1000; require x1 < x2 and y1 < y2.\n- The pose decoder uses COCO-17 order: nose,left_eye,right_eye,left_ear,right_ear,left_shoulder,right_shoulder,left_elbow,right_elbow,left_wrist,right_wrist,left_hip,right_hip,left_knee,right_knee,left_ankle,right_ankle.\n- gender is 0 for male, 1 for female, and -1 when genuinely unknown.\n- age is apparent age in years from 0 to 120, and -1 when genuinely unknown.\n- After the final unique person, immediately close the JSON object and emit EOS.\n- If no person is visible, return exactly {\"persons\":[]}.\n",
+  "token_ids": {
+    "person": 248077,
+    "pose": 248078,
+    "seg": 248079
+  },
+  "max_length": 5000,
+  "truncation": false,
+  "batch_size": 4,
+  "grad_accum_steps": 1,
+  "effective_batch_size": 4,
+  "epochs": 1,
+  "micro_steps_per_epoch": 1,
+  "target_micro_steps": 1,
+  "total_optimizer_steps": 1,
+  "optimizer": {
+    "counts": {
+      "visual_lora": 2359296,
+      "language_lora": 3145728,
+      "token_rows": 7680,
+      "visual_neck": 3680512,
+      "person_query": 3376655,
+      "pose": 2107767,
+      "mask": 1783552
+    },
+    "examples": {
+      "visual_lora": [
+        "base_model.base_model.model.model.visual.blocks.0.attn.qkv.lora_A.default.weight",
+        "base_model.base_model.model.model.visual.blocks.0.attn.qkv.lora_B.default.weight",
+        "base_model.base_model.model.model.visual.blocks.0.attn.proj.lora_A.default.weight",
+        "base_model.base_model.model.model.visual.blocks.0.attn.proj.lora_B.default.weight",
+        "base_model.base_model.model.model.visual.blocks.1.attn.qkv.lora_A.default.weight",
+        "base_model.base_model.model.model.visual.blocks.1.attn.qkv.lora_B.default.weight"
+      ],
+      "language_lora": [
+        "base_model.base_model.model.model.language_model.layers.3.self_attn.q_proj.lora_A.default.weight",
+        "base_model.base_model.model.model.language_model.layers.3.self_attn.q_proj.lora_B.default.weight",
+        "base_model.base_model.model.model.language_model.layers.3.self_attn.k_proj.lora_A.default.weight",
+        "base_model.base_model.model.model.language_model.layers.3.self_attn.k_proj.lora_B.default.weight",
+        "base_model.base_model.model.model.language_model.layers.3.self_attn.v_proj.lora_A.default.weight",
+        "base_model.base_model.model.model.language_model.layers.3.self_attn.v_proj.lora_B.default.weight"
+      ],
+      "token_rows": [
+        "base_model.base_model.model.model.language_model.embed_tokens.token_adapter.trainable_tokens_delta.default"
+      ],
+      "visual_neck": [
+        "visual_neck.input_norm.weight",
+        "visual_neck.input_norm.bias",
+        "visual_neck.input_projection.weight",
+        "visual_neck.input_projection.bias",
+        "visual_neck.level0.0.weight",
+        "visual_neck.level0.0.bias"
+      ],
+      "person_query": [
+        "person_query_decoder.level_embedding",
+        "person_query_decoder.query_content.weight",
+        "person_query_decoder.query_position.weight",
+        "person_query_decoder.layers.0.self_attention.in_proj_weight",
+        "person_query_decoder.layers.0.self_attention.in_proj_bias",
+        "person_query_decoder.layers.0.self_attention.out_proj.weight"
+      ],
+      "pose": [
+        "pose_decoder.person_projection.0.weight",
+        "pose_decoder.person_projection.0.bias",
+        "pose_decoder.person_projection.1.weight",
+        "pose_decoder.person_projection.1.bias",
+        "pose_decoder.pose_projection.0.weight",
+        "pose_decoder.pose_projection.0.bias"
+      ],
+      "mask": [
+        "mask_decoder.query_projection.0.weight",
+        "mask_decoder.query_projection.0.bias",
+        "mask_decoder.query_projection.1.weight",
+        "mask_decoder.query_projection.1.bias",
+        "mask_decoder.person_projection.0.weight",
+        "mask_decoder.person_projection.0.bias"
+      ]
+    },
+    "rates": {
+      "visual_lora": 1e-05,
+      "language_lora": 1e-05,
+      "token_rows": 2e-05,
+      "visual_neck": 0.0002,
+      "person_query": 0.0002,
+      "pose": 0.0002,
+      "mask": 0.0002
+    },
+    "groups": 11
+  },
+  "loss_weights": {
+    "ce": 1.0,
+    "query_objectness": 1.0,
+    "query_bbox_l1": 5.0,
+    "query_giou": 2.0,
+    "query_aux": 0.5,
+    "pose_l1": 10.0,
+    "pose_oks": 4.0,
+    "pose_visibility": 1.0,
+    "pose_aux": 0.5,
+    "mask_bce": 2.0,
+    "mask_dice": 5.0
+  },
+  "global_grad_clip": 5.0,
+  "warmup_ratio": 0.0,
+  "scheduler_type": "constant",
+  "bf16": true,
+  "gradient_checkpointing": true,
+  "horizontal_flip_prob": 0.0,
+  "lora": {
+    "rank": 16,
+    "alpha": 32,
+    "dropout": 0.05,
+    "all_visual_blocks": true
+  },
+  "trainable_total": 16461190,
+  "seed": 42
+}

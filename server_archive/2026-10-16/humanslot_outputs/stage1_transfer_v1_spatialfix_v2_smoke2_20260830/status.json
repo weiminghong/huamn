@@ -1,0 +1,13 @@
+{
+  "elapsed_seconds": 28.824653387069702,
+  "observed_gradient_families": [
+    "heads",
+    "language_lora",
+    "merger",
+    "token_rows",
+    "visual_lora"
+  ],
+  "peak_cuda_gib": 21.035348415374756,
+  "status": "completed",
+  "steps": 2
+}

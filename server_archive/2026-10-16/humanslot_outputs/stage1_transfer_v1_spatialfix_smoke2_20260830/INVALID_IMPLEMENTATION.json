@@ -1,0 +1,8 @@
+{
+  "status": "invalid_implementation",
+  "failed_step": 2,
+  "observed_error": "non-finite total loss",
+  "root_cause": "soft box prior used BF16 logit without a finite output bound",
+  "scientific_conclusion": "none",
+  "action": "compute prior in FP32, clamp logits to [-8, 8], and add a finite-value unit test"
+}

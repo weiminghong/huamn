@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/root/miniconda3/envs/human4b/lib/python3.10/site-packages/lmformatenforcer/integrations/transformers.py", line 6, in <module>
+    from transformers.tokenization_utils import PreTrainedTokenizerBase
+ImportError: cannot import name 'PreTrainedTokenizerBase' from 'transformers.tokenization_utils' (unknown location)
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/autodl-tmp/humanslot/human_lisa_qwen_v1/eval_stage1_v1.py", line 18, in <module>
+    from human_lisa_qwen_v1.inference_v1 import (
+  File "/root/autodl-tmp/humanslot/human_lisa_qwen_v1/inference_v1.py", line 20, in <module>
+    from lmformatenforcer.integrations.transformers import (
+  File "/root/miniconda3/envs/human4b/lib/python3.10/site-packages/lmformatenforcer/integrations/transformers.py", line 8, in <module>
+    raise ImportError('transformers is not installed. Please install it with "pip install transformers[torch]"')
+ImportError: transformers is not installed. Please install it with "pip install transformers[torch]"

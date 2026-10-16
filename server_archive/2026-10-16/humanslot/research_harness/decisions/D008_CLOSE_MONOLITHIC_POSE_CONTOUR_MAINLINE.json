@@ -1,0 +1,14 @@
+{
+  "schema": "human-slot-decision-v1",
+  "id": "D008_CLOSE_MONOLITHIC_POSE_CONTOUR_MAINLINE",
+  "date": "2026-08-30",
+  "status": "accepted_methodological_correction",
+  "decision": "Close the monolithic all-person pose plus contour64 Stage-1 mainline. Admit a grounding-first two-turn design with one predicted box per Human Slot, short box-conditioned pose generation, and UFO-style decoder-free mask embedding retrieval.",
+  "basis": [
+    "Pix2Seq v2 conditioning and AP",
+    "UFO mask representation and multi-prediction analysis",
+    "VisionLLM v2 and HQNet high-precision query/decoder evidence",
+    "Youtu-VL grounding-then-segmentation recommendation"
+  ],
+  "consequence": "Cancel A002 old G1. Freeze the revised box-conditioned interface before implementation or GPU use."
+}

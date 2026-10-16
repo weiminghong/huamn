@@ -1,0 +1,7 @@
+{
+  "processed": 32,
+  "total": 32,
+  "schema_ok": 32,
+  "health_ok": 32,
+  "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/epoch-1-step-4008"
+}

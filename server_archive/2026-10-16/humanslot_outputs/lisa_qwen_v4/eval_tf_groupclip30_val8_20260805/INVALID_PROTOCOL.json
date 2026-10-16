@@ -1,0 +1,8 @@
+{
+  "status": "protocol_invalid",
+  "reason": "training_or_generation_prefix_used_Qwen_default_open_think_block",
+  "discovered_at": "2026-08-05T14:00:00+08:00",
+  "scope": "Do not use loss curves, generated outputs, or task metrics as valid v4 protocol evidence.",
+  "retained_use": "Artifacts may only support implementation-mechanics diagnostics such as deterministic resume, memory, or same-invalid-prefix A/B controls.",
+  "replacement_protocol": "apply_chat_template(enable_thinking=False) shared by collator and inference; rerun from fresh base."
+}

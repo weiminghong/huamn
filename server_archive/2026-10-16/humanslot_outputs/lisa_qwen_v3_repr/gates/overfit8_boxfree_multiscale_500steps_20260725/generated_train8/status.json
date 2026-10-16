@@ -1,0 +1,7 @@
+{
+  "processed": 8,
+  "total": 8,
+  "schema_ok": 8,
+  "health_ok": 8,
+  "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_repr/gates/overfit8_boxfree_multiscale_500steps_20260725/final-step-500"
+}

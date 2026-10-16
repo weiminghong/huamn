@@ -1,0 +1,37 @@
+{
+  "adapter": {
+    "keys_saved": 64,
+    "keys_loaded": 64,
+    "differences": 0,
+    "max_abs": 0,
+    "examples": []
+  },
+  "merger": {
+    "keys_saved": 6,
+    "keys_loaded": 6,
+    "differences": 0,
+    "max_abs": 0,
+    "examples": []
+  },
+  "token_rows": {
+    "keys_saved": 2,
+    "keys_loaded": 2,
+    "differences": 0,
+    "max_abs": 0,
+    "examples": []
+  },
+  "pose_decoder": {
+    "keys_saved": 53,
+    "keys_loaded": 53,
+    "differences": 0,
+    "max_abs": 0,
+    "examples": []
+  },
+  "mask_decoder": {
+    "keys_saved": 14,
+    "keys_loaded": 14,
+    "differences": 0,
+    "max_abs": 0,
+    "examples": []
+  }
+}

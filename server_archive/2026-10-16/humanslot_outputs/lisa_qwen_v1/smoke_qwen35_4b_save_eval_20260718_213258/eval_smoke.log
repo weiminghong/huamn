@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/root/autodl-tmp/humanslot/human_lisa_qwen_v1/eval_stage1_v1.py", line 18, in <module>
+    from human_lisa_qwen_v1.inference_v1 import (
+  File "/root/autodl-tmp/humanslot/human_lisa_qwen_v1/inference_v1.py", line 19, in <module>
+    from lmformatenforcer import JsonSchemaParser
+ModuleNotFoundError: No module named 'lmformatenforcer'

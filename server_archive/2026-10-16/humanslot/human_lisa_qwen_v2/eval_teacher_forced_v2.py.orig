@@ -1,0 +1,134 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+from typing import Any, Dict
+
+import torch
+import torch.nn.functional as F
+from torch.utils.data import DataLoader, Dataset
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from human_lisa_qwen_v1.data_v1 import CocoUniHumanV1Dataset
+from human_lisa_qwen_v2.collator_v2 import Stage1V2Collator
+from human_lisa_qwen_v2.inference_v2 import load_stage1_v2_checkpoint
+from human_lisa_qwen_v2.schema_v2 import PROMPT_V2
+from human_lisa_qwen_v2.train_stage1_v2 import MODEL_INPUT_KEYS
+from human_lisa_qwen_v2.training_v2 import move_to_device, scalar_tensors
+
+class ShuffledImageDataset(Dataset):
+    """Keep GT records fixed while replacing only their visual evidence."""
+
+    def __init__(self, dataset: Dataset) -> None:
+        self.dataset = dataset
+        size = len(dataset)
+        self.permutation = list(range(1, size)) + ([0] if size else [])
+
+    def __len__(self) -> int:
+        return len(self.dataset)
+
+    def __getitem__(self, index: int) -> Dict[str, Any]:
+        target = dict(self.dataset[index])
+        target["image"] = self.dataset[self.permutation[index]]["image"]
+        return target
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--checkpoint", required=True)
+    parser.add_argument("--annotation", default="/root/autodl-tmp/coco/unihuman_label/coco_unihuman_train_v1.json")
+    parser.add_argument("--image-root", default="/root/autodl-tmp/coco/train2017")
+    parser.add_argument("--output", required=True)
+    parser.add_argument("--max-samples", type=int, default=32)
+    parser.add_argument("--batch-size", type=int, default=2)
+    parser.add_argument("--shuffle-images", action="store_true")
+    return parser.parse_args()
+
+
+def main() -> None:
+    args = parse_args()
+    device = torch.device("cuda")
+    model, processor, manifest = load_stage1_v2_checkpoint(args.checkpoint, dtype=torch.bfloat16, device=device)
+    processor.tokenizer.padding_side = "right"
+    dataset = CocoUniHumanV1Dataset(
+        args.annotation,
+        args.image_root,
+        training=False,
+        horizontal_flip_prob=0.0,
+        max_samples=args.max_samples,
+    )
+    collator = Stage1V2Collator(processor=processor, token_ids=model.token_ids, prompt=PROMPT_V2, max_length=5000)
+    loader = DataLoader(dataset, batch_size=args.batch_size, shuffle=False, num_workers=2, collate_fn=collator, pin_memory=True)
+    loss_sums: Dict[str, float] = {}
+    batches = 0
+    pose_visible = 0
+    pose_pck_hits = 0
+    pose_distance_sum = 0.0
+    pose_visibility_correct = 0
+    pose_visibility_total = 0
+    mask_people = 0
+    mask_iou_sum = 0.0
+    mask_dice_sum = 0.0
+
+    with torch.no_grad():
+        for raw in loader:
+            batch = move_to_device({name: value for name, value in raw.items() if name in MODEL_INPUT_KEYS}, device)
+            with torch.autocast("cuda", dtype=torch.bfloat16):
+                outputs = model(**batch, return_predictions=True)
+            for name, value in scalar_tensors(outputs).items():
+                loss_sums[name] = loss_sums.get(name, 0.0) + value
+            batches += 1
+            for index, prediction in enumerate(outputs["predictions"]):
+                target_pose = batch["pose_targets"][index].float()
+                predicted_pose = prediction["pose_xy"].float()
+                visibility = target_pose[..., 2].long().clamp(0, 2)
+                visible = visibility > 0
+                pose_indices = batch["pose_person_indices"][index]
+                boxes = batch["box_targets"][index].float().index_select(0, pose_indices)
+                scale = torch.maximum(boxes[:, 2] - boxes[:, 0], boxes[:, 3] - boxes[:, 1]).clamp(min=1e-4)
+                distance = (predicted_pose - target_pose[..., :2]).square().sum(dim=-1).sqrt() / scale[:, None]
+                pose_visible += int(visible.sum())
+                pose_pck_hits += int((distance[visible] <= 0.2).sum())
+                pose_distance_sum += float(distance[visible].sum())
+                predicted_visibility = prediction["pose_visibility"].argmax(dim=-1)
+                pose_visibility_correct += int((predicted_visibility == visibility).sum())
+                pose_visibility_total += int(visibility.numel())
+
+                logits = prediction["mask_logits"].float()
+                targets = batch["seg_targets"][index].float().unsqueeze(1)
+                targets = F.interpolate(targets, size=logits.shape[-2:], mode="nearest")[:, 0] > 0.5
+                predicted = logits.sigmoid() >= 0.5
+                intersection = (predicted & targets).flatten(1).sum(dim=1).float()
+                union = (predicted | targets).flatten(1).sum(dim=1).float().clamp(min=1)
+                denominator = predicted.flatten(1).sum(dim=1) + targets.flatten(1).sum(dim=1)
+                mask_iou_sum += float((intersection / union).sum())
+                mask_dice_sum += float(((2.0 * intersection) / denominator.clamp(min=1)).sum())
+                mask_people += int(logits.shape[0])
+
+    metrics: Dict[str, Any] = {
+        "protocol": "teacher_forced_gt_person_records_shuffled_image_diagnostic" if args.shuffle_images else "teacher_forced_gt_person_records_head_oracle_diagnostic",
+        "images": len(dataset),
+        "checkpoint": args.checkpoint,
+        "pose_visible_keypoints": pose_visible,
+        "pose_pck@0.2_gt_box": pose_pck_hits / max(1, pose_visible),
+        "pose_mean_normalized_error_gt_box": pose_distance_sum / max(1, pose_visible),
+        "pose_visibility_accuracy": pose_visibility_correct / max(1, pose_visibility_total),
+        "seg_people": mask_people,
+        "seg_binary_miou": mask_iou_sum / max(1, mask_people),
+        "seg_binary_dice": mask_dice_sum / max(1, mask_people),
+        "manifest": manifest,
+    }
+    metrics.update({name: value / max(1, batches) for name, value in loss_sums.items()})
+    output = Path(args.output); output.parent.mkdir(parents=True, exist_ok=True)
+    output.write_text(json.dumps(metrics, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(json.dumps(metrics, ensure_ascii=False, indent=2))
+
+
+if __name__ == "__main__":
+    main()

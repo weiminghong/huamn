@@ -1,0 +1,46 @@
+{
+  "area_policy": "HQNet-aligned no-small: COCO area-range ignore, all=[32^2,1e5^2]",
+  "split": "COCO-UniHuman full val, 2693 images",
+  "rows": [
+    {
+      "task": "bbox",
+      "zero_shot_aligned_AP": 0.4979121537479626,
+      "v4_aligned_AP": 0.5228302791135083,
+      "v4_minus_zero_shot_AP": 0.024918125365545718,
+      "hqnet_r50_AP": 0.749
+    },
+    {
+      "task": "segm",
+      "zero_shot_aligned_AP": null,
+      "v4_aligned_AP": 0.17194809887942725,
+      "v4_minus_zero_shot_AP": null,
+      "hqnet_r50_AP": 0.658
+    },
+    {
+      "task": "keypoints",
+      "zero_shot_aligned_AP": null,
+      "v4_aligned_AP": 0.00023738680273224257,
+      "v4_minus_zero_shot_AP": null,
+      "hqnet_r50_AP": 0.693
+    },
+    {
+      "task": "gender",
+      "zero_shot_aligned_AP": 0.48067446712515144,
+      "v4_aligned_AP": 0.5191038860690476,
+      "v4_minus_zero_shot_AP": 0.03842941894389612,
+      "hqnet_r50_AP": 0.56
+    },
+    {
+      "task": "age",
+      "zero_shot_aligned_AP": 0.4163481361352571,
+      "v4_aligned_AP": 0.44492460254690436,
+      "v4_minus_zero_shot_AP": 0.02857646641164724,
+      "hqnet_r50_AP": 0.538
+    }
+  ],
+  "comparability_note": "Area and annotations aligned. Zero-shot lacks segm/keypoints and uses self-reported confidence; v4 uses generated-record mean log-probability, so differences are diagnostic rather than a matched confidence-protocol ablation.",
+  "sources": [
+    "/root/autodl-tmp/humanslot_outputs/qwen35_zero_shot_box_attr_v1/fullval2693_batch2_20260722/eval_hqnet_nosmall_20260809/metrics.json",
+    "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/eval_epoch1_generated_full_val2693_hqnet_nosmall_20260809/metrics.json"
+  ]
+}

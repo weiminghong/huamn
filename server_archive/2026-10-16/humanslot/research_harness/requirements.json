@@ -1,0 +1,137 @@
+{
+  "schema": "human-slot-requirements-v1",
+  "project": "Grounding-First Human Slot Transfer",
+  "updated": "2026-08-31",
+  "positive_claim": "A human-adapted generative VLM learns visual and decoder representations that progressively improve a DINOv3 human grounder through visual transfer and semantic transfer.",
+  "immutable_requirements": {
+    "stage0": {
+      "role": "Document that native Qwen lacks reliable dense human pose and segmentation output; this is motivation context, not a Stage-1 admission gate.",
+      "arms": [
+        "S0_NATIVE_QWEN_NUMERIC_JSON"
+      ],
+      "native_arm": "Unmodified Qwen3.5-4B weights and tokenizer with compact numeric JSON.",
+      "outputs": [
+        "box",
+        "segment",
+        "pose",
+        "age",
+        "gender"
+      ],
+      "primary_inference": "free generation",
+      "confidence": "mean generated log-probability over each complete person span",
+      "evaluation": "Use the verified historical native box/attribute diagnostic and an optional small format smoke only; no full five-task native run is required before Stage-1.",
+      "naming_rule": "Stage-0 means unmodified native Qwen only. Any tokenizer extension belongs to Stage-1 initialization.",
+      "blocks_stage1": false,
+      "dense_output_interpretation": "Segment and pose are unsupported/N/A when the native model does not emit a valid representation; do not spend the main experiment budget forcing a zero-shot grammar it has not learned."
+    },
+    "stage1": {
+      "role": "Teach Qwen Vision human structure while Qwen text decoding produces person slots, boxes, attributes, and LISA-style pose/segment routing tokens.",
+      "base_model": "Qwen3.5-4B",
+      "pre_tuning_control": "S1_INIT_LISA_POSE_ROUTING_0STEP verifies short Human Slot text, owner-specific <POSE>/<SEG> states, Qwen-native dense features, and decoder interfaces at zero optimizer steps.",
+      "decoder_contract": "Box, gender, age, person ordering, and routing tokens use the native Qwen text decoder. <SEG> and <POSE> hidden states condition mature mask and pose decoders that consume Qwen Vision features.",
+      "outputs": [
+        "box",
+        "segment",
+        "pose",
+        "age",
+        "gender"
+      ],
+      "joint_tuning": [
+        "Qwen Vision",
+        "vision merger",
+        "Qwen LLM"
+      ],
+      "mainline_pose_representation": "Person-specific <POSE> hidden state conditions a mature box-conditioned SimCC decoder over Qwen Vision ROI features.",
+      "mainline_segment_representation": "Person-specific <SEG> hidden state conditions a SAM-style mask decoder whose sole image embedding comes from Qwen Vision features.",
+      "location_vocabulary": "Native numeric box tokens; only routing and existing task-anchor tokens are added in active E implementation.",
+      "loss": "Text cross-entropy plus mature mask BCE/focal/dice and SimCC pose/visibility losses.",
+      "forbidden_mainline_components": [
+        "HQNet shared five-task decoder",
+        "SAM image encoder in the mainline",
+        "ViTPose/RTMPose image encoder in the mainline",
+        "raw contour mask generation",
+        "raw multi-person pose coordinate generation",
+        "Mask2Former or MaskDINO mainline decoder"
+      ],
+      "allowed_non_model_operations": [
+        "grammar-constrained autoregressive decoding",
+        "token-sequence parsing",
+        "polygon rasterization for evaluation",
+        "COCO metric computation",
+        "box-conditioned per-person turns",
+        "mask-token/image-token scaled-dot-product retrieval",
+        "mask interpolation for evaluation"
+      ],
+      "baseline_policy": "S1_INIT_CODEC_0STEP is the matched initialization control for the new vocabulary; native Stage-0 is motivation context only.",
+      "trainable_contract": [
+        "Vision LoRA r16 across all 24 blocks",
+        "full vision merger",
+        "LLM attention and MLP LoRA r16 across all 32 blocks",
+        "new tied token rows"
+      ],
+      "allowed_mature_components": [
+        "LISA-style routing token projector",
+        "SAM/SAM2 mask decoder without SAM image encoder",
+        "SimCC pose decoder",
+        "ROIAlign for pose only",
+        "FPN-style Qwen dense adapter",
+        "exact LISA and ViTPose controls"
+      ]
+    },
+    "stage2": {
+      "role": "Test visual transfer from the frozen Stage-1 image encoder to DINOv3.",
+      "frozen": [
+        "Stage-1 Qwen Vision",
+        "Stage-1 vision merger"
+      ],
+      "inputs": [
+        "the same raw RGB image to DINOv3",
+        "frozen Stage-1 visual features through an explicit bridge"
+      ],
+      "trainable": [
+        "DINOv3-side adapters or selected DINOv3 blocks",
+        "fusion bridge",
+        "specialist DINO task decoders"
+      ],
+      "causal_comparison": "DINO-only versus base-Qwen visual transfer versus human-adapted-Qwen visual transfer under matched data, initialization, steps, and decoders."
+    },
+    "stage3": {
+      "role": "Test semantic transfer from the frozen Stage-1 LLM decoder to the Stage-2 DINOv3 grounder.",
+      "frozen": [
+        "entire Stage-1 VLM",
+        "all Stage-1 adapters and token rows"
+      ],
+      "semantic_source": "Image-conditioned hidden states at generated person, pose, segment, age, gender, and task delimiter tokens.",
+      "trainable": [
+        "DINOv3-side semantic bridge",
+        "DINOv3-side adapters or selected DINOv3 blocks",
+        "DINO task decoders"
+      ],
+      "causal_comparison": "Stage-2 versus base-LLM states versus human-adapted-LLM states with random, shuffled-task, and shuffled-person controls."
+    },
+    "paper": {
+      "story_center": "Progressive transfer across Stage-1, Stage-2, and Stage-3.",
+      "non_contributions": [
+        "a new segmentation architecture",
+        "a new pose architecture",
+        "a new external-tool pipeline"
+      ],
+      "evaluation_policy": "Use the same COCO-UniHuman validation records and the paper-aligned no-small-person policy for every comparable result.",
+      "evidence_rule": "Training loss, teacher-forced output, and GT-conditioned decoding are diagnostic only and never substitute for generated validation AP."
+    }
+  },
+  "execution_override": {
+    "date": "2026-08-31",
+    "authority": "latest user correction",
+    "required": "full-dataset joint training",
+    "pilot_accuracy_veto": false,
+    "retain_integrity_checks": true
+  },
+  "evaluation_schedule": {
+    "cadence": "epoch",
+    "once_per_completed_epoch": true,
+    "step_trigger_enabled": false,
+    "preserve_active_one_off": true,
+    "checkpoint_save_cadence_is_independent": true
+  }
+}

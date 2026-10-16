@@ -1,0 +1,843 @@
+{
+  "bbox_AP": 0.08914671054514697,
+  "bbox_AP50": 0.22572031095698297,
+  "bbox_AP75": 0.0605020903757674,
+  "bbox_APs": 0.0,
+  "bbox_APm": 0.04523112347194183,
+  "bbox_APl": 0.31473420230676646,
+  "keypoints_AP": 0.011759736126328697,
+  "keypoints_AP50": 0.054460300850061774,
+  "keypoints_AP75": 0.0007374530556503926,
+  "keypoints_APm": 0.0014340268629412783,
+  "keypoints_APl": 0.025082665935012037,
+  "segm_AP": 0.09063849537210525,
+  "segm_AP50": 0.21920990479787852,
+  "segm_AP75": 0.054807798027772206,
+  "segm_APs": 0.00019801980198019803,
+  "segm_APm": 0.03976816498936813,
+  "segm_APl": 0.31699950316271885,
+  "images": 64,
+  "persons": 266,
+  "per_image": [
+    {
+      "image_id": 397133,
+      "persons": 2,
+      "box_l1": 0.16082763671875,
+      "pose_l1": 0.0388401597738266,
+      "pose_oks": 0.7130807638168335,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.07947620004415512,
+      "mask_dice": 0.5481924414634705
+    },
+    {
+      "image_id": 252219,
+      "persons": 3,
+      "box_l1": 0.0347747802734375,
+      "pose_l1": 0.01986629143357277,
+      "pose_oks": 0.5443423986434937,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.04438556358218193,
+      "mask_dice": 0.2664143443107605
+    },
+    {
+      "image_id": 87038,
+      "persons": 13,
+      "box_l1": 0.06659404933452606,
+      "pose_l1": 0.0258789099752903,
+      "pose_oks": 0.7803925275802612,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.009936679154634476,
+      "mask_dice": 0.7300268411636353
+    },
+    {
+      "image_id": 480985,
+      "persons": 8,
+      "box_l1": 0.105621337890625,
+      "pose_l1": 0.1312391459941864,
+      "pose_oks": 0.8555952906608582,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.014446267858147621,
+      "mask_dice": 0.6726937890052795
+    },
+    {
+      "image_id": 296649,
+      "persons": 12,
+      "box_l1": 0.06848303973674774,
+      "pose_l1": 0.02725040540099144,
+      "pose_oks": 0.7727863192558289,
+      "pose_heatmap": 0.0,
+      "mask_bce": 0.022449685260653496,
+      "mask_dice": 0.6545929908752441
+    },
+    {
+      "image_id": 386912,
+      "persons": 1,
+      "box_l1": 0.436279296875,
+      "pose_l1": 0.433441162109375,
+      "pose_oks": 1.0,
+      "pose_heatmap": -0.0,
+      "mask_bce": 1.1025972366333008,
+      "mask_dice": 0.997996985912323
+    },
+    {
+      "image_id": 348881,
+      "persons": 2,
+      "box_l1": 0.0565185546875,
+      "pose_l1": 0.016977164894342422,
+      "pose_oks": 0.7632290720939636,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.007167906500399113,
+      "mask_dice": 0.3662385642528534
+    },
+    {
+      "image_id": 522713,
+      "persons": 2,
+      "box_l1": 0.1259765625,
+      "pose_l1": -0.0,
+      "pose_oks": -0.0,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.0018359374953433871,
+      "mask_dice": 0.25000205636024475
+    },
+    {
+      "image_id": 181666,
+      "persons": 3,
+      "box_l1": 0.035247802734375,
+      "pose_l1": 0.01731770858168602,
+      "pose_oks": 0.7546468377113342,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.005042715929448605,
+      "mask_dice": 0.2744207978248596
+    },
+    {
+      "image_id": 17627,
+      "persons": 4,
+      "box_l1": 0.069580078125,
+      "pose_l1": -0.0,
+      "pose_oks": -0.0,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.007983515970408916,
+      "mask_dice": 0.7924767732620239
+    },
+    {
+      "image_id": 143931,
+      "persons": 1,
+      "box_l1": 0.0615234375,
+      "pose_l1": 0.0360243059694767,
+      "pose_oks": 0.9137352705001831,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.028178930282592773,
+      "mask_dice": 0.3211974501609802
+    },
+    {
+      "image_id": 303818,
+      "persons": 12,
+      "box_l1": 0.06389109790325165,
+      "pose_l1": 0.0,
+      "pose_oks": 0.0,
+      "pose_heatmap": 0.0,
+      "mask_bce": 0.017810460180044174,
+      "mask_dice": 0.8413891792297363
+    },
+    {
+      "image_id": 463730,
+      "persons": 13,
+      "box_l1": 0.07518592476844788,
+      "pose_l1": 0.014484274201095104,
+      "pose_oks": 0.6692665815353394,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.014047390781342983,
+      "mask_dice": 0.72845858335495
+    },
+    {
+      "image_id": 460347,
+      "persons": 2,
+      "box_l1": 0.095458984375,
+      "pose_l1": -0.0,
+      "pose_oks": -0.0,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.0027596617583185434,
+      "mask_dice": 0.69037926197052
+    },
+    {
+      "image_id": 322864,
+      "persons": 1,
+      "box_l1": 0.10546875,
+      "pose_l1": -0.0,
+      "pose_oks": -0.0,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.004241366405040026,
+      "mask_dice": 0.6269501447677612
+    },
+    {
+      "image_id": 308394,
+      "persons": 1,
+      "box_l1": 0.0294189453125,
+      "pose_l1": 0.02714844048023224,
+      "pose_oks": 0.41569608449935913,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.04382557049393654,
+      "mask_dice": 0.13201403617858887
+    },
+    {
+      "image_id": 456496,
+      "persons": 1,
+      "box_l1": 0.03173828125,
+      "pose_l1": 0.05108173191547394,
+      "pose_oks": 0.6185469627380371,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.05137519910931587,
+      "mask_dice": 0.14063555002212524
+    },
+    {
+      "image_id": 565778,
+      "persons": 4,
+      "box_l1": 0.16668701171875,
+      "pose_l1": 0.03079928271472454,
+      "pose_oks": 0.9995771050453186,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.012061388231813908,
+      "mask_dice": 0.7228097915649414
+    },
+    {
+      "image_id": 25560,
+      "persons": 1,
+      "box_l1": 0.08740234375,
+      "pose_l1": 0.04169921949505806,
+      "pose_oks": 0.9444887042045593,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.04380131885409355,
+      "mask_dice": 0.21453022956848145
+    },
+    {
+      "image_id": 85329,
+      "persons": 1,
+      "box_l1": 0.067138671875,
+      "pose_l1": 0.05117187649011612,
+      "pose_oks": 0.5934363603591919,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.20453575253486633,
+      "mask_dice": 0.18748021125793457
+    },
+    {
+      "image_id": 329323,
+      "persons": 13,
+      "box_l1": 0.15515078604221344,
+      "pose_l1": 0.0886814296245575,
+      "pose_oks": 0.8651801943778992,
+      "pose_heatmap": 0.0,
+      "mask_bce": 0.13693483173847198,
+      "mask_dice": 0.7770226001739502
+    },
+    {
+      "image_id": 239274,
+      "persons": 13,
+      "box_l1": 0.09613507986068726,
+      "pose_l1": 0.0,
+      "pose_oks": 0.0,
+      "pose_heatmap": 0.0,
+      "mask_bce": 0.006274428218603134,
+      "mask_dice": 0.7832173109054565
+    },
+    {
+      "image_id": 233771,
+      "persons": 10,
+      "box_l1": 0.09291992336511612,
+      "pose_l1": 0.06237398460507393,
+      "pose_oks": 0.9088311791419983,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.06508743017911911,
+      "mask_dice": 0.7456449866294861
+    },
+    {
+      "image_id": 301867,
+      "persons": 3,
+      "box_l1": 0.03108724020421505,
+      "pose_l1": 0.02562314085662365,
+      "pose_oks": 0.4045904874801636,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.0845622643828392,
+      "mask_dice": 0.22886890172958374
+    },
+    {
+      "image_id": 312421,
+      "persons": 6,
+      "box_l1": 0.1042582243680954,
+      "pose_l1": 0.03530273586511612,
+      "pose_oks": 0.8145893812179565,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.1463945209980011,
+      "mask_dice": 0.6238262057304382
+    },
+    {
+      "image_id": 185250,
+      "persons": 2,
+      "box_l1": 0.0913238525390625,
+      "pose_l1": 0.018841911107301712,
+      "pose_oks": 0.30038464069366455,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.024420324712991714,
+      "mask_dice": 0.24932515621185303
+    },
+    {
+      "image_id": 356427,
+      "persons": 1,
+      "box_l1": 0.04833984375,
+      "pose_l1": 0.029937744140625,
+      "pose_oks": 0.4591658115386963,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.04572123661637306,
+      "mask_dice": 0.1191401481628418
+    },
+    {
+      "image_id": 360661,
+      "persons": 4,
+      "box_l1": 0.0552825927734375,
+      "pose_l1": 0.01805388554930687,
+      "pose_oks": 0.7003196477890015,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.01013256423175335,
+      "mask_dice": 0.38049307465553284
+    },
+    {
+      "image_id": 16228,
+      "persons": 13,
+      "box_l1": 0.08790706098079681,
+      "pose_l1": 0.0881696566939354,
+      "pose_oks": 1.0,
+      "pose_heatmap": 0.0,
+      "mask_bce": 0.018034333363175392,
+      "mask_dice": 0.8225589394569397
+    },
+    {
+      "image_id": 266409,
+      "persons": 1,
+      "box_l1": 0.03955078125,
+      "pose_l1": 0.016027113422751427,
+      "pose_oks": 0.23261404037475586,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.026075860485434532,
+      "mask_dice": 0.10454940795898438
+    },
+    {
+      "image_id": 430961,
+      "persons": 2,
+      "box_l1": 0.23793792724609375,
+      "pose_l1": 0.15796616673469543,
+      "pose_oks": 0.8898046016693115,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.4952531158924103,
+      "mask_dice": 0.855521559715271
+    },
+    {
+      "image_id": 80671,
+      "persons": 1,
+      "box_l1": 0.02197265625,
+      "pose_l1": 0.04658777639269829,
+      "pose_oks": 0.7053749561309814,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.05204927176237106,
+      "mask_dice": 0.12865447998046875
+    },
+    {
+      "image_id": 577539,
+      "persons": 2,
+      "box_l1": 0.28559112548828125,
+      "pose_l1": 0.11932373046875,
+      "pose_oks": 0.9999635219573975,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.15303480625152588,
+      "mask_dice": 0.6315329074859619
+    },
+    {
+      "image_id": 476258,
+      "persons": 1,
+      "box_l1": 0.0323486328125,
+      "pose_l1": 0.024261474609375,
+      "pose_oks": 0.33748775720596313,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.11733190715312958,
+      "mask_dice": 0.17340677976608276
+    },
+    {
+      "image_id": 448365,
+      "persons": 1,
+      "box_l1": 0.023193359375,
+      "pose_l1": 0.04010009765625,
+      "pose_oks": 0.6274596452713013,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.07064506411552429,
+      "mask_dice": 0.13713723421096802
+    },
+    {
+      "image_id": 35197,
+      "persons": 2,
+      "box_l1": 0.0345458984375,
+      "pose_l1": 0.03253728896379471,
+      "pose_oks": 0.7121556997299194,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.06557424366474152,
+      "mask_dice": 0.26825931668281555
+    },
+    {
+      "image_id": 349860,
+      "persons": 3,
+      "box_l1": 0.1030476912856102,
+      "pose_l1": 0.050537109375,
+      "pose_oks": 0.875398576259613,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.015889570116996765,
+      "mask_dice": 0.4987888038158417
+    },
+    {
+      "image_id": 180135,
+      "persons": 1,
+      "box_l1": 0.0431976318359375,
+      "pose_l1": 0.05848277732729912,
+      "pose_oks": 0.5034012794494629,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.426021009683609,
+      "mask_dice": 0.28544193506240845
+    },
+    {
+      "image_id": 486438,
+      "persons": 1,
+      "box_l1": 0.026544570922851562,
+      "pose_l1": 0.1328125,
+      "pose_oks": 0.9884820580482483,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.1967133730649948,
+      "mask_dice": 0.2038438320159912
+    },
+    {
+      "image_id": 400573,
+      "persons": 4,
+      "box_l1": 0.09062528610229492,
+      "pose_l1": 0.1156412810087204,
+      "pose_oks": 0.7573228478431702,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.051777809858322144,
+      "mask_dice": 0.5939320921897888
+    },
+    {
+      "image_id": 370677,
+      "persons": 3,
+      "box_l1": 0.02116648480296135,
+      "pose_l1": 0.02700195275247097,
+      "pose_oks": 0.40145525336265564,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.10519817471504211,
+      "mask_dice": 0.19100646674633026
+    },
+    {
+      "image_id": 502737,
+      "persons": 2,
+      "box_l1": 0.09850120544433594,
+      "pose_l1": 0.4373881220817566,
+      "pose_oks": 1.0,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.7864948511123657,
+      "mask_dice": 0.5293878316879272
+    },
+    {
+      "image_id": 515579,
+      "persons": 3,
+      "box_l1": 0.04461669921875,
+      "pose_l1": 0.04088824987411499,
+      "pose_oks": 0.661302924156189,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.05623101815581322,
+      "mask_dice": 0.4066910147666931
+    },
+    {
+      "image_id": 515445,
+      "persons": 5,
+      "box_l1": 0.13007812201976776,
+      "pose_l1": -0.0,
+      "pose_oks": -0.0,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.01739518530666828,
+      "mask_dice": 0.7075747847557068
+    },
+    {
+      "image_id": 438862,
+      "persons": 6,
+      "box_l1": 0.0360260009765625,
+      "pose_l1": 0.023895680904388428,
+      "pose_oks": 0.579261302947998,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.04367510601878166,
+      "mask_dice": 0.4823392331600189
+    },
+    {
+      "image_id": 180560,
+      "persons": 2,
+      "box_l1": 0.04385852813720703,
+      "pose_l1": 0.0517578199505806,
+      "pose_oks": 0.6557912826538086,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.1916932463645935,
+      "mask_dice": 0.17900434136390686
+    },
+    {
+      "image_id": 321214,
+      "persons": 1,
+      "box_l1": 0.0539093017578125,
+      "pose_l1": 0.07783646881580353,
+      "pose_oks": 0.7124481201171875,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.18635480105876923,
+      "mask_dice": 0.13096344470977783
+    },
+    {
+      "image_id": 474028,
+      "persons": 13,
+      "box_l1": 0.06419255584478378,
+      "pose_l1": 0.03173181414604187,
+      "pose_oks": 0.8207175135612488,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.04266669228672981,
+      "mask_dice": 0.6941625475883484
+    },
+    {
+      "image_id": 355257,
+      "persons": 1,
+      "box_l1": 0.06689453125,
+      "pose_l1": 0.0662667453289032,
+      "pose_oks": 0.9267659783363342,
+      "pose_heatmap": 0.0,
+      "mask_bce": 0.08602508902549744,
+      "mask_dice": 0.2990901470184326
+    },
+    {
+      "image_id": 63154,
+      "persons": 1,
+      "box_l1": 0.04150390625,
+      "pose_l1": 0.04400634765625,
+      "pose_oks": 0.9172463417053223,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.013670971617102623,
+      "mask_dice": 0.3544783592224121
+    },
+    {
+      "image_id": 199551,
+      "persons": 1,
+      "box_l1": 0.05322265625,
+      "pose_l1": 0.0565708726644516,
+      "pose_oks": 0.7254414558410645,
+      "pose_heatmap": 0.0,
+      "mask_bce": 0.03624587506055832,
+      "mask_dice": 0.1371704339981079
+    },
+    {
+      "image_id": 239347,
+      "persons": 2,
+      "box_l1": 0.1285400390625,
+      "pose_l1": 0.09528996795415878,
+      "pose_oks": 0.9638851284980774,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.2713600695133209,
+      "mask_dice": 0.8828262686729431
+    },
+    {
+      "image_id": 514508,
+      "persons": 4,
+      "box_l1": 0.02789306640625,
+      "pose_l1": 0.02684461884200573,
+      "pose_oks": 0.685659646987915,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.04503091797232628,
+      "mask_dice": 0.35011810064315796
+    },
+    {
+      "image_id": 473237,
+      "persons": 1,
+      "box_l1": 0.0244140625,
+      "pose_l1": 0.076904296875,
+      "pose_oks": 0.8071378469467163,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.2177257239818573,
+      "mask_dice": 0.10662621259689331
+    },
+    {
+      "image_id": 78915,
+      "persons": 10,
+      "box_l1": 0.11207550019025803,
+      "pose_l1": 0.07200728356838226,
+      "pose_oks": 0.9553467035293579,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.04413384944200516,
+      "mask_dice": 0.698957085609436
+    },
+    {
+      "image_id": 551215,
+      "persons": 1,
+      "box_l1": 0.0455322265625,
+      "pose_l1": 0.040924072265625,
+      "pose_oks": 0.47108399868011475,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.07905001193284988,
+      "mask_dice": 0.19874870777130127
+    },
+    {
+      "image_id": 544519,
+      "persons": 1,
+      "box_l1": 0.035228729248046875,
+      "pose_l1": 0.06298828125,
+      "pose_oks": 0.6376866102218628,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.22970114648342133,
+      "mask_dice": 0.10917210578918457
+    },
+    {
+      "image_id": 96493,
+      "persons": 1,
+      "box_l1": 0.052600860595703125,
+      "pose_l1": 0.0680745467543602,
+      "pose_oks": 0.6853405237197876,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.10262656956911087,
+      "mask_dice": 0.11845457553863525
+    },
+    {
+      "image_id": 23899,
+      "persons": 3,
+      "box_l1": 0.1509552001953125,
+      "pose_l1": 0.11288747191429138,
+      "pose_oks": 0.7578024864196777,
+      "pose_heatmap": -0.0,
+      "mask_bce": 1.2203810214996338,
+      "mask_dice": 0.6793593168258667
+    },
+    {
+      "image_id": 57597,
+      "persons": 13,
+      "box_l1": 0.08554313331842422,
+      "pose_l1": 0.0423990897834301,
+      "pose_oks": 0.885033905506134,
+      "pose_heatmap": 0.0,
+      "mask_bce": 0.016597934067249298,
+      "mask_dice": 0.7306333780288696
+    },
+    {
+      "image_id": 559842,
+      "persons": 13,
+      "box_l1": 0.07129845768213272,
+      "pose_l1": 0.051963984966278076,
+      "pose_oks": 0.8717320561408997,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.05981317535042763,
+      "mask_dice": 0.7291609048843384
+    },
+    {
+      "image_id": 434230,
+      "persons": 4,
+      "box_l1": 0.052490234375,
+      "pose_l1": 0.008188101463019848,
+      "pose_oks": 0.23567771911621094,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.023505985736846924,
+      "mask_dice": 0.6619421243667603
+    },
+    {
+      "image_id": 428454,
+      "persons": 1,
+      "box_l1": 0.0283203125,
+      "pose_l1": 0.03178267180919647,
+      "pose_oks": 0.5139501690864563,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.048913776874542236,
+      "mask_dice": 0.16146939992904663
+    },
+    {
+      "image_id": 399462,
+      "persons": 3,
+      "box_l1": 0.06448110193014145,
+      "pose_l1": 0.035041578114032745,
+      "pose_oks": 0.6716002225875854,
+      "pose_heatmap": -0.0,
+      "mask_bce": 0.04504087567329407,
+      "mask_dice": 0.2880859375
+    }
+  ],
+  "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v1/stage1_v1_qwen35_4b_5task_3epoch_epochval_20260718_223143_gpu0/train/final-step-5343",
+  "protocol": "diagnostic_gt_person_records_task_heads",
+  "attributes": "oracle_labels_not_reported",
+  "manifest": {
+    "model": "/root/autodl-tmp/model/Qwen3.5-4B",
+    "architecture": {
+      "person_records": "variable_length",
+      "box_head": "token_state_box_quality",
+      "pose_head": "direct_joint_query_reference_sampling",
+      "pose_decoder_type": "direct_joint_query",
+      "pose_reference": {
+        "train": "predicted_box_detached",
+        "eval": "predicted_box_detached",
+        "sampling_points": 8,
+        "refinement_layers": 2
+      },
+      "pose_heatmap_size": 0,
+      "mask_head": "token_state_pixel_decoder",
+      "record_nms": {
+        "near_duplicate_iou": 0.9
+      },
+      "pose_roi_enabled": false,
+      "pose_box_jitter": {
+        "enabled": false,
+        "shift_factor": 0.16,
+        "shift_prob": 0.3,
+        "scale_range": [
+          0.5,
+          1.5
+        ],
+        "scale_prob": 1.0
+      }
+    },
+    "train_ann": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_train_v1.json",
+    "pose_joint_reference": null,
+    "train_image_root": "/root/autodl-tmp/coco/train2017",
+    "val_ann": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json",
+    "val_image_root": "/root/autodl-tmp/coco/val2017",
+    "dataset_size": 64115,
+    "batch_size": 12,
+    "grad_accum_steps": 1,
+    "max_length": 5000,
+    "missing_attribute_loss_weight": 0.0,
+    "trainable_families": [
+      "visual",
+      "language",
+      "box",
+      "pose",
+      "mask"
+    ],
+    "trainable_family_parameters": {
+      "visual": 393216,
+      "language": 3579904,
+      "box": 793605,
+      "pose": 4047193,
+      "mask": 3147520
+    },
+    "parameter_precision": {
+      "frozen_low_precision": 4540051968,
+      "trainable_fp32": 11961438
+    },
+    "resume_optimizer_state": false,
+    "reset_pose_decoder_on_resume": false,
+    "epochs": 1.0,
+    "total_micro_steps": 5343,
+    "total_optimizer_steps": 5343,
+    "base_lr": 1e-05,
+    "visual_lr": 1e-05,
+    "language_lr": 1e-05,
+    "head_lr": 5e-05,
+    "box_lr": 5e-05,
+    "pose_lr": 5e-05,
+    "mask_lr": 2e-05,
+    "warmup_ratio": 0.05,
+    "scheduler_type": "cosine",
+    "grad_clip": 1.0,
+    "task_backbone_grad_scale": 0.02,
+    "visual_lora_blocks": {
+      "start_block": 16,
+      "trainable": 393216,
+      "frozen": 786432
+    },
+    "weight_decay": 0.01,
+    "bf16": true,
+    "visual_lora_fp32_updates": {
+      "enabled": true,
+      "modules": 16
+    },
+    "split_ce_task_backward": true,
+    "visual_gradient_sanitizer": {
+      "enabled": true,
+      "hooks": 32
+    },
+    "seed": 42,
+    "horizontal_flip_prob": 0.5,
+    "lora": {
+      "rank": 8,
+      "alpha": 16,
+      "dropout": 0.05,
+      "targets": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "attn.qkv",
+        "attn.proj",
+        "lm_head"
+      ],
+      "embed_tokens_lora": false,
+      "lm_head_lora": true
+    },
+    "loss_weights": {
+      "ce": 1.0,
+      "box_l1": 5.0,
+      "box_giou": 2.0,
+      "box_quality": 1.0,
+      "pose_l1": 5.0,
+      "pose_oks": 1.5,
+      "pose_heatmap": 0.0,
+      "pose_visibility": 1.0,
+      "mask_bce": 4.0,
+      "mask_dice": 2.0
+    },
+    "decoder_dim": 256,
+    "decoder_heads": 8,
+    "token_ids": {
+      "box": 248077,
+      "pose": 248078,
+      "seg": 248079
+    },
+    "image_token_id": 248056,
+    "optimizer": {
+      "visual_parameters": 393216,
+      "language_parameters": 3579904,
+      "head_parameters": 7988318,
+      "base_parameters": 3973120,
+      "trainable_parameters": 11961438,
+      "optimizer_groups": 8
+    },
+    "trainable_total": 11961438,
+    "trainable_by_group": {
+      "visual_lora": 393216,
+      "language_lora": 3579904,
+      "task_heads": 7988318,
+      "embeddings_or_lm_head": 0,
+      "other": 0
+    },
+    "trainable_examples": {
+      "visual_lora": [
+        "base_model.base_model.model.model.visual.blocks.16.attn.qkv.lora_A.default.weight",
+        "base_model.base_model.model.model.visual.blocks.16.attn.qkv.lora_B.default.weight",
+        "base_model.base_model.model.model.visual.blocks.16.attn.proj.lora_A.default.weight",
+        "base_model.base_model.model.model.visual.blocks.16.attn.proj.lora_B.default.weight",
+        "base_model.base_model.model.model.visual.blocks.17.attn.qkv.lora_A.default.weight"
+      ],
+      "language_lora": [
+        "base_model.base_model.model.model.language_model.layers.3.self_attn.q_proj.lora_A.default.weight",
+        "base_model.base_model.model.model.language_model.layers.3.self_attn.q_proj.lora_B.default.weight",
+        "base_model.base_model.model.model.language_model.layers.3.self_attn.k_proj.lora_A.default.weight",
+        "base_model.base_model.model.model.language_model.layers.3.self_attn.k_proj.lora_B.default.weight",
+        "base_model.base_model.model.model.language_model.layers.3.self_attn.v_proj.lora_A.default.weight"
+      ],
+      "task_heads": [
+        "box_head.project.0.weight",
+        "box_head.project.0.bias",
+        "box_head.project.1.weight",
+        "box_head.project.1.bias",
+        "box_head.box_mlp.0.weight"
+      ],
+      "embeddings_or_lm_head": [],
+      "other": []
+    },
+    "train_state": {
+      "micro_step": 5343,
+      "optimizer_step": 5343,
+      "epoch": 0,
+      "micro_in_epoch": 64115,
+      "samples_seen": 64115
+    }
+  }
+}

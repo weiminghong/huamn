@@ -1,0 +1,104 @@
+{
+  "protocol": "diagnostic_native_qwen35_zero_shot_guided_json_box_gender_age",
+  "paper_eligibility": "diagnostic_until_score_protocol_is_fixed",
+  "images": 32,
+  "gt_persons": 156,
+  "pred_persons": 133,
+  "schema_ok_rate": 0.96875,
+  "eos_rate": 0.96875,
+  "person_count_mae": 1.53125,
+  "duplicate_pairs_iou90": 0,
+  "invalid_boxes": 0,
+  "avg_generated_tokens": 250.375,
+  "elapsed_seconds_this_invocation": 0.7585020530968904,
+  "generation_seconds_sum": 426.143699510023,
+  "resumed_rows": 32,
+  "batch_size": 2,
+  "max_new_tokens": 1024,
+  "score_protocol": "self_reported_integer_0_1000_for_primary; constant_1_for_sensitivity",
+  "bbox_AP": 0.28949550736764734,
+  "bbox_AP50": 0.535280004466958,
+  "bbox_AP75": 0.30204939502614925,
+  "bbox_APs": 0.1266168475986295,
+  "bbox_APm": 0.417405078711288,
+  "bbox_APl": 0.7004147347821957,
+  "gender_AP": 0.5232446063715632,
+  "gender_AP50": 0.7561881199921712,
+  "gender_AP75": 0.6920792124058941,
+  "age_AP": 0.35067951490383337,
+  "age_AP50": 0.5118811850500579,
+  "age_AP75": 0.395049509435597,
+  "gender_gt_labeled": 15,
+  "gender_gt_coverage": 0.09615384615384616,
+  "gender_eval_images": 9,
+  "age_gt_labeled": 15,
+  "age_gt_coverage": 0.09615384615384616,
+  "age_eval_images": 9,
+  "bbox_constant_score_AP": 0.26826645298803997,
+  "bbox_constant_score_AP50": 0.5252890345338673,
+  "bbox_constant_score_AP75": 0.26296583637844934,
+  "bbox_constant_score_APs": 0.12287899835510692,
+  "bbox_constant_score_APm": 0.3949854289513771,
+  "bbox_constant_score_APl": 0.6581406311697947,
+  "model": "/root/autodl-tmp/model/Qwen3.5-4B",
+  "annotation": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json",
+  "prompt": "Detect every clear visible real person in the image exactly once.\nInclude clear partially visible people. Skip reflections, posters, statues, mannequins, isolated body parts, and ambiguous tiny regions.\nOrder persons left-to-right by bounding-box center, breaking ties top-to-bottom.\nReturn JSON only. Do not explain or think aloud.\nFor each person:\n- person_id: consecutive integers starting at 1.\n- bbox: [x1,y1,x2,y2] as tight integer coordinates normalized to [0,1000]. Require x1<x2 and y1<y2.\n- gender: 0 male, 1 female, -1 unknown.\n- age: estimated age in years, or -1 unknown.\n- score: estimated detection confidence as an integer from 0 to 1000.\nStop immediately after the final JSON object. Do not invent extra persons to fill the response.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "persons": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "person_id": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "bbox": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000
+              },
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "gender": {
+              "type": "integer",
+              "enum": [
+                -1,
+                0,
+                1
+              ]
+            },
+            "age": {
+              "type": "integer",
+              "minimum": -1,
+              "maximum": 120
+            },
+            "score": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            }
+          },
+          "required": [
+            "person_id",
+            "bbox",
+            "gender",
+            "age",
+            "score"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required": [
+      "persons"
+    ],
+    "additionalProperties": false
+  }
+}

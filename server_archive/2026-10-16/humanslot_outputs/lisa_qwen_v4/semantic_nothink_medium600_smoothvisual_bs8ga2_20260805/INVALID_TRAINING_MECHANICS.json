@@ -1,0 +1,7 @@
+{
+  "status": "training_mechanics_invalid",
+  "reason": "zero_lr_visual_and_merger_gradients_polluted_non_token_gradient_clipping_and_would_build_Adam_moments",
+  "stopped_at_optimizer_step": 13,
+  "eligibility": "Do not use as stability or performance evidence.",
+  "replacement": "set zero-LR group gradients to None before norm/clipping/optimizer.step; rerun from fresh base."
+}

@@ -1,0 +1,44 @@
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+Loading weights:   0%|          | 0/723 [00:00<?, ?it/s]Loading weights:  13%|█▎        | 97/723 [00:00<00:00, 950.80it/s]Loading weights:  29%|██▉       | 212/723 [00:00<00:00, 1026.96it/s]Loading weights:  51%|█████     | 367/723 [00:00<00:00, 1251.33it/s]Loading weights: 100%|██████████| 723/723 [00:00<00:00, 1821.81it/s]
+/root/miniconda3/envs/human4b/lib/python3.10/site-packages/peft/tuners/tuners_utils.py:1348: UserWarning: Model has `tie_word_embeddings=True` and a tied layer is part of the adapter, but `ensure_weight_tying` is not set to True. This can lead to complications, for example when merging the adapter or converting your model to formats other than safetensors. Check the discussion here: https://github.com/huggingface/peft/issues/2777
+  warnings.warn(msg)
+trainable params: 4,759,552 || all params: 4,544,025,088 || trainable%: 0.1047
+{"training_plan": {"model": "/root/autodl-tmp/model/Qwen3.5-4B", "architecture": {"person_records": "variable_length", "box_head": "token_state_box_quality", "pose_head": "direct_joint_query_reference_sampling", "pose_decoder_type": "direct_joint_query", "pose_reference": {"train": "predicted_box_detached", "eval": "predicted_box_detached", "sampling_points": 8, "refinement_layers": 2}, "pose_heatmap_size": 0, "mask_head": "token_state_pixel_decoder", "record_nms": {"near_duplicate_iou": 0.9}, "pose_roi_enabled": false, "pose_box_jitter": {"enabled": false, "shift_factor": 0.16, "shift_prob": 0.3, "scale_range": [0.5, 1.5], "scale_prob": 1.0}}, "train_ann": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json", "pose_joint_reference": null, "train_image_root": "/root/autodl-tmp/coco/val2017", "val_ann": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json", "val_image_root": "/root/autodl-tmp/coco/val2017", "dataset_size": 1, "batch_size": 1, "grad_accum_steps": 1, "max_length": 5000, "missing_attribute_loss_weight": 0.0, "trainable_families": ["visual", "language", "box", "pose", "mask"], "trainable_family_parameters": {"visual": 393216, "language": 3579904, "box": 793605, "pose": 4047193, "mask": 3147520}, "parameter_precision": {"frozen_low_precision": 4540051968, "trainable_fp32": 11961438}, "resume_optimizer_state": false, "reset_pose_decoder_on_resume": false, "epochs": 1.0, "total_micro_steps": 1, "total_optimizer_steps": 1, "base_lr": 1e-05, "visual_lr": 1e-05, "language_lr": 1e-05, "head_lr": 5e-05, "box_lr": 5e-05, "pose_lr": 5e-05, "mask_lr": 2e-05, "warmup_ratio": 0.05, "scheduler_type": "cosine", "grad_clip": 1.0, "task_backbone_grad_scale": 0.02, "visual_lora_blocks": {"start_block": 16, "trainable": 393216, "frozen": 786432}, "weight_decay": 0.01, "bf16": true, "visual_lora_fp32_updates": {"enabled": true, "modules": 16}, "split_ce_task_backward": true, "visual_gradient_sanitizer": {"enabled": true, "hooks": 32}, "seed": 42, "horizontal_flip_prob": 0.0, "lora": {"rank": 8, "alpha": 16, "dropout": 0.05, "targets": ["q_proj", "k_proj", "v_proj", "o_proj", "attn.qkv", "attn.proj", "lm_head"], "embed_tokens_lora": false, "lm_head_lora": true}, "loss_weights": {"ce": 1.0, "box_l1": 5.0, "box_giou": 2.0, "box_quality": 1.0, "pose_l1": 5.0, "pose_oks": 1.5, "pose_heatmap": 0.0, "pose_visibility": 1.0, "mask_bce": 4.0, "mask_dice": 2.0}, "decoder_dim": 256, "decoder_heads": 8, "token_ids": {"box": 248077, "pose": 248078, "seg": 248079}, "image_token_id": 248056, "optimizer": {"visual_parameters": 393216, "language_parameters": 3579904, "head_parameters": 7988318, "base_parameters": 3973120, "trainable_parameters": 11961438, "optimizer_groups": 8}, "trainable_total": 11961438, "trainable_by_group": {"visual_lora": 393216, "language_lora": 3579904, "task_heads": 7988318, "embeddings_or_lm_head": 0, "other": 0}, "trainable_examples": {"visual_lora": ["base_model.base_model.model.model.visual.blocks.16.attn.qkv.lora_A.default.weight", "base_model.base_model.model.model.visual.blocks.16.attn.qkv.lora_B.default.weight", "base_model.base_model.model.model.visual.blocks.16.attn.proj.lora_A.default.weight", "base_model.base_model.model.model.visual.blocks.16.attn.proj.lora_B.default.weight", "base_model.base_model.model.model.visual.blocks.17.attn.qkv.lora_A.default.weight"], "language_lora": ["base_model.base_model.model.model.language_model.layers.3.self_attn.q_proj.lora_A.default.weight", "base_model.base_model.model.model.language_model.layers.3.self_attn.q_proj.lora_B.default.weight", "base_model.base_model.model.model.language_model.layers.3.self_attn.k_proj.lora_A.default.weight", "base_model.base_model.model.model.language_model.layers.3.self_attn.k_proj.lora_B.default.weight", "base_model.base_model.model.model.language_model.layers.3.self_attn.v_proj.lora_A.default.weight"], "task_heads": ["box_head.project.0.weight", "box_head.project.0.bias", "box_head.project.1.weight", "box_head.project.1.bias", "box_head.box_mlp.0.weight"], "embeddings_or_lm_head": [], "other": []}}}
+Traceback (most recent call last):
+  File "/root/autodl-tmp/humanslot/human_lisa_qwen_v1/train_stage1_v1.py", line 1060, in <module>
+    main()
+  File "/root/autodl-tmp/humanslot/human_lisa_qwen_v1/train_stage1_v1.py", line 894, in main
+    outputs = model(**model_batch)
+  File "/root/miniconda3/envs/human4b/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/root/miniconda3/envs/human4b/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/root/autodl-tmp/humanslot/human_lisa_qwen_v1/modeling_stage1_v1.py", line 265, in forward
+    outputs = self.base_model(
+  File "/root/miniconda3/envs/human4b/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/root/miniconda3/envs/human4b/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/root/miniconda3/envs/human4b/lib/python3.10/site-packages/peft/peft_model.py", line 1993, in forward
+    return self.base_model(
+  File "/root/miniconda3/envs/human4b/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/root/miniconda3/envs/human4b/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/root/miniconda3/envs/human4b/lib/python3.10/site-packages/peft/tuners/tuners_utils.py", line 330, in forward
+    return self.model.forward(*args, **kwargs)
+  File "/root/miniconda3/envs/human4b/lib/python3.10/site-packages/transformers/utils/generic.py", line 911, in wrapper
+    output = func(self, *args, **kwargs)
+  File "/root/miniconda3/envs/human4b/lib/python3.10/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py", line 1804, in forward
+    outputs = self.model(
+  File "/root/miniconda3/envs/human4b/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/root/miniconda3/envs/human4b/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/root/miniconda3/envs/human4b/lib/python3.10/site-packages/transformers/utils/generic.py", line 911, in wrapper
+    output = func(self, *args, **kwargs)
+  File "/root/miniconda3/envs/human4b/lib/python3.10/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py", line 1576, in forward
+    position_ids = self.compute_3d_position_ids(
+  File "/root/miniconda3/envs/human4b/lib/python3.10/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py", line 1489, in compute_3d_position_ids
+    raise ValueError(
+ValueError: Multimodal data was passed (via `image_grid_thw` or `video_grid_thw`) but `mm_token_type_ids` is missing. Please pass `mm_token_type_ids` to the model so that multimodal RoPE (M-RoPE) can be computed correctly. `mm_token_type_ids` is returned by the processor alongside `input_ids`.

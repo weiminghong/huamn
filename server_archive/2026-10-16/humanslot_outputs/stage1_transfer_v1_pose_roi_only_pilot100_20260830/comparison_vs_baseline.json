@@ -1,0 +1,48 @@
+{
+  "classification": "diagnostic",
+  "protocol": {
+    "seed": 42,
+    "steps": 100,
+    "batch_size": 1,
+    "matched_persons": 442,
+    "mask_labels": 442,
+    "pose_labels": 243,
+    "same_examples_and_order": true
+  },
+  "last20_mean": {
+    "baseline": {
+      "mask_dice_loss": 0.6889729232,
+      "pose_relative_loss": 0.2338367820,
+      "pose_absolute_loss": 0.1912768319,
+      "pose_visibility_loss": 0.8462292939,
+      "pose_oks_loss": 0.9889722317
+    },
+    "pose_roi_only": {
+      "mask_dice_loss": 0.6775732994,
+      "pose_relative_loss": 0.2293736339,
+      "pose_absolute_loss": 0.0804075715,
+      "pose_visibility_loss": 0.8250405759,
+      "pose_oks_loss": 0.9210044116
+    }
+  },
+  "within_run_first20_to_last20_percent": {
+    "baseline": {
+      "mask_dice_loss": -21.2569,
+      "pose_relative_loss": -8.5678,
+      "pose_absolute_loss": 3.1478,
+      "pose_oks_loss": 1.3116
+    },
+    "pose_roi_only": {
+      "mask_dice_loss": -23.4371,
+      "pose_relative_loss": -15.3452,
+      "pose_absolute_loss": -34.6290,
+      "pose_oks_loss": -2.7815
+    }
+  },
+  "unit_note": "ROI heatmap CE is normalized by log(HW), so it is not directly compared with the baseline full-image heatmap CE.",
+  "decision": {
+    "promote": "pose_roi_only",
+    "stop": "balanced_mask_bce_plus_soft_box_prior",
+    "next_gate": "implement checkpoint inference and measure validation AP before full Stage-1 training"
+  }
+}

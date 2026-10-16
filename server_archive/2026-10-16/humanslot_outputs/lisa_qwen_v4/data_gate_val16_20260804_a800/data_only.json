@@ -1,0 +1,285 @@
+{
+  "summary": {
+    "batches": 4,
+    "samples": 16,
+    "max_persons": 13,
+    "max_total_tokens": 1084,
+    "max_target_tokens": 516,
+    "pose_labels": 23,
+    "seg_labels": 0
+  },
+  "samples": [
+    {
+      "image_id": 463730,
+      "persons": 13,
+      "target_start": 528,
+      "target_tokens": 516,
+      "total_tokens": 1044,
+      "pose_labels": 4,
+      "seg_labels": 0,
+      "task_token_counts": {
+        "structure": 269,
+        "box": 194,
+        "pose_route": 13,
+        "seg_route": 13,
+        "gender": 13,
+        "age": 14
+      }
+    },
+    {
+      "image_id": 386912,
+      "persons": 1,
+      "target_start": 568,
+      "target_tokens": 45,
+      "total_tokens": 613,
+      "pose_labels": 1,
+      "seg_labels": 0,
+      "task_token_counts": {
+        "structure": 25,
+        "box": 15,
+        "pose_route": 1,
+        "seg_route": 1,
+        "gender": 1,
+        "age": 2
+      }
+    },
+    {
+      "image_id": 348881,
+      "persons": 2,
+      "target_start": 548,
+      "target_tokens": 83,
+      "total_tokens": 631,
+      "pose_labels": 1,
+      "seg_labels": 0,
+      "task_token_counts": {
+        "structure": 45,
+        "box": 30,
+        "pose_route": 2,
+        "seg_route": 2,
+        "gender": 2,
+        "age": 2
+      }
+    },
+    {
+      "image_id": 322864,
+      "persons": 1,
+      "target_start": 528,
+      "target_tokens": 44,
+      "total_tokens": 572,
+      "pose_labels": 0,
+      "seg_labels": 0,
+      "task_token_counts": {
+        "structure": 25,
+        "box": 15,
+        "pose_route": 1,
+        "seg_route": 1,
+        "gender": 1,
+        "age": 1
+      }
+    },
+    {
+      "image_id": 181666,
+      "persons": 3,
+      "target_start": 528,
+      "target_tokens": 118,
+      "total_tokens": 646,
+      "pose_labels": 1,
+      "seg_labels": 0,
+      "task_token_counts": {
+        "structure": 65,
+        "box": 41,
+        "pose_route": 3,
+        "seg_route": 3,
+        "gender": 3,
+        "age": 3
+      }
+    },
+    {
+      "image_id": 252219,
+      "persons": 3,
+      "target_start": 528,
+      "target_tokens": 123,
+      "total_tokens": 651,
+      "pose_labels": 3,
+      "seg_labels": 0,
+      "task_token_counts": {
+        "structure": 65,
+        "box": 44,
+        "pose_route": 3,
+        "seg_route": 3,
+        "gender": 3,
+        "age": 5
+      }
+    },
+    {
+      "image_id": 87038,
+      "persons": 13,
+      "target_start": 568,
+      "target_tokens": 516,
+      "total_tokens": 1084,
+      "pose_labels": 2,
+      "seg_labels": 0,
+      "task_token_counts": {
+        "structure": 269,
+        "box": 195,
+        "pose_route": 13,
+        "seg_route": 13,
+        "gender": 13,
+        "age": 13
+      }
+    },
+    {
+      "image_id": 17627,
+      "persons": 4,
+      "target_start": 568,
+      "target_tokens": 161,
+      "total_tokens": 729,
+      "pose_labels": 0,
+      "seg_labels": 0,
+      "task_token_counts": {
+        "structure": 85,
+        "box": 60,
+        "pose_route": 4,
+        "seg_route": 4,
+        "gender": 4,
+        "age": 4
+      }
+    },
+    {
+      "image_id": 143931,
+      "persons": 1,
+      "target_start": 568,
+      "target_tokens": 44,
+      "total_tokens": 612,
+      "pose_labels": 1,
+      "seg_labels": 0,
+      "task_token_counts": {
+        "structure": 25,
+        "box": 15,
+        "pose_route": 1,
+        "seg_route": 1,
+        "gender": 1,
+        "age": 1
+      }
+    },
+    {
+      "image_id": 480985,
+      "persons": 8,
+      "target_start": 460,
+      "target_tokens": 315,
+      "total_tokens": 775,
+      "pose_labels": 2,
+      "seg_labels": 0,
+      "task_token_counts": {
+        "structure": 165,
+        "box": 118,
+        "pose_route": 8,
+        "seg_route": 8,
+        "gender": 8,
+        "age": 8
+      }
+    },
+    {
+      "image_id": 397133,
+      "persons": 2,
+      "target_start": 528,
+      "target_tokens": 80,
+      "total_tokens": 608,
+      "pose_labels": 2,
+      "seg_labels": 0,
+      "task_token_counts": {
+        "structure": 45,
+        "box": 27,
+        "pose_route": 2,
+        "seg_route": 2,
+        "gender": 2,
+        "age": 2
+      }
+    },
+    {
+      "image_id": 308394,
+      "persons": 1,
+      "target_start": 528,
+      "target_tokens": 45,
+      "total_tokens": 573,
+      "pose_labels": 1,
+      "seg_labels": 0,
+      "task_token_counts": {
+        "structure": 25,
+        "box": 15,
+        "pose_route": 1,
+        "seg_route": 1,
+        "gender": 1,
+        "age": 2
+      }
+    },
+    {
+      "image_id": 303818,
+      "persons": 12,
+      "target_start": 568,
+      "target_tokens": 473,
+      "total_tokens": 1041,
+      "pose_labels": 0,
+      "seg_labels": 0,
+      "task_token_counts": {
+        "structure": 248,
+        "box": 177,
+        "pose_route": 12,
+        "seg_route": 12,
+        "gender": 12,
+        "age": 12
+      }
+    },
+    {
+      "image_id": 522713,
+      "persons": 2,
+      "target_start": 568,
+      "target_tokens": 83,
+      "total_tokens": 651,
+      "pose_labels": 0,
+      "seg_labels": 0,
+      "task_token_counts": {
+        "structure": 45,
+        "box": 30,
+        "pose_route": 2,
+        "seg_route": 2,
+        "gender": 2,
+        "age": 2
+      }
+    },
+    {
+      "image_id": 296649,
+      "persons": 12,
+      "target_start": 528,
+      "target_tokens": 474,
+      "total_tokens": 1002,
+      "pose_labels": 5,
+      "seg_labels": 0,
+      "task_token_counts": {
+        "structure": 248,
+        "box": 178,
+        "pose_route": 12,
+        "seg_route": 12,
+        "gender": 12,
+        "age": 12
+      }
+    },
+    {
+      "image_id": 460347,
+      "persons": 2,
+      "target_start": 528,
+      "target_tokens": 83,
+      "total_tokens": 611,
+      "pose_labels": 0,
+      "seg_labels": 0,
+      "task_token_counts": {
+        "structure": 45,
+        "box": 30,
+        "pose_route": 2,
+        "seg_route": 2,
+        "gender": 2,
+        "age": 2
+      }
+    }
+  ]
+}

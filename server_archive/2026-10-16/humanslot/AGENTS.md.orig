@@ -1,0 +1,40 @@
+# Human Slot Project Instructions
+
+Read `research_harness/requirements.json`, `research_harness/state.json`, and the active branch file before proposing architecture changes or running experiments. Run `python3 scripts/validate_human_slot_harness.py` before every new experiment.
+
+## Locked scientific object
+
+Stage-1 studies a normal generative VLM. Qwen3.5-4B must emit box, segment, pose, age, and gender through its standard tied causal language-model output head as autoregressive tokens.
+
+Stage-1 mainline must not use HQNet heads, SAM, Mask2Former, MaskDINO, ROI heatmaps, pose regression heads, dynamic mask heads, special-token hidden-state mask decoders, or Qwen3-VL-Seg-style dense decoders. These may appear only as clearly labeled external controls after the mainline capability gate.
+
+The active Stage-1 representation is:
+
+- 1000 shared normalized location tokens;
+- COCO-17 pose as autoregressive location and visibility tokens;
+- segmentation as autoregressive multi-contour tokens with a fixed total budget of 64 boundary points per person;
+- age and gender as ordinary categorical/integer tokens;
+- task-balanced next-token cross-entropy;
+- free generation for every reported validation metric.
+
+Grammar-constrained decoding and polygon rasterization are inference/evaluation procedures, not model heads, and are allowed.
+
+## Three-stage story
+
+Stage-1 jointly tunes Qwen Vision, the vision merger, and Qwen LLM to learn human-centric generative representations.
+
+Stage-2 freezes the Stage-1 image encoder and tests whether its visual features benefit a DINOv3 human grounder. DINOv3 still receives the raw RGB image.
+
+Stage-3 freezes the entire Stage-1 VLM and tests whether image-conditioned decoder-token hidden states further benefit the Stage-2 DINOv3 grounder. Only the DINO-side bridge, adapters/selected DINO blocks, and task decoders may train.
+
+The paper contribution is progressive visual and semantic transfer across these stages. A new segmentation head, pose head, or external-tool pipeline is not a contribution.
+
+## Research convergence
+
+Every new branch requires an admission record with a paper claim, hypothesis, falsifier, frozen promotion gate, paper destination, controls, cost, decision for each outcome, and reopen condition.
+
+A failed capability gate closes the representation branch. Do not substitute more epochs, resume training, prompt wording sweeps, new heads, external tools, or claim-shrinking prose.
+
+Training loss, teacher-forced output, GT-conditioned decoding, and generated-format repair are diagnostic. Paper-facing Stage-1 evidence requires free generation and the paper-aligned COCO-UniHuman no-small-person evaluator.
+
+Closed branches remain closed unless the user explicitly changes the scientific object. The current dense-head pilot is diagnostic history and must never be promoted as Stage-1 evidence.

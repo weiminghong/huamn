@@ -1,0 +1,289 @@
+{
+  "batch_size": 4,
+  "component_weights": {
+    "mask_bce": 1.0,
+    "mask_dice": 1.0,
+    "pose_l1": 1.0,
+    "pose_oks": 1.0,
+    "pose_visibility": 0.25
+  },
+  "decoder": {
+    "dim": 256,
+    "heads": 8,
+    "layers": 2
+  },
+  "decoder_start_checksum": {
+    "mask": "ce5659aa2286b2131ebce983374b5026e91bf08bf9b85e2567a4f04d17313670",
+    "pose": "950d28cb757e5f94cd7a2ff3dd52003023481c53299f9047970cce0e5b720ae9"
+  },
+  "deterministic": true,
+  "effective_batch_size": 16,
+  "epochs": 1,
+  "grad_accum_steps": 4,
+  "gradient_clipping": {
+    "non_token_max_norm": 1.0,
+    "token_rows_max_norm": 1.0
+  },
+  "horizontal_flip_prob": 0.0,
+  "images": 80,
+  "max_length": 5000,
+  "merger": {
+    "examples": [
+      "base_model.model.model.visual.merger.norm.weight",
+      "base_model.model.model.visual.merger.norm.bias",
+      "base_model.model.model.visual.merger.linear_fc1.weight",
+      "base_model.model.model.visual.merger.linear_fc1.bias",
+      "base_model.model.model.visual.merger.linear_fc2.weight",
+      "base_model.model.model.visual.merger.linear_fc2.bias"
+    ],
+    "parameters": 27271680,
+    "tensors": 6
+  },
+  "model": "/root/autodl-tmp/model/Qwen3.5-4B",
+  "optimizer": {
+    "groups": [
+      {
+        "family": "visual_lora",
+        "lr": 1e-05,
+        "name": "visual_lora_decay",
+        "weight_decay": 0.01
+      },
+      {
+        "family": "merger",
+        "lr": 1e-05,
+        "name": "merger_no_decay",
+        "weight_decay": 0.0
+      },
+      {
+        "family": "merger",
+        "lr": 1e-05,
+        "name": "merger_decay",
+        "weight_decay": 0.01
+      },
+      {
+        "family": "token_rows",
+        "lr": 2e-05,
+        "name": "token_rows_decay",
+        "weight_decay": 0.01
+      },
+      {
+        "family": "pose_decoder",
+        "lr": 0.0002,
+        "name": "pose_decoder_no_decay",
+        "weight_decay": 0.0
+      },
+      {
+        "family": "pose_decoder",
+        "lr": 0.0002,
+        "name": "pose_decoder_decay",
+        "weight_decay": 0.01
+      },
+      {
+        "family": "mask_decoder",
+        "lr": 0.0002,
+        "name": "mask_decoder_no_decay",
+        "weight_decay": 0.0
+      },
+      {
+        "family": "mask_decoder",
+        "lr": 0.0002,
+        "name": "mask_decoder_decay",
+        "weight_decay": 0.01
+      }
+    ],
+    "trainable_by_family": {
+      "mask_decoder": 2502144,
+      "merger": 27271680,
+      "pose_decoder": 3500549,
+      "token_rows": 5120,
+      "visual_lora": 1048576
+    }
+  },
+  "profile": "vision_tuned",
+  "prompt": "Detect every visible non-crowd real person exactly once.\nReturn one JSON object and nothing else.\nUse this exact schema:\n{\"persons\":[{\"person_id\":1,\"box\":[x1,y1,x2,y2],\"pose\":\"<pose>\",\"seg\":\"<seg>\",\"gender\":0,\"age\":31}]}\nRules:\n- Order people left-to-right by body-box center, then top-to-bottom.\n- person_id must be contiguous starting at 1.\n- box is the full visible body box as four integers from 0 to 1000.\n- box order is x1,y1,x2,y2 with x1<x2 and y1<y2.\n- pose must be exactly \"<pose>\"; its decoder predicts COCO-17 keypoints.\n- seg must be exactly \"<seg>\"; its decoder predicts the person mask.\n- gender is 0 for male, 1 for female, and -1 only when genuinely unknown.\n- age is apparent age in years from 0 to 120, or -1 when genuinely unknown.\n- Do not repeat a person. Close the JSON immediately after the last person.\n- If no person is visible, return exactly {\"persons\":[]}.\n",
+  "resume": {
+    "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/step-3",
+    "epoch_index": 0,
+    "micro_step": 12,
+    "next_batch_index": 12,
+    "optimizer_step": 3,
+    "source_manifest": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/manifest.json"
+  },
+  "resume_signature": {
+    "batch_size": 4,
+    "bf16": true,
+    "component_weights": {
+      "mask_bce": 1.0,
+      "mask_dice": 1.0,
+      "pose_l1": 1.0,
+      "pose_oks": 1.0,
+      "pose_visibility": 0.25
+    },
+    "decoder_dim": 256,
+    "decoder_heads": 8,
+    "decoder_layers": 2,
+    "decoder_warmup_steps": 2,
+    "deterministic": true,
+    "epochs": 1,
+    "grad_accum_steps": 4,
+    "grad_clip": 1.0,
+    "head_lr": 0.0002,
+    "horizontal_flip_prob": 0.0,
+    "images": 80,
+    "lora_alpha": 16,
+    "lora_dropout": 0.05,
+    "lora_r": 8,
+    "max_length": 5000,
+    "max_samples": 80,
+    "merger_lr": 1e-05,
+    "model": "/root/autodl-tmp/model/Qwen3.5-4B",
+    "profile": "vision_tuned",
+    "route_loss_schedule": {
+      "hold_steps": 1,
+      "start_weight": 0.02,
+      "warmup_steps": 3
+    },
+    "seed": 42,
+    "task_weights": {
+      "pose": 1.0,
+      "seg": 1.0,
+      "text": 1.0
+    },
+    "text_weights": {
+      "age": 1.0,
+      "box": 1.0,
+      "gender": 1.0,
+      "pose_route": 0.25,
+      "seg_route": 0.25,
+      "structure": 0.25
+    },
+    "token_grad_clip": 1.0,
+    "token_lr": 2e-05,
+    "total_steps": 5,
+    "train_ann": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_train_v1.json",
+    "train_image_root": "/root/autodl-tmp/coco/train2017",
+    "version": "stage1_v4_resume_v1",
+    "visual_lora_start_block": 16,
+    "visual_lr": 1e-05,
+    "warmup_ratio": 0.03,
+    "weight_decay": 0.01
+  },
+  "resume_signature_sha256": "38f906d4105347700fda5e9df0bd58515245e2f57bcd539c77c98ec049bc0ab1",
+  "route_loss_schedule": {
+    "final_pose_weight": 0.25,
+    "final_seg_weight": 0.25,
+    "hold_steps": 1,
+    "start_weight": 0.02,
+    "warmup_steps": 3
+  },
+  "seed": 42,
+  "task_weights": {
+    "pose": 1.0,
+    "seg": 1.0,
+    "text": 1.0
+  },
+  "text_weights": {
+    "age": 1.0,
+    "box": 1.0,
+    "gender": 1.0,
+    "pose_route": 0.25,
+    "seg_route": 0.25,
+    "structure": 0.25
+  },
+  "token_ids": {
+    "pose": 248077,
+    "seg": 248078
+  },
+  "total_steps": 5,
+  "train_ann": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_train_v1.json",
+  "train_image_root": "/root/autodl-tmp/coco/train2017",
+  "trainable": {
+    "examples": {
+      "mask_decoder": [
+        "mask_decoder.state_project.0.weight",
+        "mask_decoder.state_project.0.bias",
+        "mask_decoder.state_project.1.weight",
+        "mask_decoder.state_project.1.bias",
+        "mask_decoder.visual_project.0.weight",
+        "mask_decoder.visual_project.0.bias",
+        "mask_decoder.visual_project.1.weight",
+        "mask_decoder.visual_project.1.bias"
+      ],
+      "merger": [
+        "base_model.base_model.model.model.visual.merger.norm.weight",
+        "base_model.base_model.model.model.visual.merger.norm.bias",
+        "base_model.base_model.model.model.visual.merger.linear_fc1.weight",
+        "base_model.base_model.model.model.visual.merger.linear_fc1.bias",
+        "base_model.base_model.model.model.visual.merger.linear_fc2.weight",
+        "base_model.base_model.model.model.visual.merger.linear_fc2.bias"
+      ],
+      "pose_decoder": [
+        "pose_decoder.joint_embedding",
+        "pose_decoder.state_project.0.weight",
+        "pose_decoder.state_project.0.bias",
+        "pose_decoder.state_project.1.weight",
+        "pose_decoder.state_project.1.bias",
+        "pose_decoder.visual_project.0.weight",
+        "pose_decoder.visual_project.0.bias",
+        "pose_decoder.visual_project.1.weight"
+      ],
+      "token_rows": [
+        "token_rows.delta"
+      ],
+      "visual_lora": [
+        "base_model.base_model.model.model.visual.blocks.16.attn.qkv.lora_A.default.weight",
+        "base_model.base_model.model.model.visual.blocks.16.attn.qkv.lora_B.default.weight",
+        "base_model.base_model.model.model.visual.blocks.16.attn.proj.lora_A.default.weight",
+        "base_model.base_model.model.model.visual.blocks.16.attn.proj.lora_B.default.weight",
+        "base_model.base_model.model.model.visual.blocks.16.mlp.linear_fc1.lora_A.default.weight",
+        "base_model.base_model.model.model.visual.blocks.16.mlp.linear_fc1.lora_B.default.weight",
+        "base_model.base_model.model.model.visual.blocks.16.mlp.linear_fc2.lora_A.default.weight",
+        "base_model.base_model.model.model.visual.blocks.16.mlp.linear_fc2.lora_B.default.weight"
+      ]
+    },
+    "trainable_by_family": {
+      "mask_decoder": 2502144,
+      "merger": 27271680,
+      "pose_decoder": 3500549,
+      "token_rows": 5120,
+      "visual_lora": 1048576
+    },
+    "trainable_total": 34328069
+  },
+  "truncation": false,
+  "version": "stage1_v4",
+  "visual_lora_targets": [
+    "model.visual.blocks.16.attn.proj",
+    "model.visual.blocks.16.attn.qkv",
+    "model.visual.blocks.16.mlp.linear_fc1",
+    "model.visual.blocks.16.mlp.linear_fc2",
+    "model.visual.blocks.17.attn.proj",
+    "model.visual.blocks.17.attn.qkv",
+    "model.visual.blocks.17.mlp.linear_fc1",
+    "model.visual.blocks.17.mlp.linear_fc2",
+    "model.visual.blocks.18.attn.proj",
+    "model.visual.blocks.18.attn.qkv",
+    "model.visual.blocks.18.mlp.linear_fc1",
+    "model.visual.blocks.18.mlp.linear_fc2",
+    "model.visual.blocks.19.attn.proj",
+    "model.visual.blocks.19.attn.qkv",
+    "model.visual.blocks.19.mlp.linear_fc1",
+    "model.visual.blocks.19.mlp.linear_fc2",
+    "model.visual.blocks.20.attn.proj",
+    "model.visual.blocks.20.attn.qkv",
+    "model.visual.blocks.20.mlp.linear_fc1",
+    "model.visual.blocks.20.mlp.linear_fc2",
+    "model.visual.blocks.21.attn.proj",
+    "model.visual.blocks.21.attn.qkv",
+    "model.visual.blocks.21.mlp.linear_fc1",
+    "model.visual.blocks.21.mlp.linear_fc2",
+    "model.visual.blocks.22.attn.proj",
+    "model.visual.blocks.22.attn.qkv",
+    "model.visual.blocks.22.mlp.linear_fc1",
+    "model.visual.blocks.22.mlp.linear_fc2",
+    "model.visual.blocks.23.attn.proj",
+    "model.visual.blocks.23.attn.qkv",
+    "model.visual.blocks.23.mlp.linear_fc1",
+    "model.visual.blocks.23.mlp.linear_fc2"
+  ]
+}

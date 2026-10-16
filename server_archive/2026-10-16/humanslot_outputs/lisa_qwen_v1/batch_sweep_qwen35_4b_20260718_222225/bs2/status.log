@@ -1,0 +1,6 @@
+[bs-2-start] 2026-07-18T22:22:25+08:00
+exit_code=0
+wall_seconds=27
+{"status": "completed", "train_state": {"micro_step": 0, "optimizer_step": 0, "epoch": 0, "micro_in_epoch": 0, "samples_seen": 0}}
+[bs-2-ok]
+0 MiB, 81920 MiB, 25 %

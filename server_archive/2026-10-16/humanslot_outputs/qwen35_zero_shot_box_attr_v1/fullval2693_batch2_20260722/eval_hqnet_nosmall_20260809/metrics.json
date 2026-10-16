@@ -1,0 +1,56 @@
+{
+  "bbox_AP": 0.4979121537479626,
+  "bbox_AP50": 0.7364585184796615,
+  "bbox_AP75": 0.5207804490623638,
+  "bbox_APm": 0.3653466754083456,
+  "bbox_APl": 0.6734423568920129,
+  "gender_AP": 0.48067446712515144,
+  "gender_AP50": 0.6750305070735441,
+  "gender_AP75": 0.5149558381278916,
+  "gender_APm": 0.24919445607626792,
+  "gender_APl": 0.6310894572203702,
+  "age_AP": 0.4163481361352571,
+  "age_AP50": 0.5827943310879244,
+  "age_AP75": 0.4392025801214841,
+  "age_APm": 0.2219905775556765,
+  "age_APl": 0.540332027118985,
+  "gt_persons_medium_large": 1998,
+  "gt_persons_medium": 710,
+  "gt_persons_large": 1288,
+  "gender_gt_labeled_medium_large": 1959,
+  "age_gt_labeled_medium_large": 1998,
+  "images": 2693,
+  "inference_rows": 2693,
+  "predicted_persons": 8306,
+  "model": "/root/autodl-tmp/model/Qwen3.5-4B",
+  "source_prediction_dir": "/root/autodl-tmp/humanslot_outputs/qwen35_zero_shot_box_attr_v1/fullval2693_batch2_20260722",
+  "annotation": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json",
+  "split": "full_val",
+  "available_tasks": [
+    "bbox",
+    "gender",
+    "age"
+  ],
+  "unavailable_tasks": [
+    "segm",
+    "keypoints"
+  ],
+  "score_protocol": "self_reported_integer_0_1000_for_primary; constant_1_for_sensitivity",
+  "area_policy": {
+    "all": [
+      1024.0,
+      10000000000.0
+    ],
+    "medium": [
+      1024.0,
+      9216.0
+    ],
+    "large": [
+      9216.0,
+      10000000000.0
+    ],
+    "boundary_semantics": "COCO area-range ignore rules"
+  },
+  "protocol": "native_qwen35_zero_shot_existing_predictions_hqnet_paper_no_small_area_aligned_cocoeval",
+  "result_classification": "diagnostic; no new inference; area-aligned but confidence protocol differs from v4 generated evaluation"
+}

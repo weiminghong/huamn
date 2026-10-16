@@ -1,0 +1,8 @@
+{
+  "status": "stopped_diagnostic_mask_background_shortcut",
+  "steps": 138,
+  "exit_code": 130,
+  "finding": "With Qwen learning rates zero and head LR 1e-3, BCE fell while Dice remained near one and Mask IoU stayed near zero, indicating an all-background shortcut.",
+  "scientific_conclusion": "BCE is unsuitable for this warmup configuration; use the pre-registered focal plus dice objective.",
+  "superseded_by": "lisa_pose_stage1_g1_warmup1000_softsimcc_focal_v2_20260831"
+}

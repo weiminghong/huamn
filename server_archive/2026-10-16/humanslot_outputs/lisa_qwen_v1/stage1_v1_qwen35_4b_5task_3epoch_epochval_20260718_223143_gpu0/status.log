@@ -1,0 +1,29 @@
+started_at=2026-07-18T22:31:43+08:00
+gpu=0
+model=/root/autodl-tmp/model/Qwen3.5-4B
+protocol=COCO-UniHuman-v1-five-task-qwen35-4b
+epochs=3
+eval_after_each_epoch=true
+effective_batch=12
+batch_size=12
+grad_accum_steps=1
+max_length=5000
+max_new_tokens=5000
+train_ann=/root/autodl-tmp/coco/unihuman_label/coco_unihuman_train_v1.json
+val_ann=/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json
+train_image_root=/root/autodl-tmp/coco/train2017
+val_image_root=/root/autodl-tmp/coco/val2017
+train_strategy=LoRA language + visual LoRA + box/pose/mask heads
+pose_box_jitter=false
+split_ce_task_backward=true
+language_lr=1e-5
+visual_lr=1e-5
+head_lr=5e-5
+box_lr=5e-5
+pose_lr=5e-5
+mask_lr=2e-5
+[epoch-1-train-start] 2026-07-18T22:31:43+08:00
+epoch_1_checkpoint=/root/autodl-tmp/humanslot_outputs/lisa_qwen_v1/stage1_v1_qwen35_4b_5task_3epoch_epochval_20260718_223143_gpu0/train/final-step-5343
+[epoch-1-eval-start] 2026-07-19T20:01:40+08:00
+epoch_1_eval_dir=/root/autodl-tmp/humanslot_outputs/lisa_qwen_v1/stage1_v1_qwen35_4b_5task_3epoch_epochval_20260718_223143_gpu0/eval_val_full_epoch1_final-step-5343
+[epoch-2-train-start] 2026-07-20T08:50:13+08:00

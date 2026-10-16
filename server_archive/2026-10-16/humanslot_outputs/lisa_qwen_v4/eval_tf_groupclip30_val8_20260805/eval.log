@@ -1,0 +1,306 @@
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+Loading weights:   0%|          | 0/723 [00:00<?, ?it/s]Loading weights: 100%|██████████| 723/723 [00:00<00:00, 9019.15it/s]
+{"processed": 1, "total": 8, "pose_labels": 2, "seg_labels": 2, "pose_pck_bbox_0.2": 0.0, "seg_miou": 0.2735132017458712}
+{"processed": 2, "total": 8, "pose_labels": 5, "seg_labels": 5, "pose_pck_bbox_0.2": 0.0, "seg_miou": 0.18456783897771123}
+{"processed": 3, "total": 8, "pose_labels": 7, "seg_labels": 18, "pose_pck_bbox_0.2": 0.0, "seg_miou": 0.05126884416047534}
+{"processed": 4, "total": 8, "pose_labels": 9, "seg_labels": 26, "pose_pck_bbox_0.2": 0.0, "seg_miou": 0.03549381518802139}
+{"processed": 5, "total": 8, "pose_labels": 14, "seg_labels": 38, "pose_pck_bbox_0.2": 0.0, "seg_miou": 0.02449589010714995}
+{"processed": 6, "total": 8, "pose_labels": 15, "seg_labels": 39, "pose_pck_bbox_0.2": 0.0, "seg_miou": 0.04300424585885083}
+{"processed": 7, "total": 8, "pose_labels": 16, "seg_labels": 41, "pose_pck_bbox_0.2": 0.0, "seg_miou": 0.04263164136127453}
+{"processed": 8, "total": 8, "pose_labels": 16, "seg_labels": 43, "pose_pck_bbox_0.2": 0.0, "seg_miou": 0.04064877432121525}
+loading annotations into memory...
+Done (t=0.25s)
+creating index...
+index created!
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *keypoints*
+DONE (t=0.01s).
+Accumulating evaluation results...
+DONE (t=0.00s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets= 20 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets= 20 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 20 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50      | area=   all | maxDets= 20 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.75      | area=   all | maxDets= 20 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets= 20 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets= 20 ] = 0.000
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *segm*
+DONE (t=0.01s).
+Accumulating evaluation results...
+DONE (t=0.00s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.001
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.003
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.112
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.014
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.014
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.014
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.200
+{
+  "images": 8,
+  "pose_labels": 16,
+  "seg_labels": 43,
+  "pose_pck_bbox_0.2": 0.0,
+  "pose_visible_keypoints": 181,
+  "seg_miou": 0.04064877432121525,
+  "seg_dice": 0.05569225766487795,
+  "pose_AP": 0.0,
+  "pose_AP50": 0.0,
+  "pose_AP75": 0.0,
+  "segm_AP": 0.0006926700734589589,
+  "segm_AP50": 0.003094059405940594,
+  "segm_AP75": 0.0,
+  "mean_losses": {
+    "loss": 1.6900193840265274,
+    "mask_bce": 0.053896367142442614,
+    "mask_dice": 0.8028909936547279,
+    "pose_l1": 0.21510747633874416,
+    "pose_loss": 0.5587084144353867,
+    "pose_oks": 0.8739065229892731,
+    "pose_visibility": 0.6723197177052498,
+    "seg_loss": 0.4283936806023121,
+    "text_age_loss": 0.3732345700263977,
+    "text_box_loss": 0.9691160470247269,
+    "text_gender_loss": 0.010062018875032663,
+    "text_loss": 3.7823704183101654,
+    "text_pose_route_loss": 11.650778889656067,
+    "text_seg_route_loss": 13.674733877182007,
+    "text_structure_loss": 0.5916677471250296
+  },
+  "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/run/epoch-1-step-30",
+  "annotation": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json",
+  "split": "diagnostic_val_subset",
+  "protocol": "stage1_v4_teacher_forced_gt_person_records_oracle_binding_official_pose_segm_diagnostic",
+  "manifest": {
+    "batch_size": 4,
+    "component_weights": {
+      "mask_bce": 1.0,
+      "mask_dice": 1.0,
+      "pose_l1": 1.0,
+      "pose_oks": 1.0,
+      "pose_visibility": 0.25
+    },
+    "decoder_initial_checksum": {
+      "mask": "0f62cd4297c386ff9c5515ad166bbe12886aabe0be091ad4dd0e90ab1afdbb39",
+      "pose": "4d7905e9fc3b451377f98e895e3bee4c80f1e36101fa1f78d510c4b89b5b7d28"
+    },
+    "effective_batch_size": 16,
+    "epochs": 1,
+    "grad_accum_steps": 4,
+    "gradient_clipping": {
+      "non_token_max_norm": 1.0,
+      "token_rows_max_norm": 1.0
+    },
+    "images": 512,
+    "max_length": 5000,
+    "merger": {
+      "examples": [
+        "base_model.model.model.visual.merger.norm.weight",
+        "base_model.model.model.visual.merger.norm.bias",
+        "base_model.model.model.visual.merger.linear_fc1.weight",
+        "base_model.model.model.visual.merger.linear_fc1.bias",
+        "base_model.model.model.visual.merger.linear_fc2.weight",
+        "base_model.model.model.visual.merger.linear_fc2.bias"
+      ],
+      "parameters": 27271680,
+      "tensors": 6
+    },
+    "model": "/root/autodl-tmp/model/Qwen3.5-4B",
+    "optimizer": {
+      "groups": [
+        {
+          "family": "visual_lora",
+          "lr": 1e-05,
+          "name": "visual_lora_decay",
+          "weight_decay": 0.01
+        },
+        {
+          "family": "merger",
+          "lr": 1e-05,
+          "name": "merger_no_decay",
+          "weight_decay": 0.0
+        },
+        {
+          "family": "merger",
+          "lr": 1e-05,
+          "name": "merger_decay",
+          "weight_decay": 0.01
+        },
+        {
+          "family": "token_rows",
+          "lr": 2e-05,
+          "name": "token_rows_decay",
+          "weight_decay": 0.01
+        },
+        {
+          "family": "pose_decoder",
+          "lr": 0.0002,
+          "name": "pose_decoder_no_decay",
+          "weight_decay": 0.0
+        },
+        {
+          "family": "pose_decoder",
+          "lr": 0.0002,
+          "name": "pose_decoder_decay",
+          "weight_decay": 0.01
+        },
+        {
+          "family": "mask_decoder",
+          "lr": 0.0002,
+          "name": "mask_decoder_no_decay",
+          "weight_decay": 0.0
+        },
+        {
+          "family": "mask_decoder",
+          "lr": 0.0002,
+          "name": "mask_decoder_decay",
+          "weight_decay": 0.01
+        }
+      ],
+      "trainable_by_family": {
+        "mask_decoder": 2502144,
+        "merger": 27271680,
+        "pose_decoder": 3500549,
+        "token_rows": 5120,
+        "visual_lora": 1048576
+      }
+    },
+    "profile": "vision_tuned",
+    "prompt": "Detect every visible non-crowd real person exactly once.\nReturn one JSON object and nothing else.\nUse this exact schema:\n{\"persons\":[{\"person_id\":1,\"box\":[x1,y1,x2,y2],\"pose\":\"<pose>\",\"seg\":\"<seg>\",\"gender\":0,\"age\":31}]}\nRules:\n- Order people left-to-right by body-box center, then top-to-bottom.\n- person_id must be contiguous starting at 1.\n- box is the full visible body box as four integers from 0 to 1000.\n- box order is x1,y1,x2,y2 with x1<x2 and y1<y2.\n- pose must be exactly \"<pose>\"; its decoder predicts COCO-17 keypoints.\n- seg must be exactly \"<seg>\"; its decoder predicts the person mask.\n- gender is 0 for male, 1 for female, and -1 only when genuinely unknown.\n- age is apparent age in years from 0 to 120, or -1 when genuinely unknown.\n- Do not repeat a person. Close the JSON immediately after the last person.\n- If no person is visible, return exactly {\"persons\":[]}.\n",
+    "route_loss_schedule": {
+      "final_pose_weight": 0.25,
+      "final_seg_weight": 0.25,
+      "hold_steps": 5,
+      "start_weight": 0.02,
+      "warmup_steps": 20
+    },
+    "seed": 42,
+    "task_weights": {
+      "pose": 1.0,
+      "seg": 1.0,
+      "text": 1.0
+    },
+    "text_weights": {
+      "age": 1.0,
+      "box": 1.0,
+      "gender": 1.0,
+      "pose_route": 0.25,
+      "seg_route": 0.25,
+      "structure": 0.25
+    },
+    "token_ids": {
+      "pose": 248077,
+      "seg": 248078
+    },
+    "total_steps": 30,
+    "train_ann": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_train_v1.json",
+    "train_image_root": "/root/autodl-tmp/coco/train2017",
+    "trainable": {
+      "examples": {
+        "mask_decoder": [
+          "mask_decoder.state_project.0.weight",
+          "mask_decoder.state_project.0.bias",
+          "mask_decoder.state_project.1.weight",
+          "mask_decoder.state_project.1.bias",
+          "mask_decoder.visual_project.0.weight",
+          "mask_decoder.visual_project.0.bias",
+          "mask_decoder.visual_project.1.weight",
+          "mask_decoder.visual_project.1.bias"
+        ],
+        "merger": [
+          "base_model.base_model.model.model.visual.merger.norm.weight",
+          "base_model.base_model.model.model.visual.merger.norm.bias",
+          "base_model.base_model.model.model.visual.merger.linear_fc1.weight",
+          "base_model.base_model.model.model.visual.merger.linear_fc1.bias",
+          "base_model.base_model.model.model.visual.merger.linear_fc2.weight",
+          "base_model.base_model.model.model.visual.merger.linear_fc2.bias"
+        ],
+        "pose_decoder": [
+          "pose_decoder.joint_embedding",
+          "pose_decoder.state_project.0.weight",
+          "pose_decoder.state_project.0.bias",
+          "pose_decoder.state_project.1.weight",
+          "pose_decoder.state_project.1.bias",
+          "pose_decoder.visual_project.0.weight",
+          "pose_decoder.visual_project.0.bias",
+          "pose_decoder.visual_project.1.weight"
+        ],
+        "token_rows": [
+          "token_rows.delta"
+        ],
+        "visual_lora": [
+          "base_model.base_model.model.model.visual.blocks.16.attn.qkv.lora_A.default.weight",
+          "base_model.base_model.model.model.visual.blocks.16.attn.qkv.lora_B.default.weight",
+          "base_model.base_model.model.model.visual.blocks.16.attn.proj.lora_A.default.weight",
+          "base_model.base_model.model.model.visual.blocks.16.attn.proj.lora_B.default.weight",
+          "base_model.base_model.model.model.visual.blocks.16.mlp.linear_fc1.lora_A.default.weight",
+          "base_model.base_model.model.model.visual.blocks.16.mlp.linear_fc1.lora_B.default.weight",
+          "base_model.base_model.model.model.visual.blocks.16.mlp.linear_fc2.lora_A.default.weight",
+          "base_model.base_model.model.model.visual.blocks.16.mlp.linear_fc2.lora_B.default.weight"
+        ]
+      },
+      "trainable_by_family": {
+        "mask_decoder": 2502144,
+        "merger": 27271680,
+        "pose_decoder": 3500549,
+        "token_rows": 5120,
+        "visual_lora": 1048576
+      },
+      "trainable_total": 34328069
+    },
+    "truncation": false,
+    "version": "stage1_v4",
+    "visual_lora_targets": [
+      "model.visual.blocks.16.attn.proj",
+      "model.visual.blocks.16.attn.qkv",
+      "model.visual.blocks.16.mlp.linear_fc1",
+      "model.visual.blocks.16.mlp.linear_fc2",
+      "model.visual.blocks.17.attn.proj",
+      "model.visual.blocks.17.attn.qkv",
+      "model.visual.blocks.17.mlp.linear_fc1",
+      "model.visual.blocks.17.mlp.linear_fc2",
+      "model.visual.blocks.18.attn.proj",
+      "model.visual.blocks.18.attn.qkv",
+      "model.visual.blocks.18.mlp.linear_fc1",
+      "model.visual.blocks.18.mlp.linear_fc2",
+      "model.visual.blocks.19.attn.proj",
+      "model.visual.blocks.19.attn.qkv",
+      "model.visual.blocks.19.mlp.linear_fc1",
+      "model.visual.blocks.19.mlp.linear_fc2",
+      "model.visual.blocks.20.attn.proj",
+      "model.visual.blocks.20.attn.qkv",
+      "model.visual.blocks.20.mlp.linear_fc1",
+      "model.visual.blocks.20.mlp.linear_fc2",
+      "model.visual.blocks.21.attn.proj",
+      "model.visual.blocks.21.attn.qkv",
+      "model.visual.blocks.21.mlp.linear_fc1",
+      "model.visual.blocks.21.mlp.linear_fc2",
+      "model.visual.blocks.22.attn.proj",
+      "model.visual.blocks.22.attn.qkv",
+      "model.visual.blocks.22.mlp.linear_fc1",
+      "model.visual.blocks.22.mlp.linear_fc2",
+      "model.visual.blocks.23.attn.proj",
+      "model.visual.blocks.23.attn.qkv",
+      "model.visual.blocks.23.mlp.linear_fc1",
+      "model.visual.blocks.23.mlp.linear_fc2"
+    ],
+    "manifest_path": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/run/manifest.json",
+    "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/run/epoch-1-step-30"
+  }
+}

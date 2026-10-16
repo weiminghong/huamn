@@ -1,0 +1,100 @@
+{
+  "protocol": "diagnostic_native_qwen35_zero_shot_guided_json_box_gender_age",
+  "paper_eligibility": "diagnostic_until_score_protocol_is_fixed",
+  "images": 8,
+  "gt_persons": 43,
+  "pred_persons": 43,
+  "schema_ok_rate": 1.0,
+  "eos_rate": 1.0,
+  "person_count_mae": 1.75,
+  "duplicate_pairs_iou90": 0,
+  "invalid_boxes": 0,
+  "avg_generated_tokens": 278.125,
+  "elapsed_seconds": 108.11181180737913,
+  "score_protocol": "self_reported_integer_0_1000_for_primary; constant_1_for_sensitivity",
+  "bbox_AP": 0.28555024570772664,
+  "bbox_AP50": 0.494909490949095,
+  "bbox_AP75": 0.3216047566295091,
+  "bbox_APs": 0.1300247524752475,
+  "bbox_APm": 0.4781059369673232,
+  "bbox_APl": 0.8192314945780292,
+  "gender_AP": 0.8224422448932535,
+  "gender_AP50": 1.0,
+  "gender_AP75": 1.0,
+  "age_AP": 0.8224422448932535,
+  "age_AP50": 1.0,
+  "age_AP75": 1.0,
+  "gender_gt_labeled": 3,
+  "gender_gt_coverage": 0.06976744186046512,
+  "gender_eval_images": 2,
+  "age_gt_labeled": 3,
+  "age_gt_coverage": 0.06976744186046512,
+  "age_eval_images": 2,
+  "bbox_constant_score_AP": 0.2510479075220789,
+  "bbox_constant_score_AP50": 0.46188753490733686,
+  "bbox_constant_score_AP75": 0.2772755536423207,
+  "bbox_constant_score_APs": 0.12233620340055983,
+  "bbox_constant_score_APm": 0.4649046168353099,
+  "bbox_constant_score_APl": 0.7947878359264497,
+  "model": "/root/autodl-tmp/model/Qwen3.5-4B",
+  "annotation": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json",
+  "prompt": "Detect every clear visible real person in the image exactly once.\nInclude clear partially visible people. Skip reflections, posters, statues, mannequins, isolated body parts, and ambiguous tiny regions.\nOrder persons left-to-right by bounding-box center, breaking ties top-to-bottom.\nReturn JSON only. Do not explain or think aloud.\nFor each person:\n- person_id: consecutive integers starting at 1.\n- bbox: [x1,y1,x2,y2] as tight integer coordinates normalized to [0,1000]. Require x1<x2 and y1<y2.\n- gender: 0 male, 1 female, -1 unknown.\n- age: estimated age in years, or -1 unknown.\n- score: estimated detection confidence as an integer from 0 to 1000.\nStop immediately after the final JSON object. Do not invent extra persons to fill the response.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "persons": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "person_id": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "bbox": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000
+              },
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "gender": {
+              "type": "integer",
+              "enum": [
+                -1,
+                0,
+                1
+              ]
+            },
+            "age": {
+              "type": "integer",
+              "minimum": -1,
+              "maximum": 120
+            },
+            "score": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            }
+          },
+          "required": [
+            "person_id",
+            "bbox",
+            "gender",
+            "age",
+            "score"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required": [
+      "persons"
+    ],
+    "additionalProperties": false
+  }
+}

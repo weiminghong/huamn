@@ -1,0 +1,138 @@
+{
+  "schema": "human-slot-stage0-stage1-readiness-v1",
+  "updated": "2026-08-31",
+  "overall": {
+    "stage0_qualified": false,
+    "stage1_qualified": false,
+    "stage1_passed_gate": "G0 passed; exact-64 joint500 failed G1 accuracy gate",
+    "stage2_admitted": false
+  },
+  "stage0": {
+    "purpose": "Record the native model limitation that motivates Stage-1; it no longer blocks Stage-1 implementation or G1.",
+    "status": "closed_as_native_motivation_context",
+    "required_arms": [
+      {
+        "id": "S0_NATIVE_QWEN_NUMERIC_JSON",
+        "model": "Unmodified Qwen3.5-4B weights and native tokenizer",
+        "grammar": "Compact numeric JSON using native vocabulary for box, 17 keypoints, contours, gender, and age",
+        "role": "true native zero-shot capability",
+        "comparison_status": "Stage-0 baseline; no new vocabulary"
+      }
+    ],
+    "locked_requirements": [
+      "Qwen3.5-4B weights and tokenizer remain completely unmodified",
+      "historical box, gender, and age metrics retain diagnostic status",
+      "segment and pose remain N/A when no valid native output representation exists",
+      "no full native five-task run is required for Stage-1 admission"
+    ],
+    "qualification_gate": {},
+    "existing_results": [
+      {
+        "id": "S0_HISTORICAL_PARTIAL",
+        "metrics_AP_percent": {
+          "box": 49.7912,
+          "segment": null,
+          "pose": null,
+          "gender": 48.0674,
+          "age": 41.6348
+        },
+        "status": "diagnostic_only",
+        "reason": "It lacks segment and pose, predates the unified grammar, and uses a confidence protocol different from historical v4."
+      }
+    ],
+    "missing": []
+  },
+  "stage1": {
+    "purpose": "Teach Qwen Vision human structure using dense mask/pose losses routed from person-specific LLM tokens while retaining native text decoding for boxes and attributes.",
+    "status": "full_joint_running_user_authorized",
+    "pre_tuning_control": "S1_INIT_LISA_POSE_ROUTING_0STEP verifies routing ownership, Qwen-native dense features, and mature decoder interfaces at zero optimizer steps.",
+    "locked_model_contract": {
+      "text_decoder": "person slots, box, gender, age, <POSE>, <SEG>",
+      "segment": "<SEG> projector plus SAM-style decoder over Qwen Vision features only",
+      "pose": "<POSE> projector plus box-conditioned SimCC decoder over Qwen Vision ROI features",
+      "mainline_image_encoder": "Qwen Vision only",
+      "loss": "text CE + mask BCE/focal/dice + SimCC/visibility",
+      "official_inference": "free text generation and generated-box dense decoding"
+    },
+    "passed": [
+      {
+        "gate": "architecture_selection",
+        "evidence": [
+          "LISA validates special-token-to-mask routing",
+          "VisionLLM v2 validates analogous pose routing",
+          "Qwen-native dense inputs force visual learning",
+          "external SAM/ViTPose branches remain controls"
+        ]
+      },
+      {
+        "gate": "G0_lisa_pose_routing",
+        "evidence": [
+          "7/7 component tests",
+          "real person-token owner counts",
+          "all five trainable gradient families nonzero",
+          "all 24 Vision blocks LoRA",
+          "no SAM/ViTPose image encoder",
+          "20.58 GiB one-step smoke"
+        ]
+      },
+      {
+        "gate": "joint500_learning_diagnostic",
+        "evidence": [
+          "500 steps completed on exact 64 records",
+          "all gradient families remained active",
+          "text/mask/pose losses decreased",
+          "checkpoint saved",
+          "G1 Mask/Pose metric thresholds not passed"
+        ]
+      }
+    ],
+    "not_passed": [
+      "G1 overfit-64",
+      "G2 5K pilot and frozen probes",
+      "G3 full validation"
+    ],
+    "qualification_gate": {
+      "box_AP": 52.0,
+      "segment_AP": 50.0,
+      "pose_AP": 60.0,
+      "gender_AP": 50.0,
+      "age_AP": 44.0
+    },
+    "historical_non_evidence": [
+      {
+        "id": "V4",
+        "metrics_AP_percent": {
+          "box": 52.283,
+          "segment": 17.1948,
+          "pose": 0.0237,
+          "gender": 51.9104,
+          "age": 44.4925
+        },
+        "reason": "LLM frozen and segment/pose produced by specialist heads; it violates the active Stage-1 contract."
+      },
+      {
+        "id": "DENSE_HEAD_PILOT",
+        "reason": "Optimization mechanics passed, but it used Human Query, dynamic masks, and ROI pose heads and is closed diagnostic history."
+      }
+    ]
+  },
+  "tokenizer_audit": {
+    "native_three_digit_coordinate_tokens": 3,
+    "one_person_compact_numeric_JSON_tokens": 693,
+    "nineteen_person_compact_numeric_JSON_tokens": 13095,
+    "conclusion": "Native numeric JSON is suitable for true Stage-0 but too expensive to replace the compact Stage-1 loc-token grammar without a new context and memory audit."
+  },
+  "ordered_next_steps": [
+    {
+      "order": 1,
+      "action": "Start user-authorized full-dataset joint Stage-1 training; prior pilot metrics remain diagnostic.",
+      "gpu": true
+    },
+    {
+      "order": 2,
+      "action": "Evaluate generated slots, generated-box mask/pose, and visual probes from trained checkpoints.",
+      "gpu": true
+    }
+  ],
+  "decision": "The mainline follows LISA: Qwen text decoding owns person slots, boxes, attributes, and routing tokens; <SEG>/<POSE> hidden states drive mature decoders over Qwen Vision features. HQNet shared heads are closed."
+}

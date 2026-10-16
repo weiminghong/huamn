@@ -1,0 +1,52 @@
+{
+  "status": "full_joint_running",
+  "process_id": 29370,
+  "screen": "humanslot_stage1_full",
+  "dataset_images": 64115,
+  "epochs": 2,
+  "last_verified_step": 7,
+  "total_steps": 32058,
+  "gradient_and_update_audits": [
+    {
+      "event": "dense_gradient_audit",
+      "mask_to_vision_gradient_norm": 0.24189478158950806,
+      "pose_to_vision_gradient_norm": 0.2970542013645172,
+      "sample_ids": [
+        426052
+      ]
+    },
+    {
+      "changes": {
+        "heads": {
+          "delta_norm": 5.17145854246337e-05,
+          "name": "spatial_adapter.projections.0.0.weight"
+        },
+        "language_lora": {
+          "delta_norm": 4.21091544922092e-06,
+          "name": "base_model.base_model.model.model.language_model.layers.0.linear_attn.out_proj.lora_B.default.weight"
+        },
+        "merger": {
+          "delta_norm": 7.450580596923828e-09,
+          "name": "base_model.base_model.model.model.visual.merger.norm.weight"
+        },
+        "token_rows": {
+          "delta_norm": 2.9773615096928552e-05,
+          "name": "token_rows.delta"
+        },
+        "visual_lora": {
+          "delta_norm": 2.29377133109665e-06,
+          "name": "base_model.base_model.model.model.visual.blocks.0.attn.qkv.lora_B.default.weight"
+        }
+      },
+      "event": "parameter_update_audit"
+    }
+  ],
+  "checkpoint": {
+    "examples_seen": 4,
+    "global_step": 1,
+    "next_batch": 4,
+    "next_epoch": 0,
+    "path": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_full_joint_2ep_20260831/checkpoint-step-0000001"
+  },
+  "scratch_review": "Reviewed prior lisa_pose outputs. Small logs and the three prior compact checkpoints are retained for the audit trail and warmup initialization; no unrelated files or active outputs removed."
+}

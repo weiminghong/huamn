@@ -1,0 +1,32 @@
+[
+  {
+    "path": "/root/autodl-tmp/humanslot_refs/stage1_v2_20260723/GroupPose",
+    "commit": "127fe0e2e7b54d7a43420015a2e90e456a8ea1fb",
+    "remote": "https://github.com/Michel-liu/GroupPose.git",
+    "status": []
+  },
+  {
+    "path": "/root/autodl-tmp/humanslot_refs/stage1_v2_20260723/LISA",
+    "commit": "3cb2d4301f1af4691bd4f3938335ef06e76f155a",
+    "remote": "https://github.com/dvlab-research/LISA.git",
+    "status": []
+  },
+  {
+    "path": "/root/autodl-tmp/humanslot_refs/stage1_v2_20260723/PixelLM",
+    "commit": "ebf07922745a926517a9a1d16fddd392a7544bb0",
+    "remote": "https://github.com/MaverickRen/PixelLM.git",
+    "status": []
+  },
+  {
+    "path": "/root/autodl-tmp/humanslot_refs/stage1_v2_20260723/COCO-UniHuman",
+    "commit": "7b5f57b767b70192b5c262090aa55a5a4388ea95",
+    "remote": "https://github.com/lishuhuai527/COCO-UniHuman.git",
+    "status": []
+  },
+  {
+    "path": "/root/autodl-tmp/humanslot_refs/stage1_v2_20260723/PaDT",
+    "commit": "912a8ae5aaa4f01644a41e15d5d6905cc73c8ce7",
+    "remote": "https://github.com/Gorilla-Lab-SCUT/PaDT.git",
+    "status": []
+  }
+]

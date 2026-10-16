@@ -1,0 +1,7 @@
+[bs-4-start] 2026-07-18T22:22:55+08:00
+exit_code=0
+wall_seconds=34
+{"micro_step": 4, "optimizer_step": 1, "epoch": 0, "micro_in_epoch": 16, "lr": [1e-05, 1e-05, 5e-05, 5e-05, 5e-05, 5e-05, 2e-05, 2e-05], "grad_norm": 5.9747490882873535, "grad_norm_by_family": {"visual": 0.17771251499652863, "language": 2.3382763862609863, "box": 2.5663390159606934, "pose": 5.9747490882873535}, "cuda_memory_allocated_mb": 8937.37, "cuda_memory_reserved_mb": 28580.0, "max_sequence_tokens": 956, "log_window_micro_steps": 4, "visual_grad_sanitization_events": 0, "visual_grad_sanitized_parameters": [], "ce_loss": 1.5350798070430756, "box_l1": 0.23938410356640816, "box_giou": 1.084749922156334, "box_quality": 0.6825364977121353, "pose_l1": 0.19686019606888294, "pose_oks": 0.9870406985282898, "pose_heatmap": 0.0, "pose_visibility": 1.1156246662139893, "mask_bce": 0.0, "mask_dice": 0.0, "weighted_box_l1": 1.196920484304428, "weighted_box_giou": 2.169499844312668, "weighted_box_quality": 0.6825364977121353, "weighted_pose_l1": 0.984300971031189, "weighted_pose_oks": 1.4805610477924347, "weighted_pose_heatmap": 0.0, "weighted_pose_visibility": 1.1156246662139893, "weighted_mask_bce": 0.0, "weighted_mask_dice": 0.0, "loss": 9.164523601531982, "valid_box_count": 21.25, "valid_pose_count": 7.5, "valid_seg_count": 0.0}
+{"status": "completed", "train_state": {"micro_step": 4, "optimizer_step": 1, "epoch": 0, "micro_in_epoch": 16, "samples_seen": 4}}
+[bs-4-ok]
+0 MiB, 81920 MiB, 46 %

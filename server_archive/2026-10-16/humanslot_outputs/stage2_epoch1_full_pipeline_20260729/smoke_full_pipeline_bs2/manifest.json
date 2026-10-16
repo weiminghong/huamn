@@ -1,0 +1,72 @@
+{
+  "train_ann_file": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_train_v1.json",
+  "train_image_root": "/root/autodl-tmp/coco/train2017",
+  "num_samples": 16,
+  "profile": "full",
+  "image_size": 640,
+  "num_query": 300,
+  "batch_size": 2,
+  "grad_accum_steps": 1,
+  "effective_batch_size": 2,
+  "loss_weights": {
+    "bbox": 1.0,
+    "iou": 1.0,
+    "cls": 0.05,
+    "kpt_cls": 0.05,
+    "hm": 0.001,
+    "kpt": 2.0,
+    "kpt_rpn": 2.0,
+    "oks": 0.2,
+    "kpt_refine": 2.0,
+    "oks_refine": 0.2,
+    "mask": 0.5,
+    "dice": 0.2
+  },
+  "max_instances": 25,
+  "qwen_model": "/root/autodl-tmp/model/Qwen3.5-4B",
+  "qwen_adapter": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/epoch-1-step-4008/base_or_adapter",
+  "backbone_mode": "qwen_fusion",
+  "dino_model": "/root/autodl-tmp/model/dinov3-vits16-pretrain-lvd1689m-timm",
+  "fusion_mode": "feature_add",
+  "freeze_dino": false,
+  "head_lr": 5e-05,
+  "dino_lr": 1e-06,
+  "shared_init": {
+    "path": "",
+    "loaded": false,
+    "written": false
+  },
+  "trainable_params": 52175531,
+  "qwen_trainable_params": 0,
+  "dino_trainable_params": 21586944,
+  "optimizer_groups": [
+    {
+      "name": "bridge_neck_heads",
+      "lr": 5e-05,
+      "weight_decay": 0.0001,
+      "num_tensors": 578,
+      "num_params": 30588587,
+      "example_names": [
+        "backbone.bridge_scale",
+        "backbone.proj_layers.0.weight",
+        "backbone.proj_layers.0.bias",
+        "backbone.proj_layers.1.weight",
+        "backbone.proj_layers.1.bias"
+      ]
+    },
+    {
+      "name": "dinov3_backbone",
+      "lr": 1e-06,
+      "weight_decay": 0.0001,
+      "num_tensors": 162,
+      "num_params": 21586944,
+      "example_names": [
+        "backbone.backbone.timm_model.cls_token",
+        "backbone.backbone.timm_model.reg_token",
+        "backbone.backbone.timm_model.patch_embed.proj.weight",
+        "backbone.backbone.timm_model.patch_embed.proj.bias",
+        "backbone.backbone.timm_model.blocks.0.gamma_1"
+      ]
+    }
+  ]
+}

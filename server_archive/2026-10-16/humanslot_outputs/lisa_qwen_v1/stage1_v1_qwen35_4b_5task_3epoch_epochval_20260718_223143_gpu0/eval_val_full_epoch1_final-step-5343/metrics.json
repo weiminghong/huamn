@@ -1,0 +1,231 @@
+{
+  "bbox_AP": 0.08476643703858859,
+  "bbox_AP50": 0.2323811028754709,
+  "bbox_AP75": 0.04670536016091378,
+  "bbox_APs": 0.0049504950495049506,
+  "bbox_APm": 0.05000895226800843,
+  "bbox_APl": 0.2621297046541595,
+  "keypoints_AP": 0.009311625269913436,
+  "keypoints_AP50": 0.04450073820268172,
+  "keypoints_AP75": 0.0014144271570014143,
+  "keypoints_APm": 0.0008611203436522615,
+  "keypoints_APl": 0.019086252361531702,
+  "segm_AP": 0.09484843416958559,
+  "segm_AP50": 0.23504494060052197,
+  "segm_AP75": 0.06024545702207406,
+  "segm_APs": 0.0001611808606515333,
+  "segm_APm": 0.037015283012525366,
+  "segm_APl": 0.30098126091837946,
+  "gender_AP": 0.19825339516956764,
+  "gender_AP50": 0.49698319942644326,
+  "gender_AP75": 0.12790258833677462,
+  "age_AP": 0.17621513088833135,
+  "age_AP50": 0.4387615995832009,
+  "age_AP75": 0.1165869156322857,
+  "gt_persons": 10777,
+  "gender_gt_labeled": 1970,
+  "gender_gt_coverage": 0.18279669666883178,
+  "gender_eval_images": 1149,
+  "age_gt_labeled": 1998,
+  "age_gt_coverage": 0.1853948223067644,
+  "age_eval_images": 1162,
+  "images": 2693,
+  "schema_ok_rate": 1.0,
+  "raw_schema_ok_rate": 1.0,
+  "person_id_repair_image_rate": 0.0,
+  "person_id_repairs": 0,
+  "health_ok_rate": 0.8822874118083921,
+  "eos_rate": 1.0,
+  "person_count_mae": 1.33754177497215,
+  "predicted_persons": 13115,
+  "inference_file": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v1/stage1_v1_qwen35_4b_5task_3epoch_epochval_20260718_223143_gpu0/eval_val_full_epoch1_final-step-5343/inference.jsonl",
+  "resume_audit": {
+    "path": ".",
+    "lines": 0,
+    "valid": 0,
+    "recovered": 0,
+    "invalid": 0,
+    "duplicates": 0,
+    "outside_dataset": 0
+  },
+  "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v1/stage1_v1_qwen35_4b_5task_3epoch_epochval_20260718_223143_gpu0/train/final-step-5343",
+  "annotation": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json",
+  "protocol": "official_cocoeval_and_humanquerynet_attr",
+  "manifest": {
+    "model": "/root/autodl-tmp/model/Qwen3.5-4B",
+    "architecture": {
+      "person_records": "variable_length",
+      "box_head": "token_state_box_quality",
+      "pose_head": "direct_joint_query_reference_sampling",
+      "pose_decoder_type": "direct_joint_query",
+      "pose_reference": {
+        "train": "predicted_box_detached",
+        "eval": "predicted_box_detached",
+        "sampling_points": 8,
+        "refinement_layers": 2
+      },
+      "pose_heatmap_size": 0,
+      "mask_head": "token_state_pixel_decoder",
+      "record_nms": {
+        "near_duplicate_iou": 0.9
+      },
+      "pose_roi_enabled": false,
+      "pose_box_jitter": {
+        "enabled": false,
+        "shift_factor": 0.16,
+        "shift_prob": 0.3,
+        "scale_range": [
+          0.5,
+          1.5
+        ],
+        "scale_prob": 1.0
+      }
+    },
+    "train_ann": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_train_v1.json",
+    "pose_joint_reference": null,
+    "train_image_root": "/root/autodl-tmp/coco/train2017",
+    "val_ann": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json",
+    "val_image_root": "/root/autodl-tmp/coco/val2017",
+    "dataset_size": 64115,
+    "batch_size": 12,
+    "grad_accum_steps": 1,
+    "max_length": 5000,
+    "missing_attribute_loss_weight": 0.0,
+    "trainable_families": [
+      "visual",
+      "language",
+      "box",
+      "pose",
+      "mask"
+    ],
+    "trainable_family_parameters": {
+      "visual": 393216,
+      "language": 3579904,
+      "box": 793605,
+      "pose": 4047193,
+      "mask": 3147520
+    },
+    "parameter_precision": {
+      "frozen_low_precision": 4540051968,
+      "trainable_fp32": 11961438
+    },
+    "resume_optimizer_state": false,
+    "reset_pose_decoder_on_resume": false,
+    "epochs": 1.0,
+    "total_micro_steps": 5343,
+    "total_optimizer_steps": 5343,
+    "base_lr": 1e-05,
+    "visual_lr": 1e-05,
+    "language_lr": 1e-05,
+    "head_lr": 5e-05,
+    "box_lr": 5e-05,
+    "pose_lr": 5e-05,
+    "mask_lr": 2e-05,
+    "warmup_ratio": 0.05,
+    "scheduler_type": "cosine",
+    "grad_clip": 1.0,
+    "task_backbone_grad_scale": 0.02,
+    "visual_lora_blocks": {
+      "start_block": 16,
+      "trainable": 393216,
+      "frozen": 786432
+    },
+    "weight_decay": 0.01,
+    "bf16": true,
+    "visual_lora_fp32_updates": {
+      "enabled": true,
+      "modules": 16
+    },
+    "split_ce_task_backward": true,
+    "visual_gradient_sanitizer": {
+      "enabled": true,
+      "hooks": 32
+    },
+    "seed": 42,
+    "horizontal_flip_prob": 0.5,
+    "lora": {
+      "rank": 8,
+      "alpha": 16,
+      "dropout": 0.05,
+      "targets": [
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "attn.qkv",
+        "attn.proj",
+        "lm_head"
+      ],
+      "embed_tokens_lora": false,
+      "lm_head_lora": true
+    },
+    "loss_weights": {
+      "ce": 1.0,
+      "box_l1": 5.0,
+      "box_giou": 2.0,
+      "box_quality": 1.0,
+      "pose_l1": 5.0,
+      "pose_oks": 1.5,
+      "pose_heatmap": 0.0,
+      "pose_visibility": 1.0,
+      "mask_bce": 4.0,
+      "mask_dice": 2.0
+    },
+    "decoder_dim": 256,
+    "decoder_heads": 8,
+    "token_ids": {
+      "box": 248077,
+      "pose": 248078,
+      "seg": 248079
+    },
+    "image_token_id": 248056,
+    "optimizer": {
+      "visual_parameters": 393216,
+      "language_parameters": 3579904,
+      "head_parameters": 7988318,
+      "base_parameters": 3973120,
+      "trainable_parameters": 11961438,
+      "optimizer_groups": 8
+    },
+    "trainable_total": 11961438,
+    "trainable_by_group": {
+      "visual_lora": 393216,
+      "language_lora": 3579904,
+      "task_heads": 7988318,
+      "embeddings_or_lm_head": 0,
+      "other": 0
+    },
+    "trainable_examples": {
+      "visual_lora": [
+        "base_model.base_model.model.model.visual.blocks.16.attn.qkv.lora_A.default.weight",
+        "base_model.base_model.model.model.visual.blocks.16.attn.qkv.lora_B.default.weight",
+        "base_model.base_model.model.model.visual.blocks.16.attn.proj.lora_A.default.weight",
+        "base_model.base_model.model.model.visual.blocks.16.attn.proj.lora_B.default.weight",
+        "base_model.base_model.model.model.visual.blocks.17.attn.qkv.lora_A.default.weight"
+      ],
+      "language_lora": [
+        "base_model.base_model.model.model.language_model.layers.3.self_attn.q_proj.lora_A.default.weight",
+        "base_model.base_model.model.model.language_model.layers.3.self_attn.q_proj.lora_B.default.weight",
+        "base_model.base_model.model.model.language_model.layers.3.self_attn.k_proj.lora_A.default.weight",
+        "base_model.base_model.model.model.language_model.layers.3.self_attn.k_proj.lora_B.default.weight",
+        "base_model.base_model.model.model.language_model.layers.3.self_attn.v_proj.lora_A.default.weight"
+      ],
+      "task_heads": [
+        "box_head.project.0.weight",
+        "box_head.project.0.bias",
+        "box_head.project.1.weight",
+        "box_head.project.1.bias",
+        "box_head.box_mlp.0.weight"
+      ],
+      "embeddings_or_lm_head": [],
+      "other": []
+    },
+    "train_state": {
+      "micro_step": 5343,
+      "optimizer_step": 5343,
+      "epoch": 0,
+      "micro_in_epoch": 64115,
+      "samples_seen": 64115
+    }
+  }
+}

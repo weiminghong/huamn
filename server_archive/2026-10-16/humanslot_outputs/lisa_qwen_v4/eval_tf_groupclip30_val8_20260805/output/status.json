@@ -1,0 +1,8 @@
+{
+  "processed": 8,
+  "total": 8,
+  "pose_labels": 16,
+  "seg_labels": 43,
+  "pose_pck_bbox_0.2": 0.0,
+  "seg_miou": 0.04064877432121525
+}

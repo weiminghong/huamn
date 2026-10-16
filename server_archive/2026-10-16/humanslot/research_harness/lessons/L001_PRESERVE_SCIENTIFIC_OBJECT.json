@@ -1,0 +1,12 @@
+{
+  "schema": "human-slot-lesson-v1",
+  "lesson_id": "L001_PRESERVE_SCIENTIFIC_OBJECT",
+  "text": "A stronger task head is not an acceptable optimization when the research question explicitly concerns what a normal generative VLM learns. Accuracy engineering must preserve the decoder contract before it can be compared.",
+  "operational_rule": "Before proposing or implementing a Stage-1 component, verify that every task output is produced by the tied causal LM head. If not, reject it from the mainline regardless of expected AP.",
+  "applies_to": [
+    "architecture review",
+    "experiment admission",
+    "paper story",
+    "future Codex tasks"
+  ]
+}

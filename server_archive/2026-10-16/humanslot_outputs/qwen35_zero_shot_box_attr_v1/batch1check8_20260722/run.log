@@ -1,0 +1,202 @@
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+Loading weights:   0%|          | 0/723 [00:00<?, ?it/s]Loading weights: 100%|██████████| 723/723 [00:00<00:00, 8738.31it/s]
+{"image_id": 397133, "schema_ok": true, "gt_persons": 2, "pred_persons": 1, "generated_tokens": 56, "generation_seconds": 10.277819611132145}
+{"image_id": 252219, "schema_ok": true, "gt_persons": 3, "pred_persons": 3, "generated_tokens": 159, "generation_seconds": 15.074533900246024}
+{"image_id": 87038, "schema_ok": true, "gt_persons": 13, "pred_persons": 20, "generated_tokens": 1014, "generation_seconds": 53.873427705839276}
+{"image_id": 480985, "schema_ok": true, "gt_persons": 8, "pred_persons": 5, "generated_tokens": 259, "generation_seconds": 19.084692604839802}
+{"image_id": 296649, "schema_ok": true, "gt_persons": 12, "pred_persons": 10, "generated_tokens": 514, "generation_seconds": 31.065974162891507}
+{"image_id": 386912, "schema_ok": true, "gt_persons": 1, "pred_persons": 1, "generated_tokens": 56, "generation_seconds": 10.011211022734642}
+{"image_id": 348881, "schema_ok": true, "gt_persons": 2, "pred_persons": 2, "generated_tokens": 107, "generation_seconds": 12.734241699799895}
+{"image_id": 522713, "schema_ok": true, "gt_persons": 2, "pred_persons": 0, "generated_tokens": 6, "generation_seconds": 7.106081053614616}
+loading annotations into memory...
+Done (t=0.21s)
+creating index...
+index created!
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=0.01s).
+Accumulating evaluation results...
+DONE (t=0.01s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.289
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.534
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.297
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.138
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.476
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.821
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.091
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.300
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.319
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.141
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.546
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.933
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=0.00s).
+Accumulating evaluation results...
+DONE (t=0.00s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.822
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 1.000
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 1.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = -1.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.800
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.834
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.600
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.867
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.867
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = -1.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.800
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.900
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=0.00s).
+Accumulating evaluation results...
+DONE (t=0.00s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.822
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 1.000
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 1.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = -1.000
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.800
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.834
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.600
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.867
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.867
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = -1.000
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.800
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.900
+loading annotations into memory...
+Done (t=0.21s)
+creating index...
+index created!
+Loading and preparing results...
+DONE (t=0.00s)
+creating index...
+index created!
+Running per image evaluation...
+Evaluate annotation type *bbox*
+DONE (t=0.01s).
+Accumulating evaluation results...
+DONE (t=0.00s).
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.266
+ Average Precision  (AP) @[ IoU=0.50      | area=   all | maxDets=100 ] = 0.520
+ Average Precision  (AP) @[ IoU=0.75      | area=   all | maxDets=100 ] = 0.266
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.134
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.463
+ Average Precision  (AP) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.798
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=  1 ] = 0.091
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets= 10 ] = 0.300
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=   all | maxDets=100 ] = 0.319
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= small | maxDets=100 ] = 0.141
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area=medium | maxDets=100 ] = 0.546
+ Average Recall     (AR) @[ IoU=0.50:0.95 | area= large | maxDets=100 ] = 0.933
+{
+  "protocol": "diagnostic_native_qwen35_zero_shot_guided_json_box_gender_age",
+  "paper_eligibility": "diagnostic_until_score_protocol_is_fixed",
+  "images": 8,
+  "gt_persons": 43,
+  "pred_persons": 42,
+  "schema_ok_rate": 1.0,
+  "eos_rate": 1.0,
+  "person_count_mae": 1.875,
+  "duplicate_pairs_iou90": 0,
+  "invalid_boxes": 0,
+  "avg_generated_tokens": 271.375,
+  "elapsed_seconds": 159.94009244255722,
+  "score_protocol": "self_reported_integer_0_1000_for_primary; constant_1_for_sensitivity",
+  "bbox_AP": 0.28860924696644125,
+  "bbox_AP50": 0.5341262697698341,
+  "bbox_AP75": 0.297029702970297,
+  "bbox_APs": 0.1383066768215283,
+  "bbox_APm": 0.476038153265876,
+  "bbox_APl": 0.8207873644507307,
+  "gender_AP": 0.8224422448932535,
+  "gender_AP50": 1.0,
+  "gender_AP75": 1.0,
+  "age_AP": 0.8224422448932535,
+  "age_AP50": 1.0,
+  "age_AP75": 1.0,
+  "gender_gt_labeled": 3,
+  "gender_gt_coverage": 0.06976744186046512,
+  "gender_eval_images": 2,
+  "age_gt_labeled": 3,
+  "age_gt_coverage": 0.06976744186046512,
+  "age_eval_images": 2,
+  "bbox_constant_score_AP": 0.26603173475697545,
+  "bbox_constant_score_AP50": 0.5199551785417268,
+  "bbox_constant_score_AP75": 0.2659805454229634,
+  "bbox_constant_score_APs": 0.13426141515250425,
+  "bbox_constant_score_APm": 0.46283683313386287,
+  "bbox_constant_score_APl": 0.7979467232437529,
+  "model": "/root/autodl-tmp/model/Qwen3.5-4B",
+  "annotation": "/root/autodl-tmp/coco/unihuman_label/coco_unihuman_val_v1.json",
+  "prompt": "Detect every clear visible real person in the image exactly once.\nInclude clear partially visible people. Skip reflections, posters, statues, mannequins, isolated body parts, and ambiguous tiny regions.\nOrder persons left-to-right by bounding-box center, breaking ties top-to-bottom.\nReturn JSON only. Do not explain or think aloud.\nFor each person:\n- person_id: consecutive integers starting at 1.\n- bbox: [x1,y1,x2,y2] as tight integer coordinates normalized to [0,1000]. Require x1<x2 and y1<y2.\n- gender: 0 male, 1 female, -1 unknown.\n- age: estimated age in years, or -1 unknown.\n- score: estimated detection confidence as an integer from 0 to 1000.\nStop immediately after the final JSON object. Do not invent extra persons to fill the response.",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "persons": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "person_id": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "bbox": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000
+              },
+              "minItems": 4,
+              "maxItems": 4
+            },
+            "gender": {
+              "type": "integer",
+              "enum": [
+                -1,
+                0,
+                1
+              ]
+            },
+            "age": {
+              "type": "integer",
+              "minimum": -1,
+              "maximum": 120
+            },
+            "score": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000
+            }
+          },
+          "required": [
+            "person_id",
+            "bbox",
+            "gender",
+            "age",
+            "score"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "required": [
+      "persons"
+    ],
+    "additionalProperties": false
+  }
+}

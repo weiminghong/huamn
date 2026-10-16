@@ -1,0 +1,32 @@
+{
+  "schema": "lisa-pose-g1-joint200-summary-v1",
+  "date": "2026-08-31",
+  "status": "completed_diagnostic",
+  "artifact": "/root/autodl-tmp/humanslot_outputs/lisa_pose_stage1_g1_joint200_v2_20260831",
+  "steps": 200,
+  "task_rich_records": 57,
+  "unique_images": 57,
+  "elapsed_seconds": 321.28,
+  "peak_cuda_gib": 31.58036,
+  "first20": {
+    "loss": 15.13773,
+    "text_loss": 0.85115,
+    "dense_loss": 14.28659,
+    "mask_bce": 0.4216,
+    "mask_dice": 0.88542,
+    "pose_x": 6.12424,
+    "pose_y": 6.33457,
+    "pose_visibility": 1.0415
+  },
+  "last20": {
+    "loss": 12.65469,
+    "text_loss": 0.38713,
+    "dense_loss": 12.26756,
+    "mask_bce": 0.18837,
+    "mask_dice": 0.58305,
+    "pose_x": 5.44143,
+    "pose_y": 5.61245,
+    "pose_visibility": 0.88452
+  },
+  "interpretation": "All task losses decreased and checkpoint saved, but only 57 task-rich records and no accuracy metric were available. This is learning-signal evidence, not G1 qualification."
+}

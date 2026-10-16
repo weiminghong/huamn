@@ -1,0 +1,247 @@
+{
+  "main_commit": "3db7daf9f95f487aa490562abc6491a97602f3c1",
+  "date": "2026-10-16",
+  "phase": "read-only review of existing results",
+  "evaluations": {
+    "native_nosmall": {
+      "metrics_file": "/root/autodl-tmp/humanslot_outputs/qwen35_zero_shot_box_attr_v1/fullval2693_batch2_20260722/eval_hqnet_nosmall_20260809/metrics.json",
+      "AP_percent": {
+        "bbox_AP": 49.79121537479626,
+        "gender_AP": 48.06744671251514,
+        "age_AP": 41.634813613525715
+      },
+      "images": 2693,
+      "protocol": "native_qwen35_zero_shot_existing_predictions_hqnet_paper_no_small_area_aligned_cocoeval",
+      "score_strategy": "self_reported_integer_0_1000_for_primary; constant_1_for_sensitivity",
+      "checkpoint": null
+    },
+    "v3_e1_all": {
+      "metrics_file": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/generated_val_full_epoch1_bs2/metrics.json",
+      "AP_percent": {
+        "bbox_AP": 31.494415865301605,
+        "segm_AP": 13.362532117571362,
+        "keypoints_AP": 0.5667740956482872,
+        "gender_AP": 37.04734255476753,
+        "age_AP": 30.91639568900118
+      },
+      "images": 2693,
+      "protocol": "stage1_v3_official_cocoeval_partial_label_attr_native_text_box_query_confidence_query_bound_dense_tasks",
+      "score_strategy": "matched_query_objectness_native_text_box; constant-score metrics are retained as a diagnostic",
+      "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/epoch-1-step-4008"
+    },
+    "v3_e2_all": {
+      "metrics_file": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/generated_val_full_epoch2_bs2/metrics.json",
+      "AP_percent": {
+        "bbox_AP": 33.10844829432958,
+        "segm_AP": 16.00650218267162,
+        "keypoints_AP": 10.826455900096596,
+        "gender_AP": 38.66654743652533,
+        "age_AP": 31.651261233457245
+      },
+      "images": 2693,
+      "protocol": "stage1_v3_official_cocoeval_partial_label_attr_native_text_box_query_confidence_query_bound_dense_tasks",
+      "score_strategy": "matched_query_objectness_native_text_box; constant-score metrics are retained as a diagnostic",
+      "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/epoch-2-step-8016"
+    },
+    "v4_e1_all": {
+      "metrics_file": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/eval_epoch1_generated_full_val2693_bs1_tok5000_20260807/metrics.json",
+      "AP_percent": {
+        "bbox_AP": 32.093617871526455,
+        "segm_AP": 7.567347303752735,
+        "keypoints_AP": 0.022710947988876046,
+        "gender_AP": 47.54867176313212,
+        "age_AP": 40.83291930137295
+      },
+      "images": 2693,
+      "protocol": "stage1_v4_guided_json_native_text_box_record_bound_pose_seg_official_cocoeval_partial_label_attr",
+      "score_strategy": "generated_person_record_mean_logprob",
+      "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/epoch-1-step-4008"
+    },
+    "v4_e1_nosmall": {
+      "metrics_file": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/eval_epoch1_generated_full_val2693_hqnet_nosmall_20260809/metrics.json",
+      "AP_percent": {
+        "bbox_AP": 52.283027911350835,
+        "segm_AP": 17.194809887942725,
+        "keypoints_AP": 0.023738680273224257,
+        "gender_AP": 51.91038860690475,
+        "age_AP": 44.492460254690435
+      },
+      "images": 2693,
+      "protocol": "stage1_v4_generated_existing_predictions_hqnet_paper_no_small_area_aligned_cocoeval",
+      "score_strategy": null,
+      "checkpoint": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/epoch-1-step-4008"
+    }
+  },
+  "loss_windows": {
+    "v3_repr": {
+      "log": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/events.jsonl",
+      "definition": "first 20 and last 20 logged values; cadence differs by run",
+      "components": {
+        "ce_loss": {
+          "records": 321,
+          "first20": 0.5016327116688093,
+          "last20": 0.36492578813433646,
+          "last20_std": 0.003363943693182035
+        },
+        "ce_bbox": {
+          "records": 321,
+          "first20": 0.923158221711715,
+          "last20": 0.8557470123171806,
+          "last20_std": 0.007499106297976217
+        },
+        "ce_gender": {
+          "records": 321,
+          "first20": 0.19903309616691936,
+          "last20": 0.21826329430670013,
+          "last20_std": 0.03528024980294206
+        },
+        "ce_age": {
+          "records": 321,
+          "first20": 1.6449334576701125,
+          "last20": 1.5382136219739915,
+          "last20_std": 0.03476438311090703
+        },
+        "pose_l1": {
+          "records": 321,
+          "first20": 0.13186587182494502,
+          "last20": 0.025101879588328303,
+          "last20_std": 0.0009037815864561691
+        },
+        "pose_oks": {
+          "records": 321,
+          "first20": 0.9592322539165616,
+          "last20": 0.4844540210068226,
+          "last20_std": 0.009175372416082437
+        },
+        "mask_bce": {
+          "records": 321,
+          "first20": 0.19813967796725532,
+          "last20": 0.03468469008617103,
+          "last20_std": 0.002543156639082093
+        },
+        "mask_dice": {
+          "records": 321,
+          "first20": 0.7657334472661217,
+          "last20": 0.2947829373292625,
+          "last20_std": 0.01383307389725578
+        },
+        "loss": {
+          "records": 321,
+          "first20": 18.256278520663578,
+          "last20": 6.843264970779419,
+          "last20_std": 0.1208565551221148
+        }
+      },
+      "last_progress": {
+        "event": "completed",
+        "micro_step": 16030,
+        "optimizer_step": 8016,
+        "samples_seen": 128230,
+        "completed_full_plan": true
+      }
+    },
+    "v4": {
+      "log": "/root/autodl-tmp/humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/events.jsonl",
+      "definition": "first 20 and last 20 logged values; cadence differs by run",
+      "components": {
+        "loss": {
+          "records": 5500,
+          "first20": 0.7866476655006409,
+          "last20": 0.4189416140317917,
+          "last20_std": 0.06321194536992847
+        },
+        "mask_bce": {
+          "records": 5500,
+          "first20": 0.45166647136211396,
+          "last20": 0.033305165078490975,
+          "last20_std": 0.011612165481158943
+        },
+        "mask_dice": {
+          "records": 5500,
+          "first20": 0.9542027026414871,
+          "last20": 0.3074428543448448,
+          "last20_std": 0.07882174215858222
+        },
+        "pose_l1": {
+          "records": 5500,
+          "first20": 0.21307943835854531,
+          "last20": 0.03524796925485134,
+          "last20_std": 0.00817400806308432
+        },
+        "pose_loss": {
+          "records": 5500,
+          "first20": 0.6478483706712723,
+          "last20": 0.36868242621421815,
+          "last20_std": 0.04040957766968053
+        },
+        "pose_oks": {
+          "records": 5500,
+          "first20": 0.9849496185779572,
+          "last20": 0.6542782306671142,
+          "last20_std": 0.07464211337455211
+        },
+        "seg_loss": {
+          "records": 5500,
+          "first20": 0.7029345840215683,
+          "last20": 0.1703740119934082,
+          "last20_std": 0.03842479728772094
+        },
+        "text_age_loss": {
+          "records": 5500,
+          "first20": 1.90253027677536,
+          "last20": 1.3852324426174163,
+          "last20_std": 0.43680658208617723
+        },
+        "text_box_loss": {
+          "records": 5500,
+          "first20": 1.136087453365326,
+          "last20": 0.979856887459755,
+          "last20_std": 0.08244917890123282
+        },
+        "text_gender_loss": {
+          "records": 5500,
+          "first20": 0.195213430817239,
+          "last20": 0.2519565664930269,
+          "last20_std": 0.5723241872788078
+        },
+        "text_loss": {
+          "records": 5500,
+          "first20": 1.009159979224205,
+          "last20": 0.7177683621644974,
+          "last20_std": 0.18641206464782592
+        }
+      },
+      "last_progress": {
+        "epoch": 2,
+        "event": "optimizer_step",
+        "micro_step": 10999,
+        "optimizer_step": 5500
+      },
+      "post_route_warmup_steps501_520": 0.5584459602832794
+    },
+    "stage2": {
+      "log": "/root/autodl-tmp/humanslot_outputs/stage2_epoch1_full_pipeline_20260729/train_full_epoch1/train_metrics.jsonl",
+      "definition": "first 20 and last 20 logged values; cadence differs by run",
+      "components": {
+        "loss": {
+          "records": 6235,
+          "first20": 65.24349346160889,
+          "last20": 15.73343517780304,
+          "last20_std": 6.4199240229142776
+        }
+      },
+      "last_progress": {
+        "micro_step": 6235,
+        "step": 3117,
+        "epoch": 1,
+        "sample_pos": 12469
+      }
+    }
+  },
+  "limitations": [
+    "cross-version scoring/confidence protocols differ",
+    "no-small and all-size AP are separate regimes",
+    "losses have different definitions and weights",
+    "historical results are not new evaluation runs"
+  ]
+}

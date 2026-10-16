@@ -1,0 +1,4270 @@
+{
+  "unarchived_text_source_candidates": [
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/full64115_3ep_bs8ga2_alllinear_20260723/generated_val_full_epoch1_bs2/diagnose_pose_seg.py",
+      "bytes": 8580
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_boxpose/overfit8_boxref_100_gpu0_20260724/launch.sh",
+      "bytes": 1153
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_boxpose/overfit8_boxref_100_gpu0_20260724b/source_snapshot/human_lisa_qwen_v3_boxpose/train_stage1_v3.py",
+      "bytes": 35186
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_boxpose/overfit8_boxref_500_gpu0_20260724/source_snapshot/human_lisa_qwen_v3_boxpose/train_stage1_v3.py",
+      "bytes": 35185
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/gates/overfit8_boxfree_multiscale_500steps_20260725/source_snapshot/human_lisa_qwen_v3_repr/train_stage1_v3.py",
+      "bytes": 35226
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_real_qwen35_vision_tuned_5step_20260805/launch.sh",
+      "bytes": 1043
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_real_qwen35_vision_tuned_5step_20260805/run/epoch-1-step-5/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_5step_20260805/launch.sh",
+      "bytes": 1214
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_5step_20260805/run/epoch-1-step-5/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805/launch.sh",
+      "bytes": 1214
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805/run/epoch-1-step-30/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_5step_20260805/launch.sh",
+      "bytes": 1258
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_5step_20260805/run/epoch-1-step-5/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/launch.sh",
+      "bytes": 1258
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/run/epoch-1-step-30/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_groupclip30_val1_20260805/launch.sh",
+      "bytes": 931
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_groupclip30_val8_bs2_20260805/launch.sh",
+      "bytes": 935
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_tf_groupclip30_val8_20260805/launch.sh",
+      "bytes": 834
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/launch.sh",
+      "bytes": 1771
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/launch_independent2.sh",
+      "bytes": 1462
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/step-3/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/epoch-1-step-5/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/resumed/epoch-1-step-5/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/step-3/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/epoch-1-step-5/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/launch.sh",
+      "bytes": 1442
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/step-3/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/epoch-1-step-5/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/resumed/epoch-1-step-5/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/stress_bs8ga2_top16_20260805/launch.sh",
+      "bytes": 950
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/stress_bs8ga2_top16_20260805/run/epoch-1-step-1/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/launch.sh",
+      "bytes": 1165
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/step-50/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/step-100/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/stopped-epoch-1-step-100/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/launch.sh",
+      "bytes": 1160
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/step-1/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/stopped-epoch-1-step-1/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_medium600_bs8ga2_20260805/launch.sh",
+      "bytes": 1168
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/launch.sh",
+      "bytes": 1271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/step-1/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/stopped-epoch-1-step-1/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_smoothvisual_bs8ga2_20260805/launch.sh",
+      "bytes": 1348
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/launch.sh",
+      "bytes": 1275
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/step-3/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/stopped-epoch-1-step-3/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/launch.sh",
+      "bytes": 1948
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/step-3/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/epoch-1-step-5/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/resumed/epoch-1-step-5/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/launch.sh",
+      "bytes": 1294
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-100/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-200/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-300/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-400/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-500/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-600/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/stopped-epoch-1-step-600/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/launch.sh",
+      "bytes": 875
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/start_screen.sh",
+      "bytes": 197
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-500/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-1000/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-1500/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-2000/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-2500/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-3000/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-3500/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-4000/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/epoch-1-step-4008/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-4500/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-5000/base_or_adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pilot100_20260830/checkpoint-final/adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_v2_pilot100_20260830/checkpoint-final/adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_v2_pilot100_20260830/source_snapshot/modeling.py",
+      "bytes": 31830
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_v2_pilot100_20260830/source_snapshot/train_stage1_pilot.py",
+      "bytes": 23121
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_v2_pilot100_20260830/source_snapshot/test_components.py",
+      "bytes": 2970
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pose_roi_only_pilot100_20260830/checkpoint-final/adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_joint200_v2_20260831/checkpoint-final/adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_exact64_joint500_20260831/checkpoint-final/adapter/README.md",
+      "bytes": 5220
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_warmup1000_softsimcc_focal_v2_20260831/checkpoint-final/adapter/README.md",
+      "bytes": 5220
+    }
+  ],
+  "experiment_records": [
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_smoke_20260830.launch.log",
+      "bytes": 3244
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pilot100_20260830.launch.log",
+      "bytes": 120606
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_smoke2_20260830.launch.log",
+      "bytes": 2219
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_v2_smoke2_20260830.launch.log",
+      "bytes": 3001
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_v2_pilot100_20260830.launch.log",
+      "bytes": 121313
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pose_roi_only_smoke2_20260830.launch.log",
+      "bytes": 3005
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pose_roi_only_pilot100_20260830.launch.log",
+      "bytes": 121468
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_joint200_20260831.launch.log",
+      "bytes": 9582
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_joint200_v2_20260831.launch.log",
+      "bytes": 201451
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_exact64_joint500_20260831.launch.log",
+      "bytes": 538882
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_warmup1000_softsimcc_20260831.launch.log",
+      "bytes": 149195
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_warmup1000_softsimcc_focal_v2_20260831.launch.log",
+      "bytes": 1074213
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_full_joint_2ep_20260831.launch.log",
+      "bytes": 2133483
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/stage1_v1_stable5task_full_3epoch_20260716_044540_gpu2/status.log",
+      "bytes": 398
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/stage1_v1_stable5task_full_3epoch_20260716_044540_gpu2/train.log",
+      "bytes": 2571404
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/stage1_v1_stable5task_full_3epoch_20260716_044540_gpu2/eval_val_full_checkpoint-10000_gpu3/metrics.json",
+      "bytes": 1967
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/smoke_qwen35_4b_20260718_210320/smoke.log",
+      "bytes": 2158
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/smoke_qwen35_4b_20260718_212950/smoke.log",
+      "bytes": 8441
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/smoke_qwen35_4b_20260718_212950/train/run_manifest.json",
+      "bytes": 4723
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/smoke_qwen35_4b_20260718_213213/smoke.log",
+      "bytes": 6492
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/smoke_qwen35_4b_20260718_213213/train/run_manifest.json",
+      "bytes": 4723
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/smoke_qwen35_4b_save_eval_20260718_213258/train_smoke.log",
+      "bytes": 6491
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/smoke_qwen35_4b_save_eval_20260718_213258/eval_smoke.log",
+      "bytes": 379
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/smoke_qwen35_4b_save_eval_20260718_213258/eval_smoke_retry.log",
+      "bytes": 1111
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/smoke_qwen35_4b_save_eval_20260718_213258/eval_smoke_retry2.log",
+      "bytes": 13641
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/smoke_qwen35_4b_save_eval_20260718_213258/train/run_manifest.json",
+      "bytes": 4723
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/smoke_qwen35_4b_save_eval_20260718_213258/eval1_retry2/metrics.json",
+      "bytes": 6676
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_20260718_222133/bs2/status.log",
+      "bytes": 89
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_20260718_222133/bs2/train.log",
+      "bytes": 56
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_20260718_222133/bs4/status.log",
+      "bytes": 89
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_20260718_222133/bs4/train.log",
+      "bytes": 56
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_20260718_222133/bs8/status.log",
+      "bytes": 89
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_20260718_222133/bs8/train.log",
+      "bytes": 56
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_20260718_222225/bs2/status.log",
+      "bytes": 231
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_20260718_222225/bs2/train.log",
+      "bytes": 5261
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_20260718_222225/bs2/train/run_manifest.json",
+      "bytes": 4725
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_20260718_222225/bs4/status.log",
+      "bytes": 1475
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_20260718_222225/bs4/train.log",
+      "bytes": 6504
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_20260718_222225/bs4/train/run_manifest.json",
+      "bytes": 4724
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_20260718_222225/bs8/status.log",
+      "bytes": 2695
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_20260718_222225/bs8/train.log",
+      "bytes": 7724
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_20260718_222225/bs8/train/run_manifest.json",
+      "bytes": 4724
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_highbs_20260718_222510/bs12/status.log",
+      "bytes": 2727
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_highbs_20260718_222510/bs12/train.log",
+      "bytes": 7729
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_highbs_20260718_222510/bs12/train/run_manifest.json",
+      "bytes": 4725
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_highbs_20260718_222510/bs16/status.log",
+      "bytes": 2745
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_highbs_20260718_222510/bs16/train.log",
+      "bytes": 7747
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_highbs_20260718_222510/bs16/train/run_manifest.json",
+      "bytes": 4725
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_segstress_20260718_222916/bs8/status.log",
+      "bytes": 1571
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_segstress_20260718_222916/bs8/train.log",
+      "bytes": 6607
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_segstress_20260718_222916/bs8/train/run_manifest.json",
+      "bytes": 4740
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_segstress_20260718_222916/bs12/status.log",
+      "bytes": 1578
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_segstress_20260718_222916/bs12/train.log",
+      "bytes": 6612
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_segstress_20260718_222916/bs12/train/run_manifest.json",
+      "bytes": 4741
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_segstress_20260718_222916/bs16/status.log",
+      "bytes": 1577
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_segstress_20260718_222916/bs16/train.log",
+      "bytes": 6611
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/batch_sweep_qwen35_4b_segstress_20260718_222916/bs16/train/run_manifest.json",
+      "bytes": 4741
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/stage1_v1_qwen35_4b_5task_3epoch_epochval_20260718_223143_gpu0/status.log",
+      "bytes": 1151
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/stage1_v1_qwen35_4b_5task_3epoch_epochval_20260718_223143_gpu0/train_epoch1.log",
+      "bytes": 797176
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/stage1_v1_qwen35_4b_5task_3epoch_epochval_20260718_223143_gpu0/eval_epoch1.log",
+      "bytes": 207170
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/stage1_v1_qwen35_4b_5task_3epoch_epochval_20260718_223143_gpu0/train_epoch2.log",
+      "bytes": 323792
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/stage1_v1_qwen35_4b_5task_3epoch_epochval_20260718_223143_gpu0/train/run_manifest.json",
+      "bytes": 4739
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/stage1_v1_qwen35_4b_5task_3epoch_epochval_20260718_223143_gpu0/train/decode_probes/step-1000.json",
+      "bytes": 6860
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/stage1_v1_qwen35_4b_5task_3epoch_epochval_20260718_223143_gpu0/train/decode_probes/step-2000.json",
+      "bytes": 6793
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/stage1_v1_qwen35_4b_5task_3epoch_epochval_20260718_223143_gpu0/train/decode_probes/step-3000.json",
+      "bytes": 6462
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/stage1_v1_qwen35_4b_5task_3epoch_epochval_20260718_223143_gpu0/train/decode_probes/step-4000.json",
+      "bytes": 6512
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/stage1_v1_qwen35_4b_5task_3epoch_epochval_20260718_223143_gpu0/train/decode_probes/step-5000.json",
+      "bytes": 6443
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/stage1_v1_qwen35_4b_5task_3epoch_epochval_20260718_223143_gpu0/train/decode_probes/step-6000.json",
+      "bytes": 6505
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/stage1_v1_qwen35_4b_5task_3epoch_epochval_20260718_223143_gpu0/train/decode_probes/step-7000.json",
+      "bytes": 6430
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/stage1_v1_qwen35_4b_5task_3epoch_epochval_20260718_223143_gpu0/eval_val_full_epoch1_final-step-5343/metrics.json",
+      "bytes": 7223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/diagnostics_epoch1_count_score_20260722/run.log",
+      "bytes": 15016
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/diagnostics_epoch1_count_score_20260722/metrics.json",
+      "bytes": 6678
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/diagnostics_epoch1_teacher_forced_head_20260722/smoke64.log",
+      "bytes": 43635
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/diagnostics_epoch1_teacher_forced_head_20260722/smoke64_metrics.json",
+      "bytes": 23466
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/diagnostics_epoch1_teacher_forced_head_20260722/freegen_subset64.log",
+      "bytes": 15040
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/diagnostics_epoch1_teacher_forced_head_20260722/freegen_subset64_metrics.json",
+      "bytes": 6277
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/diagnostics_epoch1_teacher_forced_head_20260722/full2693.log",
+      "bytes": 1304306
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/diagnostics_epoch1_teacher_forced_head_20260722/full2693_metrics.json",
+      "bytes": 731366
+    },
+    {
+      "path": "humanslot_outputs/qwen35_zero_shot_box_attr_v1/smoke32_20260722/run.log",
+      "bytes": 9014
+    },
+    {
+      "path": "humanslot_outputs/qwen35_zero_shot_box_attr_v1/smoke32_20260722/finetuned_epoch1_subset32.log",
+      "bytes": 15032
+    },
+    {
+      "path": "humanslot_outputs/qwen35_zero_shot_box_attr_v1/smoke32_20260722/finetuned_epoch1_subset32_metrics.json",
+      "bytes": 6219
+    },
+    {
+      "path": "humanslot_outputs/qwen35_zero_shot_box_attr_v1/smoke32_20260722/metrics.json",
+      "bytes": 3743
+    },
+    {
+      "path": "humanslot_outputs/qwen35_zero_shot_box_attr_v1/batch4check8_20260722/run.log",
+      "bytes": 9952
+    },
+    {
+      "path": "humanslot_outputs/qwen35_zero_shot_box_attr_v1/batch4check8_20260722/metrics.json",
+      "bytes": 3537
+    },
+    {
+      "path": "humanslot_outputs/qwen35_zero_shot_box_attr_v1/batch1check8_20260722/run.log",
+      "bytes": 9952
+    },
+    {
+      "path": "humanslot_outputs/qwen35_zero_shot_box_attr_v1/batch1check8_20260722/metrics.json",
+      "bytes": 3538
+    },
+    {
+      "path": "humanslot_outputs/qwen35_zero_shot_box_attr_v1/fullval2693_batch2_20260722/status.log",
+      "bytes": 422
+    },
+    {
+      "path": "humanslot_outputs/qwen35_zero_shot_box_attr_v1/fullval2693_batch2_20260722/run.log",
+      "bytes": 391265
+    },
+    {
+      "path": "humanslot_outputs/qwen35_zero_shot_box_attr_v1/fullval2693_batch2_20260722/metrics.json",
+      "bytes": 3805
+    },
+    {
+      "path": "humanslot_outputs/qwen35_zero_shot_box_attr_v1/fullval2693_batch2_20260722/eval_hqnet_nosmall_20260809/metrics.json",
+      "bytes": 1735
+    },
+    {
+      "path": "humanslot_outputs/qwen35_zero_shot_box_attr_v1/fullval2693_batch2_20260722/eval_hqnet_nosmall_20260809/manifest.json",
+      "bytes": 3376
+    },
+    {
+      "path": "humanslot_outputs/qwen35_zero_shot_box_attr_v1/fullval2693_batch2_20260722/eval_hqnet_nosmall_20260809/comparison_zero_shot_vs_v4_vs_hqnet.json",
+      "bytes": 1715
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit32_100steps_20260723.log",
+      "bytes": 54263
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit32_v2b_200steps_20260723.log",
+      "bytes": 53062
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit4_v2c_300steps_20260723.log",
+      "bytes": 105101
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit4_v2d_rank25_200steps_20260723.log",
+      "bytes": 72738
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit4_v2f_refsample_300steps_20260723.screen.log",
+      "bytes": 38868
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/batch4_step1_20260723/run_manifest.json",
+      "bytes": 5918
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/batch4_step1_20260723/events.jsonl",
+      "bytes": 7583
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/batch8_step1_20260723/run_manifest.json",
+      "bytes": 5918
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/batch8_step1_20260723/events.jsonl",
+      "bytes": 7580
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit32_100steps_20260723/run_manifest.json",
+      "bytes": 5926
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit32_100steps_20260723/events.jsonl",
+      "bytes": 53607
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit32_v2b_200steps_20260723/run_manifest.json",
+      "bytes": 6039
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit32_v2b_200steps_20260723/events.jsonl",
+      "bytes": 52406
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit32_v2b_200steps_20260723/teacher_forced_metrics.json",
+      "bytes": 7975
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit32_v2b_200steps_20260723/teacher_forced_shuffled_metrics.json",
+      "bytes": 7959
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit4_v2c_300steps_20260723/run_manifest.json",
+      "bytes": 6039
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit4_v2c_300steps_20260723/events.jsonl",
+      "bytes": 104445
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit4_v2c_300steps_20260723/teacher_forced_metrics.json",
+      "bytes": 7923
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit4_v2c_300steps_20260723/compat_after_rank_patch.json",
+      "bytes": 7899
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit4_v2d_rank25_200steps_20260723/run_manifest.json",
+      "bytes": 6130
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit4_v2d_rank25_200steps_20260723/events.jsonl",
+      "bytes": 72082
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit4_v2d_rank25_200steps_20260723/teacher_forced_metrics.json",
+      "bytes": 8403
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit4_v2d_rank25_200steps_20260723/compat_after_visualref_patch_1img.json",
+      "bytes": 8388
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/forward_backward1_v2e_visualref_20260723/run_manifest.json",
+      "bytes": 6318
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/forward_backward1_v2e_visualref_20260723/events.jsonl",
+      "bytes": 8152
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit4_v2e_visualref_300steps_20260723/run_manifest.json",
+      "bytes": 6325
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit4_v2e_visualref_300steps_20260723/events.jsonl",
+      "bytes": 47622
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/forward_backward1_v2f_refsample_20260723/run_manifest.json",
+      "bytes": 6479
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/forward_backward1_v2f_refsample_20260723/events.jsonl",
+      "bytes": 8305
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit4_v2f_refsample_300steps_20260723/run_manifest.json",
+      "bytes": 6486
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v2/gates/overfit4_v2f_refsample_300steps_20260723/events.jsonl",
+      "bytes": 38048
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3/gates/overfit4_query25_300steps_20260723.screen.log",
+      "bytes": 121988
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3/gates/forward_backward1_v3_query25_20260723/run_manifest.json",
+      "bytes": 6943
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3/gates/forward_backward1_v3_query25_20260723/events.jsonl",
+      "bytes": 9119
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3/gates/overfit4_query25_300steps_20260723/run_manifest.json",
+      "bytes": 6950
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3/gates/overfit4_query25_300steps_20260723/events.jsonl",
+      "bytes": 120941
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_bs16_3ep_20260723.screen.log",
+      "bytes": 129155
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_bs16_3ep_20260723.train.log",
+      "bytes": 80949
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_bs16_3ep_20260723.teacher_train256.log",
+      "bytes": 10757
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_bs16_3ep_20260723.teacher_val256.log",
+      "bytes": 10756
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_bs16_3ep_20260723.generated_val32.log",
+      "bytes": 25738
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723.train.log",
+      "bytes": 59082
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723.teacher_train256.log",
+      "bytes": 13249
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723.teacher_val256.log",
+      "bytes": 13256
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723.generated_val32.log",
+      "bytes": 28634
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/full64115_3ep_bs8ga2_alllinear_20260723.train_epoch1.log",
+      "bytes": 252060
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/full64115_3ep_bs8ga2_alllinear_20260723.teacher_val_full_epoch1.log",
+      "bytes": 16615
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/full64115_3ep_bs8ga2_alllinear_20260723.generated_val_full_epoch1.log",
+      "bytes": 303606
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/full64115_3ep_bs8ga2_alllinear_20260723.train_epoch2.log",
+      "bytes": 51465
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_query25_300steps_20260723.screen.log",
+      "bytes": 132726
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_query25_300steps_20260723.train.log",
+      "bytes": 121605
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_query25_300steps_20260723.teacher_eval.log",
+      "bytes": 10561
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/generated_eval_train4.screen.log",
+      "bytes": 23767
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/batch_benchmark_20260723.screen.log",
+      "bytes": 9749
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/forward_backward1_alllinear_20260723.train.log",
+      "bytes": 10949
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_alllinear_150steps_20260723.train.log",
+      "bytes": 66897
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_alllinear_150steps_20260723.teacher_eval.log",
+      "bytes": 13182
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_alllinear_150steps_20260723.generated_train4.log",
+      "bytes": 25880
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/stress_batch8_alllinear_20260723.log",
+      "bytes": 6839
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/stress_batch8_alllinear_20260723.json",
+      "bytes": 8334
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/resume_epoch_boundary_alllinear_20260723.pause_after_epoch1.log",
+      "bytes": 11889
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/resume_epoch_boundary_alllinear_20260723.resume_epoch2_to3.log",
+      "bytes": 6722
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/finalcode_step1_postorchestrator_20260723.train.log",
+      "bytes": 13852
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/forward_backward1_query25_20260723/run_manifest.json",
+      "bytes": 7083
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/forward_backward1_query25_20260723/events.jsonl",
+      "bytes": 9254
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_query25_300steps_20260723/run_manifest.json",
+      "bytes": 7086
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_query25_300steps_20260723/events.jsonl",
+      "bytes": 120949
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_query25_300steps_20260723/teacher_forced_metrics.json",
+      "bytes": 9904
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_query25_300steps_20260723/generated_eval_train4.run.log",
+      "bytes": 23309
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_query25_300steps_20260723/generated_eval_train4/status.json",
+      "bytes": 202
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_query25_300steps_20260723/generated_eval_train4/metrics.json",
+      "bytes": 10678
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/batch_benchmark_20260723/bs8.log",
+      "bytes": 10073
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/batch_benchmark_20260723/bs16.log",
+      "bytes": 10080
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/batch_benchmark_20260723/bs24.log",
+      "bytes": 10080
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/batch_benchmark_20260723/bs32.log",
+      "bytes": 8472
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/batch_benchmark_20260723/bs8/run_manifest.json",
+      "bytes": 7221
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/batch_benchmark_20260723/bs8/events.jsonl",
+      "bytes": 9416
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/batch_benchmark_20260723/bs16/run_manifest.json",
+      "bytes": 7223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/batch_benchmark_20260723/bs16/events.jsonl",
+      "bytes": 9423
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/batch_benchmark_20260723/bs24/run_manifest.json",
+      "bytes": 7223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/batch_benchmark_20260723/bs24/events.jsonl",
+      "bytes": 9424
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/batch_benchmark_20260723/bs32/run_manifest.json",
+      "bytes": 7222
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/batch_benchmark_20260723/bs32/events.jsonl",
+      "bytes": 6435
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/forward_backward1_alllinear_20260723/run_manifest.json",
+      "bytes": 9431
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/forward_backward1_alllinear_20260723/events.jsonl",
+      "bytes": 10292
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_alllinear_150steps_20260723/run_manifest.json",
+      "bytes": 9436
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_alllinear_150steps_20260723/events.jsonl",
+      "bytes": 66241
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_alllinear_150steps_20260723/teacher_forced_metrics.json",
+      "bytes": 12525
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_alllinear_150steps_20260723/generated_train4/status.json",
+      "bytes": 204
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_alllinear_150steps_20260723/generated_train4/metrics.json",
+      "bytes": 13245
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/resume_epoch_boundary_alllinear_20260723/run_manifest.json",
+      "bytes": 10521
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/resume_epoch_boundary_alllinear_20260723/events.jsonl",
+      "bytes": 17298
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/finalcode_step1_postorchestrator_20260723/run_manifest.json",
+      "bytes": 12652
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/finalcode_step1_postorchestrator_20260723/events.jsonl",
+      "bytes": 13195
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_bs16_3ep_20260723/run_manifest.json",
+      "bytes": 7224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_bs16_3ep_20260723/events.jsonl",
+      "bytes": 80293
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_bs16_3ep_20260723/teacher_train256_metrics.json",
+      "bytes": 10100
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_bs16_3ep_20260723/teacher_val256_metrics.json",
+      "bytes": 10099
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_bs16_3ep_20260723/generated_val32/status.json",
+      "bytes": 191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_bs16_3ep_20260723/generated_val32/metrics.json",
+      "bytes": 10628
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/run_manifest.json",
+      "bytes": 9439
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/events.jsonl",
+      "bytes": 58426
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/teacher_train256_metrics.json",
+      "bytes": 12592
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/teacher_val256_metrics.json",
+      "bytes": 12599
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/generated_val32/status.json",
+      "bytes": 205
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/generated_val32/metrics.json",
+      "bytes": 13301
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/full64115_3ep_bs8ga2_alllinear_20260723/run_manifest.json",
+      "bytes": 12669
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/full64115_3ep_bs8ga2_alllinear_20260723/events.jsonl",
+      "bytes": 302213
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/full64115_3ep_bs8ga2_alllinear_20260723/teacher_val_full_epoch1.json",
+      "bytes": 15958
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/full64115_3ep_bs8ga2_alllinear_20260723/generated_val_full_epoch1_bs2/status.json",
+      "bytes": 216
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/full64115_3ep_bs8ga2_alllinear_20260723/generated_val_full_epoch1_bs2/metrics.json",
+      "bytes": 16890
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/full64115_3ep_bs8ga2_alllinear_20260723/generated_val_full_epoch1_bs2/diagnostics_pose_seg/summary.json",
+      "bytes": 2713
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/full64115_3ep_bs8ga2_alllinear_20260723/generated_val_full_epoch1_bs2/diagnostics_pose_seg/oks_summary.json",
+      "bytes": 4684
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/full64115_3ep_bs8ga2_alllinear_20260723/generated_val_full_epoch1_bs2/diagnostics_pose_seg/keypoint_eval_variants.json",
+      "bytes": 808
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/full64115_3ep_bs8ga2_alllinear_20260723/generated_val_full_epoch1_bs2/diagnostics_pose_seg/keypoint_oracle_variants.json",
+      "bytes": 1145
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_boxpose/overfit8_boxref_100_gpu0_20260724b.train.log",
+      "bytes": 46198
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_boxpose/overfit8_boxref_500_gpu0_20260724.train.log",
+      "bytes": 93143
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_boxpose/full64115_3ep_bs8ga2_boxpose_20260725.train.log",
+      "bytes": 271953
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_boxpose/overfit8_boxref_100_gpu0_20260724/launch.sh",
+      "bytes": 1153
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_boxpose/overfit8_boxref_100_gpu0_20260724/train.log",
+      "bytes": 476
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_boxpose/overfit8_boxref_100_gpu0_20260724b/run_manifest.json",
+      "bytes": 12646
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_boxpose/overfit8_boxref_100_gpu0_20260724b/events.jsonl",
+      "bytes": 45542
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_boxpose/overfit8_boxref_100_gpu0_20260724b/teacher_forced_train8.json",
+      "bytes": 15852
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_boxpose/overfit8_boxref_500_gpu0_20260724/run_manifest.json",
+      "bytes": 12646
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_boxpose/overfit8_boxref_500_gpu0_20260724/events.jsonl",
+      "bytes": 92487
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_boxpose/overfit8_boxref_500_gpu0_20260724/teacher_forced_train8.json",
+      "bytes": 15858
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_boxpose/overfit8_boxref_500_gpu0_20260724/generated_train8_smoke/status.json",
+      "bytes": 194
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_boxpose/overfit8_boxref_500_gpu0_20260724/generated_train8_smoke/metrics.json",
+      "bytes": 16708
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_boxpose/full64115_3ep_bs8ga2_boxpose_20260725/run_manifest.json",
+      "bytes": 12679
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_boxpose/full64115_3ep_bs8ga2_boxpose_20260725/events.jsonl",
+      "bytes": 271297
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728.train.log",
+      "bytes": 1012580
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728.teacher_val_full_epoch1.log",
+      "bytes": 17719
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728.generated_val_full_epoch1.log",
+      "bytes": 296617
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728.teacher_val_full_epoch2.log",
+      "bytes": 17723
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728.generated_val_full_epoch2.log",
+      "bytes": 296574
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/gates/stress_batch8_alllinear_20260725.json",
+      "bytes": 8318
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/gates/overfit8_boxfree_multiscale_500steps_20260725.train.log",
+      "bytes": 200847
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/gates/overfit8_boxfree_multiscale_500steps_20260725.gate_eval.log",
+      "bytes": 152
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/gates/overfit8_boxfree_multiscale_500steps_20260725.teacher_forced.log",
+      "bytes": 17186
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/gates/overfit8_boxfree_multiscale_500steps_20260725.generated.log",
+      "bytes": 30330
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/gates/overfit8_boxfree_multiscale_500steps_20260725/run_manifest.json",
+      "bytes": 13299
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/gates/overfit8_boxfree_multiscale_500steps_20260725/events.jsonl",
+      "bytes": 200191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/gates/overfit8_boxfree_multiscale_500steps_20260725/teacher_forced_metrics.json",
+      "bytes": 16528
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/gates/overfit8_boxfree_multiscale_500steps_20260725/generated_train8/status.json",
+      "bytes": 209
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/gates/overfit8_boxfree_multiscale_500steps_20260725/generated_train8/metrics.json",
+      "bytes": 17289
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/run_manifest.json",
+      "bytes": 13749
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/events.jsonl",
+      "bytes": 1011924
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/eval_epoch1_small.status.log",
+      "bytes": 177
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/eval_epoch1_parallel_full.status.log",
+      "bytes": 496
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/launch.sh",
+      "bytes": 3475
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/teacher_val_full_epoch1.json",
+      "bytes": 17062
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/teacher_val_full_epoch2.json",
+      "bytes": 17066
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0000001/metrics.json",
+      "bytes": 2923
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0000250/metrics.json",
+      "bytes": 2835
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0000500/metrics.json",
+      "bytes": 2902
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0000750/metrics.json",
+      "bytes": 2829
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0001000/metrics.json",
+      "bytes": 2888
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0001250/metrics.json",
+      "bytes": 2903
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0001500/metrics.json",
+      "bytes": 2934
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0001750/metrics.json",
+      "bytes": 2907
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0002000/metrics.json",
+      "bytes": 2846
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0002250/metrics.json",
+      "bytes": 2895
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0002500/metrics.json",
+      "bytes": 2778
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0002750/metrics.json",
+      "bytes": 2852
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0003000/metrics.json",
+      "bytes": 2896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0003250/metrics.json",
+      "bytes": 2859
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0003500/metrics.json",
+      "bytes": 2951
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0003750/metrics.json",
+      "bytes": 2849
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0004000/metrics.json",
+      "bytes": 2892
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0004250/metrics.json",
+      "bytes": 2845
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0004500/metrics.json",
+      "bytes": 2891
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0004750/metrics.json",
+      "bytes": 2831
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0005000/metrics.json",
+      "bytes": 2765
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0005250/metrics.json",
+      "bytes": 2864
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0005500/metrics.json",
+      "bytes": 2916
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0005750/metrics.json",
+      "bytes": 2785
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0006000/metrics.json",
+      "bytes": 2851
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0006250/metrics.json",
+      "bytes": 2850
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0006500/metrics.json",
+      "bytes": 2918
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0006750/metrics.json",
+      "bytes": 2832
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0007000/metrics.json",
+      "bytes": 2906
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0007250/metrics.json",
+      "bytes": 2793
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0007500/metrics.json",
+      "bytes": 2913
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0007750/metrics.json",
+      "bytes": 2853
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/monitor/step-0008000/metrics.json",
+      "bytes": 2878
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/eval_epoch1_tf_val64/run.log",
+      "bytes": 17676
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/eval_epoch1_tf_val64/metrics.json",
+      "bytes": 17019
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/eval_epoch1_generated_val32/run.log",
+      "bytes": 399
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/eval_epoch1_generated_val32_tok5000_bs1/run.log",
+      "bytes": 36208
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/eval_epoch1_generated_val32_tok5000_bs1/status.json",
+      "bytes": 202
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/eval_epoch1_generated_val32_tok5000_bs1/metrics.json",
+      "bytes": 17882
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/eval_epoch1_tf_full_val2693_bs1/run.log",
+      "bytes": 17723
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/eval_epoch1_tf_full_val2693_bs1/metrics.json",
+      "bytes": 17066
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/eval_epoch1_generated_full_val2693_bs1/run.log",
+      "bytes": 562790
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/eval_epoch1_generated_full_val2693_bs1/status.json",
+      "bytes": 210
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/eval_epoch1_generated_full_val2693_bs1/metrics.json",
+      "bytes": 17967
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/generated_val_full_epoch1_bs2/status.json",
+      "bytes": 210
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/generated_val_full_epoch1_bs2/metrics.json",
+      "bytes": 17983
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/generated_val_full_epoch2_bs2/status.json",
+      "bytes": 210
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/generated_val_full_epoch2_bs2/metrics.json",
+      "bytes": 17939
+    },
+    {
+      "path": "humanslot_outputs/stage2_epoch1_pair_20260729/status.log",
+      "bytes": 13095
+    },
+    {
+      "path": "humanslot_outputs/stage2_epoch1_full_pipeline_20260729/status.log",
+      "bytes": 671774
+    },
+    {
+      "path": "humanslot_outputs/stage2_epoch1_full_pipeline_20260729/smoke_full_pipeline_bs2.log",
+      "bytes": 16385
+    },
+    {
+      "path": "humanslot_outputs/stage2_epoch1_full_pipeline_20260729/train_full_epoch1.log",
+      "bytes": 600455
+    },
+    {
+      "path": "humanslot_outputs/stage2_epoch1_full_pipeline_20260729/smoke_full_pipeline_bs2/manifest.json",
+      "bytes": 2031
+    },
+    {
+      "path": "humanslot_outputs/stage2_epoch1_full_pipeline_20260729/smoke_full_pipeline_bs2/train_metrics.jsonl",
+      "bytes": 11420
+    },
+    {
+      "path": "humanslot_outputs/stage2_epoch1_full_pipeline_20260729/train_full_epoch1/manifest.json",
+      "bytes": 2034
+    },
+    {
+      "path": "humanslot_outputs/stage2_epoch1_full_pipeline_20260729/train_full_epoch1/train_metrics.jsonl",
+      "bytes": 23713946
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/preflight_full_train_v1_20260805.json",
+      "bytes": 22787
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/stress_top16_train_v1_20260805.json",
+      "bytes": 378801
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/preflight_full_train_v1_nothink_20260805.json",
+      "bytes": 22787
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/data_gate_val16_20260804_a800/data_only.json",
+      "bytes": 5924
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/data_gate_train16_20260804_a800/train16_annotations.json",
+      "bytes": 74479
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/data_gate_train16_20260804_a800/run/data_only.json",
+      "bytes": 5917
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_real_qwen35_vision_tuned_5step_20260805/launch.sh",
+      "bytes": 1043
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_real_qwen35_vision_tuned_5step_20260805/status.log",
+      "bytes": 81
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_real_qwen35_vision_tuned_5step_20260805/train.log",
+      "bytes": 12047
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_real_qwen35_vision_tuned_5step_20260805/INVALID_PROTOCOL.json",
+      "bytes": 556
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_real_qwen35_vision_tuned_5step_20260805/run/manifest.json",
+      "bytes": 7526
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_real_qwen35_vision_tuned_5step_20260805/run/events.jsonl",
+      "bytes": 11630
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_real_qwen35_vision_tuned_5step_20260805/run/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_real_qwen35_vision_tuned_5step_20260805/run/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_real_qwen35_vision_tuned_5step_20260805/run/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_real_qwen35_vision_tuned_5step_20260805/run/epoch-1-step-5/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_real_qwen35_vision_tuned_5step_20260805/run/epoch-1-step-5/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_real_qwen35_vision_tuned_5step_20260805/run/epoch-1-step-5/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_real_qwen35_vision_tuned_5step_20260805/run/epoch-1-step-5/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_5step_20260805/launch.sh",
+      "bytes": 1214
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_5step_20260805/status.log",
+      "bytes": 81
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_5step_20260805/train.log",
+      "bytes": 12525
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_5step_20260805/INVALID_PROTOCOL.json",
+      "bytes": 556
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_5step_20260805/run/manifest.json",
+      "bytes": 7692
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_5step_20260805/run/events.jsonl",
+      "bytes": 12108
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_5step_20260805/run/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_5step_20260805/run/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_5step_20260805/run/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_5step_20260805/run/epoch-1-step-5/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_5step_20260805/run/epoch-1-step-5/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_5step_20260805/run/epoch-1-step-5/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_5step_20260805/run/epoch-1-step-5/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805/launch.sh",
+      "bytes": 1214
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805/status.log",
+      "bytes": 81
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805/train.log",
+      "bytes": 74680
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805/comparison_summary.json",
+      "bytes": 2056
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805/INVALID_PROTOCOL.json",
+      "bytes": 556
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805/run/manifest.json",
+      "bytes": 7691
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805/run/events.jsonl",
+      "bytes": 74265
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805/run/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805/run/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805/run/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805/run/epoch-1-step-30/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805/run/epoch-1-step-30/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805/run/epoch-1-step-30/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805/run/epoch-1-step-30/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_5step_20260805/launch.sh",
+      "bytes": 1258
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_5step_20260805/status.log",
+      "bytes": 81
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_5step_20260805/train.log",
+      "bytes": 14179
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_5step_20260805/INVALID_PROTOCOL.json",
+      "bytes": 556
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_5step_20260805/run/manifest.json",
+      "bytes": 7784
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_5step_20260805/run/events.jsonl",
+      "bytes": 13761
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_5step_20260805/run/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_5step_20260805/run/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_5step_20260805/run/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_5step_20260805/run/epoch-1-step-5/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_5step_20260805/run/epoch-1-step-5/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_5step_20260805/run/epoch-1-step-5/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_5step_20260805/run/epoch-1-step-5/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/launch.sh",
+      "bytes": 1258
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/status.log",
+      "bytes": 81
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/train.log",
+      "bytes": 84496
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/comparison_groupclip_vs_global.json",
+      "bytes": 2706
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/INVALID_PROTOCOL.json",
+      "bytes": 556
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/run/manifest.json",
+      "bytes": 7783
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/run/events.jsonl",
+      "bytes": 84080
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/run/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/run/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/run/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/run/epoch-1-step-30/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/run/epoch-1-step-30/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/run/epoch-1-step-30/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/run/epoch-1-step-30/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_groupclip30_val1_20260805/launch.sh",
+      "bytes": 931
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_groupclip30_val1_20260805/status.log",
+      "bytes": 81
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_groupclip30_val1_20260805/eval.log",
+      "bytes": 23659
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_groupclip30_val1_20260805/INVALID_PROTOCOL.json",
+      "bytes": 556
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_groupclip30_val1_20260805/output/status.json",
+      "bytes": 209
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_groupclip30_val1_20260805/output/metrics.json",
+      "bytes": 11303
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_groupclip30_val8_bs2_20260805/launch.sh",
+      "bytes": 935
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_groupclip30_val8_bs2_20260805/status.log",
+      "bytes": 81
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_groupclip30_val8_bs2_20260805/eval.log",
+      "bytes": 24292
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_groupclip30_val8_bs2_20260805/INVALID_PROTOCOL.json",
+      "bytes": 556
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_groupclip30_val8_bs2_20260805/output/status.json",
+      "bytes": 209
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_groupclip30_val8_bs2_20260805/output/metrics.json",
+      "bytes": 11502
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_tf_groupclip30_val8_20260805/launch.sh",
+      "bytes": 834
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_tf_groupclip30_val8_20260805/status.log",
+      "bytes": 81
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_tf_groupclip30_val8_20260805/eval.log",
+      "bytes": 13502
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_tf_groupclip30_val8_20260805/INVALID_PROTOCOL.json",
+      "bytes": 556
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_tf_groupclip30_val8_20260805/output/status.json",
+      "bytes": 138
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_tf_groupclip30_val8_20260805/output/metrics.json",
+      "bytes": 9823
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/launch.sh",
+      "bytes": 1771
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/status.log",
+      "bytes": 194
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous.log",
+      "bytes": 14314
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/resumed.log",
+      "bytes": 6043
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/comparison.log",
+      "bytes": 48340
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/comparison.json",
+      "bytes": 48339
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/load_audit.json",
+      "bytes": 630
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/launch_independent2.sh",
+      "bytes": 1462
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2.status.log",
+      "bytes": 110
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2.log",
+      "bytes": 14326
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/comparison_independent.log",
+      "bytes": 48311
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/comparison_independent.json",
+      "bytes": 48310
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/manifest.json",
+      "bytes": 9414
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/events.jsonl",
+      "bytes": 13895
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/step-3/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/step-3/processor/tokenizer.json",
+      "bytes": 19989858
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/step-3/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/step-3/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/epoch-1-step-5/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/epoch-1-step-5/processor/tokenizer.json",
+      "bytes": 19989858
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/epoch-1-step-5/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/epoch-1-step-5/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/resumed/manifest.json",
+      "bytes": 9747
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/resumed/events.jsonl",
+      "bytes": 5954
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/resumed/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/resumed/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/resumed/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/resumed/epoch-1-step-5/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/resumed/epoch-1-step-5/processor/tokenizer.json",
+      "bytes": 19989858
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/resumed/epoch-1-step-5/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/resumed/epoch-1-step-5/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/manifest.json",
+      "bytes": 9414
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/events.jsonl",
+      "bytes": 13909
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/step-3/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/step-3/processor/tokenizer.json",
+      "bytes": 19989858
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/step-3/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/step-3/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/epoch-1-step-5/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/epoch-1-step-5/processor/tokenizer.json",
+      "bytes": 19989858
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/epoch-1-step-5/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/epoch-1-step-5/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/launch.sh",
+      "bytes": 1442
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/status.log",
+      "bytes": 146
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous.log",
+      "bytes": 14780
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/resumed.log",
+      "bytes": 6412
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/comparison.log",
+      "bytes": 339
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/comparison.json",
+      "bytes": 338
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/manifest.json",
+      "bytes": 9466
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/events.jsonl",
+      "bytes": 13920
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/step-3/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/step-3/processor/tokenizer.json",
+      "bytes": 19989858
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/step-3/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/step-3/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/epoch-1-step-5/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/epoch-1-step-5/processor/tokenizer.json",
+      "bytes": 19989858
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/epoch-1-step-5/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/epoch-1-step-5/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/resumed/manifest.json",
+      "bytes": 9821
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/resumed/events.jsonl",
+      "bytes": 5983
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/resumed/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/resumed/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/resumed/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/resumed/epoch-1-step-5/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/resumed/epoch-1-step-5/processor/tokenizer.json",
+      "bytes": 19989858
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/resumed/epoch-1-step-5/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/resumed/epoch-1-step-5/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/stress_bs8ga2_top16_20260805/launch.sh",
+      "bytes": 950
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/stress_bs8ga2_top16_20260805/status.log",
+      "bytes": 66
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/stress_bs8ga2_top16_20260805/train.log",
+      "bytes": 4735
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/stress_bs8ga2_top16_20260805/run/manifest.json",
+      "bytes": 9516
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/stress_bs8ga2_top16_20260805/run/events.jsonl",
+      "bytes": 3937
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/stress_bs8ga2_top16_20260805/run/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/stress_bs8ga2_top16_20260805/run/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/stress_bs8ga2_top16_20260805/run/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/stress_bs8ga2_top16_20260805/run/epoch-1-step-1/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/stress_bs8ga2_top16_20260805/run/epoch-1-step-1/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/stress_bs8ga2_top16_20260805/run/epoch-1-step-1/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/stress_bs8ga2_top16_20260805/run/epoch-1-step-1/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/launch.sh",
+      "bytes": 1165
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/status.log",
+      "bytes": 66
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/train.log",
+      "bytes": 43031
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/INVALID_PROTOCOL.json",
+      "bytes": 556
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/manifest.json",
+      "bytes": 9584
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/events.jsonl",
+      "bytes": 382410
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/step-50/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/step-50/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/step-50/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/step-50/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/step-100/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/step-100/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/step-100/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/step-100/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/stopped-epoch-1-step-100/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/stopped-epoch-1-step-100/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/stopped-epoch-1-step-100/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/stopped-epoch-1-step-100/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/launch.sh",
+      "bytes": 1160
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/status.log",
+      "bytes": 66
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/train.log",
+      "bytes": 4841
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/INVALID_PROTOCOL.json",
+      "bytes": 556
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/manifest.json",
+      "bytes": 10412
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/events.jsonl",
+      "bytes": 3937
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/step-1/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/step-1/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/step-1/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/step-1/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/stopped-epoch-1-step-1/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/stopped-epoch-1-step-1/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/stopped-epoch-1-step-1/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/stopped-epoch-1-step-1/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_medium600_bs8ga2_20260805/launch.sh",
+      "bytes": 1168
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_medium600_bs8ga2_20260805/status.log",
+      "bytes": 74
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_medium600_bs8ga2_20260805/train.log",
+      "bytes": 38267
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_medium600_bs8ga2_20260805/INVALID_PROTOCOL.json",
+      "bytes": 556
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_medium600_bs8ga2_20260805/run/manifest.json",
+      "bytes": 10414
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_medium600_bs8ga2_20260805/run/events.jsonl",
+      "bytes": 282146
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_medium600_bs8ga2_20260805/run/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_medium600_bs8ga2_20260805/run/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_medium600_bs8ga2_20260805/run/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/launch.sh",
+      "bytes": 1271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/status.log",
+      "bytes": 66
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/train.log",
+      "bytes": 4832
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/manifest.json",
+      "bytes": 10476
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/events.jsonl",
+      "bytes": 3937
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/step-1/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/step-1/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/step-1/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/step-1/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/stopped-epoch-1-step-1/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/stopped-epoch-1-step-1/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/stopped-epoch-1-step-1/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/stopped-epoch-1-step-1/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_smoothvisual_bs8ga2_20260805/launch.sh",
+      "bytes": 1348
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_smoothvisual_bs8ga2_20260805/status.log",
+      "bytes": 74
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_smoothvisual_bs8ga2_20260805/train.log",
+      "bytes": 9627
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_smoothvisual_bs8ga2_20260805/INVALID_TRAINING_MECHANICS.json",
+      "bytes": 382
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_smoothvisual_bs8ga2_20260805/run/manifest.json",
+      "bytes": 10711
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_smoothvisual_bs8ga2_20260805/run/events.jsonl",
+      "bytes": 72318
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_smoothvisual_bs8ga2_20260805/run/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_smoothvisual_bs8ga2_20260805/run/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_smoothvisual_bs8ga2_20260805/run/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/launch.sh",
+      "bytes": 1275
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/status.log",
+      "bytes": 66
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/train.log",
+      "bytes": 12945
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/manifest.json",
+      "bytes": 10795
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/events.jsonl",
+      "bytes": 12116
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/step-3/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/step-3/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/step-3/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/step-3/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/stopped-epoch-1-step-3/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/stopped-epoch-1-step-3/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/stopped-epoch-1-step-3/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/stopped-epoch-1-step-3/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/launch.sh",
+      "bytes": 1948
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/status.log",
+      "bytes": 146
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous.log",
+      "bytes": 15652
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/resumed.log",
+      "bytes": 6845
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/comparison.log",
+      "bytes": 347
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/comparison.json",
+      "bytes": 346
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/manifest.json",
+      "bytes": 10763
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/events.jsonl",
+      "bytes": 15031
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/step-3/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/step-3/processor/tokenizer.json",
+      "bytes": 19989858
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/step-3/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/step-3/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/epoch-1-step-5/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/epoch-1-step-5/processor/tokenizer.json",
+      "bytes": 19989858
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/epoch-1-step-5/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/epoch-1-step-5/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/resumed/manifest.json",
+      "bytes": 11126
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/resumed/events.jsonl",
+      "bytes": 6368
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/resumed/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/resumed/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/resumed/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/resumed/epoch-1-step-5/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/resumed/epoch-1-step-5/processor/tokenizer.json",
+      "bytes": 19989858
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/resumed/epoch-1-step-5/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/resumed/epoch-1-step-5/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/launch.sh",
+      "bytes": 1294
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/status.log",
+      "bytes": 66
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/train.log",
+      "bytes": 245189
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/manifest.json",
+      "bytes": 10797
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/events.jsonl",
+      "bytes": 2401163
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-100/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-100/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-100/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-100/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-200/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-200/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-200/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-200/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-300/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-300/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-300/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-300/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-400/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-400/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-400/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-400/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-500/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-500/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-500/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-500/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-600/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-600/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-600/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-600/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/stopped-epoch-1-step-600/processor/tokenizer_config.json",
+      "bytes": 1223
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/stopped-epoch-1-step-600/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/stopped-epoch-1-step-600/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/stopped-epoch-1-step-600/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/launch.sh",
+      "bytes": 875
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/start_screen.sh",
+      "bytes": 197
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/eval_epoch1_full_20260807.status.log",
+      "bytes": 4175
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/eval_hqnet_nosmall_20260809.run.log",
+      "bytes": 4376
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/manifest.json",
+      "bytes": 10795
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/events.jsonl",
+      "bytes": 22036479
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-500/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-500/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-500/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-500/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-1000/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-1000/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-1000/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-1000/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-1500/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-1500/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-1500/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-1500/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-2000/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-2000/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-2000/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-2000/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-2500/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-2500/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-2500/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-2500/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-3000/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-3000/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-3000/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-3000/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-3500/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-3500/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-3500/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-3500/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-4000/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-4000/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-4000/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-4000/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/epoch-1-step-4008/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/epoch-1-step-4008/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/epoch-1-step-4008/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/epoch-1-step-4008/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-4500/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-4500/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-4500/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-4500/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-5000/processor/tokenizer_config.json",
+      "bytes": 1224
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-5000/processor/tokenizer.json",
+      "bytes": 19989690
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-5000/processor/processor_config.json",
+      "bytes": 1191
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-5000/base_or_adapter/adapter_config.json",
+      "bytes": 2356
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/eval_epoch1_tf_full_val2693_bs1_20260807/run.log",
+      "bytes": 416036
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/eval_epoch1_tf_full_val2693_bs1_20260807/status.json",
+      "bytes": 162
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/eval_epoch1_tf_full_val2693_bs1_20260807/metrics.json",
+      "bytes": 13113
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/eval_epoch1_generated_full_val2693_bs1_tok5000_20260807/run.log",
+      "bytes": 603666
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/eval_epoch1_generated_full_val2693_bs1_tok5000_20260807/status.json",
+      "bytes": 229
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/eval_epoch1_generated_full_val2693_bs1_tok5000_20260807/metrics.json",
+      "bytes": 15313
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/eval_epoch1_generated_full_val2693_hqnet_nosmall_20260809/metrics.json",
+      "bytes": 1991
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/eval_epoch1_generated_full_val2693_hqnet_nosmall_20260809/manifest.json",
+      "bytes": 2585
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_smoke_20260830/manifest.json",
+      "bytes": 7163
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_smoke_20260830/events.jsonl",
+      "bytes": 2391
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_smoke_20260830/status.json",
+      "bytes": 244
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pilot100_20260830/manifest.json",
+      "bytes": 7964
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pilot100_20260830/events.jsonl",
+      "bytes": 119982
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pilot100_20260830/status.json",
+      "bytes": 246
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pilot100_20260830/checkpoint-final/adapter/adapter_config.json",
+      "bytes": 1907
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_smoke2_20260830/manifest.json",
+      "bytes": 7580
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_smoke2_20260830/events.jsonl",
+      "bytes": 1175
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_smoke2_20260830/INVALID_IMPLEMENTATION.json",
+      "bytes": 317
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_v2_smoke2_20260830/manifest.json",
+      "bytes": 7587
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_v2_smoke2_20260830/events.jsonl",
+      "bytes": 2379
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_v2_smoke2_20260830/status.json",
+      "bytes": 244
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_v2_pilot100_20260830/manifest.json",
+      "bytes": 8387
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_v2_pilot100_20260830/events.jsonl",
+      "bytes": 120690
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_v2_pilot100_20260830/status.json",
+      "bytes": 245
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_v2_pilot100_20260830/checkpoint-final/adapter/adapter_config.json",
+      "bytes": 1907
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_v2_pilot100_20260830/source_snapshot/launch.sh",
+      "bytes": 978
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pose_roi_only_smoke2_20260830/manifest.json",
+      "bytes": 7446
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pose_roi_only_smoke2_20260830/events.jsonl",
+      "bytes": 2383
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pose_roi_only_smoke2_20260830/status.json",
+      "bytes": 244
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pose_roi_only_pilot100_20260830/manifest.json",
+      "bytes": 8245
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pose_roi_only_pilot100_20260830/events.jsonl",
+      "bytes": 120845
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pose_roi_only_pilot100_20260830/status.json",
+      "bytes": 245
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pose_roi_only_pilot100_20260830/comparison_vs_baseline.json",
+      "bytes": 1430
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pose_roi_only_pilot100_20260830/checkpoint-final/adapter/adapter_config.json",
+      "bytes": 1907
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pose_roi_only_pilot100_20260830/source_snapshot/launch.sh",
+      "bytes": 978
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g0_smoke1_20260831/manifest.json",
+      "bytes": 7506
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g0_smoke1_20260831/events.jsonl",
+      "bytes": 965
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g0_smoke1_20260831/status.json",
+      "bytes": 243
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_joint200_20260831/manifest.json",
+      "bytes": 7951
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_joint200_20260831/events.jsonl",
+      "bytes": 2983
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_joint200_20260831/failure.json",
+      "bytes": 423
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g0_smoke5_v2_20260831/manifest.json",
+      "bytes": 7540
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g0_smoke5_v2_20260831/events.jsonl",
+      "bytes": 5003
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g0_smoke5_v2_20260831/status.json",
+      "bytes": 243
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_joint200_v2_20260831/manifest.json",
+      "bytes": 7956
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_joint200_v2_20260831/events.jsonl",
+      "bytes": 200716
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_joint200_v2_20260831/status.json",
+      "bytes": 243
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_joint200_v2_20260831/checkpoint-final/adapter/adapter_config.json",
+      "bytes": 1268
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g0_exact64_metric_smoke1_20260831/manifest.json",
+      "bytes": 8061
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g0_exact64_metric_smoke1_20260831/events.jsonl",
+      "bytes": 1036
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g0_exact64_metric_smoke1_20260831/status.json",
+      "bytes": 244
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_exact64_joint500_20260831/manifest.json",
+      "bytes": 8052
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_exact64_joint500_20260831/events.jsonl",
+      "bytes": 538145
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_exact64_joint500_20260831/status.json",
+      "bytes": 245
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_exact64_joint500_20260831/checkpoint-final/adapter/adapter_config.json",
+      "bytes": 1268
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_warmup1000_softsimcc_20260831/manifest.json",
+      "bytes": 8041
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_warmup1000_softsimcc_20260831/events.jsonl",
+      "bytes": 147603
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_warmup1000_softsimcc_20260831/stopped_diagnostic.json",
+      "bytes": 480
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_warmup1000_softsimcc_focal_v2_20260831/manifest.json",
+      "bytes": 8058
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_warmup1000_softsimcc_focal_v2_20260831/events.jsonl",
+      "bytes": 1073461
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_warmup1000_softsimcc_focal_v2_20260831/status.json",
+      "bytes": 247
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_warmup1000_softsimcc_focal_v2_20260831/checkpoint-final/adapter/adapter_config.json",
+      "bytes": 1268
+    },
+    {
+      "path": "humanslot_outputs/v5_manifest_preflight_20260901/coco3.jsonl",
+      "bytes": 20471
+    },
+    {
+      "path": "humanslot_outputs/v5_manifest_preflight_20260901/audit.json",
+      "bytes": 400
+    },
+    {
+      "path": "humanslot_outputs/v5_manifest_preflight_20260901/train_preflight.json",
+      "bytes": 1397
+    }
+  ],
+  "weights": [
+    {
+      "path": "humanslot_outputs/stage2_epoch1_full_pipeline_20260729/train_full_epoch1/checkpoint_step_0001000.pt",
+      "bytes": 619104680
+    },
+    {
+      "path": "humanslot_outputs/stage2_epoch1_full_pipeline_20260729/train_full_epoch1/latest.pt",
+      "bytes": 619050626
+    },
+    {
+      "path": "humanslot_outputs/stage2_epoch1_full_pipeline_20260729/train_full_epoch1/checkpoint_step_0002000.pt",
+      "bytes": 619104680
+    },
+    {
+      "path": "humanslot_outputs/stage2_epoch1_full_pipeline_20260729/train_full_epoch1/checkpoint_step_0003000.pt",
+      "bytes": 619104680
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_real_qwen35_vision_tuned_5step_20260805/run/epoch-1-step-5/stage1_v4_tasks.pt",
+      "bytes": 24056207
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_real_qwen35_vision_tuned_5step_20260805/run/epoch-1-step-5/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_real_qwen35_vision_tuned_5step_20260805/run/epoch-1-step-5/training_state.pt",
+      "bytes": 165656932
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_real_qwen35_vision_tuned_5step_20260805/run/epoch-1-step-5/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_5step_20260805/run/epoch-1-step-5/stage1_v4_tasks.pt",
+      "bytes": 24056207
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_5step_20260805/run/epoch-1-step-5/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_5step_20260805/run/epoch-1-step-5/training_state.pt",
+      "bytes": 165656932
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_5step_20260805/run/epoch-1-step-5/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805/run/epoch-1-step-30/stage1_v4_tasks.pt",
+      "bytes": 24056207
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805/run/epoch-1-step-30/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805/run/epoch-1-step-30/training_state.pt",
+      "bytes": 165656932
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_dynamic_route_warmup_qwen35_30step_20260805/run/epoch-1-step-30/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_5step_20260805/run/epoch-1-step-5/stage1_v4_tasks.pt",
+      "bytes": 24056207
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_5step_20260805/run/epoch-1-step-5/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_5step_20260805/run/epoch-1-step-5/training_state.pt",
+      "bytes": 165656932
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_5step_20260805/run/epoch-1-step-5/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/run/epoch-1-step-30/stage1_v4_tasks.pt",
+      "bytes": 24056207
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/run/epoch-1-step-30/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/run/epoch-1-step-30/training_state.pt",
+      "bytes": 165656932
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/smoke_group_clip_dynamic_qwen35_30step_20260805/run/epoch-1-step-30/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/step-3/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/step-3/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/step-3/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/step-3/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/epoch-1-step-5/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/epoch-1-step-5/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/epoch-1-step-5/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/continuous/epoch-1-step-5/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/resumed/epoch-1-step-5/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/resumed/epoch-1-step-5/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/resumed/epoch-1-step-5/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/resumed/epoch-1-step-5/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/step-3/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/step-3/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/step-3/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/step-3/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/epoch-1-step-5/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/epoch-1-step-5/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/epoch-1-step-5/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v1_20260805/independent2/epoch-1-step-5/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/step-3/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/step-3/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/step-3/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/step-3/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/epoch-1-step-5/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/epoch-1-step-5/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/epoch-1-step-5/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/continuous/epoch-1-step-5/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/resumed/epoch-1-step-5/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/resumed/epoch-1-step-5/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/resumed/epoch-1-step-5/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_deterministic_20260805/resumed/epoch-1-step-5/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/stress_bs8ga2_top16_20260805/run/epoch-1-step-1/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/stress_bs8ga2_top16_20260805/run/epoch-1-step-1/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/stress_bs8ga2_top16_20260805/run/epoch-1-step-1/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/stress_bs8ga2_top16_20260805/run/epoch-1-step-1/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/step-50/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/step-50/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/step-50/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/step-50/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/step-100/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/step-100/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/step-100/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/step-100/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/stopped-epoch-1-step-100/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/stopped-epoch-1-step-100/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/stopped-epoch-1-step-100/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/pilot_fullcfg_bs8ga2_100step_20260805/run/stopped-epoch-1-step-100/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/step-1/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/step-1/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/step-1/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/step-1/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/stopped-epoch-1-step-1/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/stopped-epoch-1-step-1/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/stopped-epoch-1-step-1/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_init_step1_bs8ga2_20260805/run/stopped-epoch-1-step-1/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/step-1/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/step-1/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/step-1/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/step-1/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/stopped-epoch-1-step-1/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/stopped-epoch-1-step-1/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/stopped-epoch-1-step-1/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_step1_bs8ga2_20260805/run/stopped-epoch-1-step-1/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/step-3/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/step-3/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/step-3/training_state.pt",
+      "bytes": 48135892
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/step-3/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/stopped-epoch-1-step-3/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/stopped-epoch-1-step-3/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/stopped-epoch-1-step-3/training_state.pt",
+      "bytes": 48135892
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_zerolrfix_3step_bs8ga2_20260805/run/stopped-epoch-1-step-3/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/step-3/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/step-3/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/step-3/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/step-3/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/epoch-1-step-5/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/epoch-1-step-5/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/epoch-1-step-5/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/continuous/epoch-1-step-5/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/resumed/epoch-1-step-5/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/resumed/epoch-1-step-5/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/resumed/epoch-1-step-5/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/exact_resume_v2_nothink_zerolr_20260805/resumed/epoch-1-step-5/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-100/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-100/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-100/training_state.pt",
+      "bytes": 48135892
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-100/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-200/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-200/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-200/training_state.pt",
+      "bytes": 48135892
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-200/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-300/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-300/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-300/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-300/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-400/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-400/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-400/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-400/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-500/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-500/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-500/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-500/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-600/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-600/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-600/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/step-600/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/stopped-epoch-1-step-600/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/stopped-epoch-1-step-600/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/stopped-epoch-1-step-600/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/semantic_nothink_medium600_zerolr_smoothvisual_bs8ga2_20260805/run/stopped-epoch-1-step-600/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-500/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-500/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-500/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-500/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-1000/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-1000/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-1000/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-1000/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-1500/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-1500/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-1500/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-1500/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-2000/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-2000/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-2000/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-2000/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-2500/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-2500/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-2500/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-2500/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-3000/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-3000/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-3000/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-3000/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-3500/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-3500/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-3500/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-3500/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-4000/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-4000/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-4000/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-4000/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/epoch-1-step-4008/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/epoch-1-step-4008/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/epoch-1-step-4008/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/epoch-1-step-4008/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-4500/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-4500/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-4500/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-4500/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-5000/stage1_v4_tasks.pt",
+      "bytes": 24056271
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-5000/visual_merger.pt",
+      "bytes": 54546244
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-5000/training_state.pt",
+      "bytes": 165670766
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/run/step-5000/base_or_adapter/adapter_model.safetensors",
+      "bytes": 4202896
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pilot100_20260830/checkpoint-final/task_modules.pt",
+      "bytes": 51776610
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pilot100_20260830/checkpoint-final/visual_merger.pt",
+      "bytes": 54546180
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pilot100_20260830/checkpoint-final/adapter/adapter_model.safetensors",
+      "bytes": 69206872
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_v2_pilot100_20260830/checkpoint-final/task_modules.pt",
+      "bytes": 51776869
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_v2_pilot100_20260830/checkpoint-final/visual_merger.pt",
+      "bytes": 54546180
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_spatialfix_v2_pilot100_20260830/checkpoint-final/adapter/adapter_model.safetensors",
+      "bytes": 69206872
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pose_roi_only_pilot100_20260830/checkpoint-final/task_modules.pt",
+      "bytes": 51776610
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pose_roi_only_pilot100_20260830/checkpoint-final/visual_merger.pt",
+      "bytes": 54546180
+    },
+    {
+      "path": "humanslot_outputs/stage1_transfer_v1_pose_roi_only_pilot100_20260830/checkpoint-final/adapter/adapter_model.safetensors",
+      "bytes": 69206872
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_joint200_v2_20260831/checkpoint-final/task_modules.pt",
+      "bytes": 37408807
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_joint200_v2_20260831/checkpoint-final/visual_merger.pt",
+      "bytes": 54546180
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_joint200_v2_20260831/checkpoint-final/adapter/adapter_model.safetensors",
+      "bytes": 155126928
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_exact64_joint500_20260831/checkpoint-final/task_modules.pt",
+      "bytes": 37408807
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_exact64_joint500_20260831/checkpoint-final/visual_merger.pt",
+      "bytes": 54546180
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_exact64_joint500_20260831/checkpoint-final/adapter/adapter_model.safetensors",
+      "bytes": 155126928
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_warmup1000_softsimcc_focal_v2_20260831/checkpoint-final/task_modules.pt",
+      "bytes": 37408807
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_warmup1000_softsimcc_focal_v2_20260831/checkpoint-final/visual_merger.pt",
+      "bytes": 54546180
+    },
+    {
+      "path": "humanslot_outputs/lisa_pose_stage1_g1_warmup1000_softsimcc_focal_v2_20260831/checkpoint-final/adapter/adapter_model.safetensors",
+      "bytes": 155126928
+    }
+  ],
+  "predictions": [
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/stage1_v1_stable5task_full_3epoch_20260716_044540_gpu2/eval_val_full_checkpoint-10000_gpu3/predictions.coco_multitask.json",
+      "bytes": 7380724
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/smoke_qwen35_4b_save_eval_20260718_213258/eval1_retry2/inference.jsonl",
+      "bytes": 7520
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/smoke_qwen35_4b_save_eval_20260718_213258/eval1_retry2/predictions.coco_multitask.json",
+      "bytes": 6950
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/stage1_v1_qwen35_4b_5task_3epoch_epochval_20260718_223143_gpu0/eval_val_full_epoch1_final-step-5343/inference.jsonl",
+      "bytes": 11645262
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v1/stage1_v1_qwen35_4b_5task_3epoch_epochval_20260718_223143_gpu0/eval_val_full_epoch1_final-step-5343/predictions.coco_multitask.json",
+      "bytes": 9020512
+    },
+    {
+      "path": "humanslot_outputs/qwen35_zero_shot_box_attr_v1/smoke32_20260722/inference.jsonl",
+      "bytes": 42955
+    },
+    {
+      "path": "humanslot_outputs/qwen35_zero_shot_box_attr_v1/batch4check8_20260722/inference.jsonl",
+      "bytes": 12681
+    },
+    {
+      "path": "humanslot_outputs/qwen35_zero_shot_box_attr_v1/batch1check8_20260722/inference.jsonl",
+      "bytes": 12368
+    },
+    {
+      "path": "humanslot_outputs/qwen35_zero_shot_box_attr_v1/fullval2693_batch2_20260722/inference.jsonl",
+      "bytes": 3002046
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_query25_300steps_20260723/generated_eval_train4/inference.jsonl",
+      "bytes": 24716
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_query25_300steps_20260723/generated_eval_train4/predictions.coco_multitask.json",
+      "bytes": 20294
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_alllinear_150steps_20260723/generated_train4/inference.jsonl",
+      "bytes": 23663
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/gates/overfit4_alllinear_150steps_20260723/generated_train4/predictions.coco_multitask.json",
+      "bytes": 19372
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_bs16_3ep_20260723/generated_val32/inference.jsonl",
+      "bytes": 163549
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_bs16_3ep_20260723/generated_val32/predictions.coco_multitask.json",
+      "bytes": 132260
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/generated_val32/inference.jsonl",
+      "bytes": 311059
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/smoke256_alllinear_bs8ga2_10ep_20260723/generated_val32/predictions.coco_multitask.json",
+      "bytes": 265964
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/full64115_3ep_bs8ga2_alllinear_20260723/generated_val_full_epoch1_bs2/inference.jsonl",
+      "bytes": 15626860
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_flatpose/full64115_3ep_bs8ga2_alllinear_20260723/generated_val_full_epoch1_bs2/predictions.coco_multitask.json",
+      "bytes": 12674088
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_boxpose/overfit8_boxref_500_gpu0_20260724/generated_train8_smoke/inference.jsonl",
+      "bytes": 47458
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_boxpose/overfit8_boxref_500_gpu0_20260724/generated_train8_smoke/predictions.coco_multitask.json",
+      "bytes": 39126
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/gates/overfit8_boxfree_multiscale_500steps_20260725/generated_train8/inference.jsonl",
+      "bytes": 44714
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/gates/overfit8_boxfree_multiscale_500steps_20260725/generated_train8/predictions.coco_multitask.json",
+      "bytes": 36801
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/eval_epoch1_generated_val32_tok5000_bs1/inference.jsonl",
+      "bytes": 215043
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/eval_epoch1_generated_val32_tok5000_bs1/predictions.coco_multitask.json",
+      "bytes": 175552
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/eval_epoch1_generated_full_val2693_bs1/inference.jsonl",
+      "bytes": 16469603
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/eval_epoch1_generated_full_val2693_bs1/predictions.coco_multitask.json",
+      "bytes": 13432854
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/generated_val_full_epoch1_bs2/inference.jsonl",
+      "bytes": 16467738
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/generated_val_full_epoch1_bs2/predictions.coco_multitask.json",
+      "bytes": 13414870
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/generated_val_full_epoch2_bs2/inference.jsonl",
+      "bytes": 16618781
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v3_repr/full64115_2ep_bs8ga2_monitor_20260728/generated_val_full_epoch2_bs2/predictions.coco_multitask.json",
+      "bytes": 13549264
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_groupclip30_val1_20260805/output/inference.jsonl",
+      "bytes": 2330
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_groupclip30_val1_20260805/output/predictions.coco_multitask.json",
+      "bytes": 1681
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_groupclip30_val8_bs2_20260805/output/inference.jsonl",
+      "bytes": 36311
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_groupclip30_val8_bs2_20260805/output/predictions.coco_multitask.json",
+      "bytes": 28825
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/eval_tf_groupclip30_val8_20260805/output/predictions.teacher_forced_pose_seg.json",
+      "bytes": 20112
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/eval_epoch1_tf_full_val2693_bs1_20260807/predictions.teacher_forced_pose_seg.json",
+      "bytes": 8719751
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/eval_epoch1_generated_full_val2693_bs1_tok5000_20260807/inference.jsonl",
+      "bytes": 14585527
+    },
+    {
+      "path": "humanslot_outputs/lisa_qwen_v4/full64115_2ep_bs8ga2_20260805/eval_epoch1_generated_full_val2693_bs1_tok5000_20260807/predictions.coco_multitask.json",
+      "bytes": 12106808
+    }
+  ]
+}
