@@ -1,11 +1,11 @@
-model_name_or_path: "/share2/program/weiminghong/model/Qwen3.5-4B"
+model_name_or_path: "/home/priv/project/model/Qwen3.5-4B"
 adapter_path: ""
 
-# Current server-visible data prepared by the stage1 teacher pipeline.
-jsonl: "/home/weiminghong/humanslot/outputs/hsm_stage1_teacher/stage1_sft_data/val.jsonl"
-image_root: "/share2/program/weiminghong/coco/val2017"
-output_dir: "/share2/program/weiminghong/humanslot_outputs/ft_box_pose_attr_eval/debug10_compact"
-cuda_visible_devices: "1"
+# Use val.jsonl after running run_prepare_server_data.sh with VAL_IMAGE_ROOT=/home/priv/wmh_project/coco_person/val/val2017.
+jsonl: "/home/priv/wmh_project/coco_person/ft_box_pose_attr_data/val.jsonl"
+image_root: "/home/priv/wmh_project/coco_person/val/val2017"
+output_dir: "/home/priv/wmh_project/coco_person/ft_box_pose_attr_eval/debug10"
+cuda_visible_devices: "0"
 
 debug_sample_size: 4
 debug_seed: 42
@@ -14,16 +14,12 @@ batch_size: 1
 num_workers: 0
 
 max_length: 4096
-max_new_tokens: 10000
+max_new_tokens: 1024
 bf16: true
 fp16: false
-strict_parse: true
-stop_at_answer_end: true
-truncate_after_answer_end: true
 assistant_prefix: ""
 extra_prompt: null
 prompt_format: tag
-output_format: tag
 
 iou_thr: 0.5
 pck_thr: 0.2

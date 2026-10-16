@@ -1,16 +1,13 @@
-model_name_or_path: "/share2/program/weiminghong/model/Qwen3.5-4B"
-train_jsonl: "/home/weiminghong/humanslot/outputs/hsm_stage1_teacher/stage1_sft_data/train.jsonl"
-val_jsonl: "/home/weiminghong/humanslot/outputs/hsm_stage1_teacher/stage1_sft_data/val.jsonl"
-image_root: "/share2/program/weiminghong/coco"
-output_dir: "/share2/program/weiminghong/humanslot_outputs/qwen35_vl_box_pose_attr_sft_compact"
-cuda_visible_devices: "1"
+model_name_or_path: "/home/priv/project/model/Qwen3.5-4B"
+train_jsonl: "/home/priv/wmh_project/coco_person/ft_box_pose_attr_data/train.jsonl"
+val_jsonl: "/home/priv/wmh_project/coco_person/ft_box_pose_attr_data/val.jsonl"
+image_root: "/home/priv/wmh_project/coco_person/images"
+output_dir: "/home/priv/wmh_project/coco_person/outputs/qwen35_vl_box_pose_attr_sft_simple"
 
 seed: 42
 max_train_samples: null
 max_val_samples: null
-max_length: 4096
-target_format: compact_tag
-force_rebuild_target_text: true
+max_length: 2048
 
 train_batch_size: 1
 eval_batch_size: 1
@@ -43,7 +40,7 @@ swanlab:
   experiment_name: "qwen35-vl-box-pose-attr-simple"
   mode: "cloud"
   preview_samples: 4
-  preview_max_new_tokens: 4096
+  preview_max_new_tokens: 1024
   stage_eval:
     enable: true
     samples: 16

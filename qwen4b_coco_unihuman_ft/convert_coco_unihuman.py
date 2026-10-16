@@ -4,11 +4,6 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
-from qwen4b_coco_unihuman_ft.output_protocol import (
-    FORMAT_COMPACT_TAG,
-    build_target_text as _build_protocol_target_text,
-    normalize_target_format,
-)
 from qwen4b_coco_unihuman_ft.prompts import build_box_pose_attribute_prompt
 
 
@@ -26,13 +21,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--train-ratio", type=float, default=0.9)
     parser.add_argument("--val-ratio", type=float, default=0.1)
     parser.add_argument("--max-samples", type=int, default=None)
-    parser.add_argument(
-        "--target-format",
-        type=str,
-        default=FORMAT_COMPACT_TAG,
-        choices=["tag", "compact_tag", "compact", "short", "short_tag", "xml", "long_tag"],
-        help="Target answer protocol. compact_tag is shorter and preferred for SFT.",
-    )
     parser.add_argument(
         "--skip-missing-images",
         action=argparse.BooleanOptionalAction,
@@ -124,8 +112,45 @@ def _format_tag_pose(keypoints: List[List[int]]) -> str:
     return ", ".join(f"[{int(kp[0])}, {int(kp[1])}, {int(kp[2])}]" for kp in keypoints[:17])
 
 
-def _build_target_text(record: Dict[str, Any], target_format: str = FORMAT_COMPACT_TAG) -> str:
-    return _build_protocol_target_text(record, target_format=target_format)
+def _build_target_text(record: Dict[str, Any]) -> str:
+    width = int(record.get("width", 0))
+    height = int(record.get("height", 0))
+    poses_by_pid = _poses_by_person_id(record.get("pose", []))
+    attrs_by_pid = _attrs_by_person_id(record.get("attribute", []))
+    person_blocks: List[str] = []
+    for box_item in record.get("box", []):
+        if not isinstance(box_item, dict):
+            continue
+        bbox = box_item.get("bbox_xyxy", [])
+        if not isinstance(bbox, list) or len(bbox) < 4:
+            continue
+        pid = box_item.get("person_id", len(person_blocks) + 1)
+        attr = attrs_by_pid.get(pid, {})
+        box = [
+            _norm_x(bbox[0], width),
+            _norm_y(bbox[1], height),
+            _norm_x(bbox[2], width),
+            _norm_y(bbox[3], height),
+        ]
+        pose = _norm_pose_17(poses_by_pid.get(pid), width, height)
+        gender = int(attr.get("gender", -1)) if isinstance(attr, dict) else -1
+        age = int(round(float(attr.get("age", -1)))) if isinstance(attr, dict) and "age" in attr else -1
+        person_blocks.append(
+            "\n".join(
+                [
+                    "<person>",
+                    f"<box>[{box[0]}, {box[1]}, {box[2]}, {box[3]}]</box>",
+                    f"<pose>{_format_tag_pose(pose)}</pose>",
+                    f"<gender>{gender}</gender>",
+                    f"<age>{age}</age>",
+                    "<score>1.0</score>",
+                    "</person>",
+                ]
+            )
+        )
+    if not person_blocks:
+        return "<answer></answer>"
+    return "<answer>\n" + "\n".join(person_blocks) + "\n</answer>"
 
 
 def _read_json(path: str) -> Dict[str, Any]:
@@ -223,13 +248,7 @@ def _extract_from_instances(
     return boxes, poses, attrs, stats
 
 
-def _convert_payload(
-    payload: Dict[str, Any],
-    image_root: str,
-    skip_missing_images: bool,
-    target_format: str = FORMAT_COMPACT_TAG,
-) -> Tuple[List[Dict[str, Any]], Dict[str, int]]:
-    target_format = normalize_target_format(target_format)
+def _convert_payload(payload: Dict[str, Any], image_root: str, skip_missing_images: bool) -> Tuple[List[Dict[str, Any]], Dict[str, int]]:
     images = payload.get("images", [])
     if not isinstance(images, list):
         raise ValueError("Invalid format: images must be list.")
@@ -292,23 +311,21 @@ def _convert_payload(
             "image_abs": str(image_abs),
             "width": int(img.get("width", 0)),
             "height": int(img.get("height", 0)),
-            "target_format": target_format,
             "box": boxes,
             "pose": poses,
             "attribute": attrs,
         }
-        rec["target_text"] = _build_target_text(rec, target_format=target_format)
+        rec["target_text"] = _build_target_text(rec)
         converted.append(rec)
         stats["num_images_kept"] += 1
     return converted, stats
 
 
-def _to_swift_records(records: List[Dict[str, Any]], target_format: str = FORMAT_COMPACT_TAG) -> List[Dict[str, Any]]:
+def _to_swift_records(records: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     swift_records: List[Dict[str, Any]] = []
-    target_format = normalize_target_format(target_format)
-    prompt = build_box_pose_attribute_prompt(output_format=target_format)
+    prompt = build_box_pose_attribute_prompt()
     for rec in records:
-        target_text = rec.get("target_text", _build_target_text(rec, target_format=target_format))
+        target_text = rec.get("target_text", _build_target_text(rec))
         image_path = rec.get("image_abs", rec.get("image", ""))
         swift_records.append(
             {
@@ -328,13 +345,7 @@ def _apply_max_samples(records: List[Dict[str, Any]], max_samples: Optional[int]
     return records
 
 
-def _save_split(
-    output_dir: Path,
-    split: str,
-    records: List[Dict[str, Any]],
-    emit_swift: bool,
-    target_format: str = FORMAT_COMPACT_TAG,
-) -> Dict[str, str]:
+def _save_split(output_dir: Path, split: str, records: List[Dict[str, Any]], emit_swift: bool) -> Dict[str, str]:
     out: Dict[str, str] = {}
     jsonl_path = output_dir / f"{split}.jsonl"
     _dump_jsonl(str(jsonl_path), records)
@@ -342,14 +353,13 @@ def _save_split(
 
     if emit_swift:
         swift_path = output_dir / f"{split}_swift.jsonl"
-        _dump_jsonl(str(swift_path), _to_swift_records(records, target_format=target_format))
+        _dump_jsonl(str(swift_path), _to_swift_records(records))
         out[f"output_{split}_swift_jsonl"] = str(swift_path)
     return out
 
 
 def main() -> None:
     args = parse_args()
-    target_format = normalize_target_format(args.target_format)
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -359,17 +369,17 @@ def main() -> None:
         train_payload = _read_json(args.train_ann_json)
         val_payload = _read_json(args.val_ann_json)
         train_records_all, train_stats = _convert_payload(
-            train_payload, train_image_root, skip_missing_images=bool(args.skip_missing_images), target_format=target_format
+            train_payload, train_image_root, skip_missing_images=bool(args.skip_missing_images)
         )
         val_records_all, val_stats = _convert_payload(
-            val_payload, val_image_root, skip_missing_images=bool(args.skip_missing_images), target_format=target_format
+            val_payload, val_image_root, skip_missing_images=bool(args.skip_missing_images)
         )
         train_records = _apply_max_samples(train_records_all, args.max_samples)
         val_records = _apply_max_samples(val_records_all, args.max_samples)
 
         outputs = {}
-        outputs.update(_save_split(output_dir, "train", train_records, args.emit_swift_format, target_format=target_format))
-        outputs.update(_save_split(output_dir, "val", val_records, args.emit_swift_format, target_format=target_format))
+        outputs.update(_save_split(output_dir, "train", train_records, args.emit_swift_format))
+        outputs.update(_save_split(output_dir, "val", val_records, args.emit_swift_format))
         summary = {
             "mode": "separate_train_val_json",
             "train_ann_json": args.train_ann_json,
@@ -377,7 +387,6 @@ def main() -> None:
             "image_root": args.image_root,
             "train_image_root": train_image_root,
             "val_image_root": val_image_root,
-            "target_format": target_format,
             "num_train": len(train_records),
             "num_val": len(val_records),
             "train_stats": train_stats,
@@ -391,7 +400,7 @@ def main() -> None:
         train_ratio = args.train_ratio / total_ratio
 
         records_all, convert_stats = _convert_payload(
-            _read_json(args.ann_json), args.image_root, skip_missing_images=bool(args.skip_missing_images), target_format=target_format
+            _read_json(args.ann_json), args.image_root, skip_missing_images=bool(args.skip_missing_images)
         )
         records = _apply_max_samples(records_all, args.max_samples)
         n_total = len(records)
@@ -400,8 +409,8 @@ def main() -> None:
         val_records = records[n_train:]
 
         outputs = {}
-        outputs.update(_save_split(output_dir, "train", train_records, args.emit_swift_format, target_format=target_format))
-        outputs.update(_save_split(output_dir, "val", val_records, args.emit_swift_format, target_format=target_format))
+        outputs.update(_save_split(output_dir, "train", train_records, args.emit_swift_format))
+        outputs.update(_save_split(output_dir, "val", val_records, args.emit_swift_format))
         summary = {
             "mode": "single_json_split_by_ratio",
             "ann_json": args.ann_json,
@@ -409,7 +418,6 @@ def main() -> None:
             "num_total": n_total,
             "num_train": len(train_records),
             "num_val": len(val_records),
-            "target_format": target_format,
             "convert_stats": convert_stats,
             **outputs,
         }
